@@ -4,6 +4,7 @@ sys.path.append('..')
 sys.path.append('../..')
 import argparse
 import utils
+import solver-toolbox
 
 from student_utils import *
 """
@@ -25,7 +26,15 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
         A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
         NOTE: both outputs should be in terms of indices not the names of the locations themselves
     """
-    pass
+    solvers = [randomSolveJS]
+    bestSolution = None
+    
+    for solver in solvers:
+        solution = solver(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
+        if bestSolution == None or solution[0] < bestSolution[0]:
+            bestSolution = solution
+    
+    return bestSolution[1], bestSolution[2]
 
 """
 ======================================================================
