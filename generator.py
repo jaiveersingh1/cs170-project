@@ -1,5 +1,11 @@
 import numpy as np
 import math
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import collections 
+
+
+mpl.use('Agg')
 
 class Vertex:
   def __init__(self, x, y, nodeType, numLocations):
@@ -20,8 +26,8 @@ class Vertex:
 
 
 class GraphGenerator:
-  def __init__(self, vertices, numLocations, numHomes):
-    self.vertices = vertices
+  def __init__(self, numLocations, numHomes):
+    self.vertices = []
     self.numLocations = numLocations
     self.numHomes = numHomes
     self.startVertex = 0
@@ -41,10 +47,9 @@ class GraphGenerator:
 
     currHomes = 0
     while (currHomes < self.numHomes):
-      v = self.vertices[np.random.randint(0, self.numLocations - 1)] 
-      if (v.nodeType != 2):
-        v.nodeType = 2
-        self.homeList.append(np.random.randint(0, self.numLocations - 1))
+      v = np.random.randint(0, self.numLocations - 1)
+      if (v not in set(self.homeList)):
+        self.homeList.append(v)
         currHomes += 1
 
     for i in range(self.numLocations):
@@ -61,9 +66,6 @@ class GraphGenerator:
           self.vertices[i].adjList[v] = self.dist(v, i)
           self.vertices[v].adjList[i] = self.dist(v, i)
           numNeighbors += 1
-
-    for i in range(self.numLocations):
-      print(self.vertices[i].adjList)
 
   def dist(self, v, i):
     x_1, x_2 = self.vertices[v].x, self.vertices[i].x
@@ -96,8 +98,50 @@ class GraphGenerator:
 
     f.close()
 
-gen = GraphGenerator([], 200, 5)
+class VisualGrapher:
+  def __init__(self, gen):
+    self.gen = gen
+
+  def connectPoints(self, x, y, p1, p2):
+    x1, x2 = x[p1], x[p2]
+    y1, y2 = y[p1], y[p2]
+    plt.plot([x1,x2],[y1,y2],'k-')
+
+  def visualizer(self):
+    X, Y = [], []
+    color_map = {1:'red',2:'green',3:'blue'}
+
+    for i in range(self.gen.numLocations):
+      xPos = self.gen.vertices[i].x
+      yPos = self.gen.vertices[i].y
+      if (xPos not in set(X) and yPos not in set(Y)):
+        X.append(xPos)
+        Y.append(yPos)
+
+    for i in range(0, len(X)):
+        color = 0
+        if (i == self.gen.startVertex):
+          color = 1
+        elif (i in set(self.gen.homeList)):
+          color = 2
+        else:
+          color = 3
+        plt.scatter(X[i] , Y[i], color = color_map.get(color, 'black'))
+
+    connected = []
+    for i in range(self.gen.numLocations):
+      for j in range(self.gen.numLocations):
+        if (self.gen.vertices[i].adjList[j] != 'x'):
+          if [i, j] not in connected and [j, i] not in connected:
+              self.connectPoints(X, Y, i, j)
+              connected.append([i, j])
+
+    plt.savefig('graph.png')
+
+gen = GraphGenerator(200, 100)
+vis = VisualGrapher(gen)
 gen.genGraph()
-gen.writeInput(0)
+gen.writeInput(2)
 
 print(gen.avgDegree())
+# vis.visualizer()
