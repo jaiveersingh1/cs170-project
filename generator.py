@@ -2,10 +2,6 @@ import numpy as np
 import math
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import collections 
-
-
-mpl.use('Agg')
 
 class Vertex:
   def __init__(self, x, y, nodeType, numLocations):
@@ -67,6 +63,8 @@ class GraphGenerator:
           self.vertices[v].adjList[i] = self.dist(v, i)
           numNeighbors += 1
 
+    print(gen.avgDegree())
+
   def dist(self, v, i):
     x_1, x_2 = self.vertices[v].x, self.vertices[i].x
     y_1, y_2 = self.vertices[v].y, self.vertices[i].y
@@ -112,36 +110,31 @@ class VisualGrapher:
     color_map = {1:'red',2:'green',3:'blue'}
 
     for i in range(self.gen.numLocations):
-      xPos = self.gen.vertices[i].x
-      yPos = self.gen.vertices[i].y
-      if (xPos not in set(X) and yPos not in set(Y)):
-        X.append(xPos)
-        Y.append(yPos)
+      X.append(self.gen.vertices[i].x)
+      Y.append(self.gen.vertices[i].y)
 
-    for i in range(0, len(X)):
-        color = 0
-        if (i == self.gen.startVertex):
-          color = 1
-        elif (i in set(self.gen.homeList)):
-          color = 2
-        else:
-          color = 3
-        plt.scatter(X[i] , Y[i], color = color_map.get(color, 'black'))
+      color = 0
+      if (i == self.gen.startVertex):
+        color = 1
+      elif (i in set(self.gen.homeList)):
+        color = 2
+      else:
+        color = 3
 
-    connected = []
+      plt.scatter(X[i] , Y[i], color = color_map.get(color, 'black'))
+
+    connected = set()
     for i in range(self.gen.numLocations):
       for j in range(self.gen.numLocations):
         if (self.gen.vertices[i].adjList[j] != 'x'):
-          if [i, j] not in connected and [j, i] not in connected:
+          if tuple([i, j]) not in connected and tuple([j, i]) not in connected:
               self.connectPoints(X, Y, i, j)
-              connected.append([i, j])
+              connected.add(tuple([i, j]))
 
-    plt.savefig('graph.png')
+    plt.show()
 
-gen = GraphGenerator(200, 100)
+gen = GraphGenerator(100, 50)
 vis = VisualGrapher(gen)
-gen.genGraph()
-gen.writeInput(2)
 
-print(gen.avgDegree())
-# vis.visualizer()
+gen.genGraph()
+vis.visualizer()
