@@ -1,3 +1,5 @@
+import networkx as nx
+
 class BaseSolver:
     """ Base class for solvers """
 
@@ -17,14 +19,13 @@ class BaseSolver:
         """
         return 0, [], dict()
     
-    def find_best_dropoffs(self, list_of_locations, list_of_homes, list_of_car_stops, adjacency_matrix):
+    def find_best_dropoffs(self, G, home_indices, car_path_indices):
         """
         Treating the car's cycle as constant, find the best dropoff locations for the TAs to minimize walking cost.
         Input:
-            list_of_locations: A list of locations such that node i of the graph corresponds to name at index i of the list
-            list_of_homes: A list of homes
-            list_of_car_stops: A list of locations representing the car path
-            adjacency_matrix: The adjacency matrix from the input file
+            G: A NetworkX graph
+            home_indices: The indices of the vertices in G that are TA homes
+            car_path_indices: The indices of the vertices in G that are in the car path
         Output:
             Total walking cost (TA ONLY)
             A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
@@ -33,27 +34,7 @@ class BaseSolver:
 
         # Initialize shortest_distances matrix, where shortest_distances[r][c] is the shortest distance from r to c
 
-        V = len(adjacency_matrix)
-        shortest_distances = [[None for c in range(V)] for r in range(V)]
-        for r in range(V):
-            for c in range(V):
-                if c == r:
-                    shortest_distances[r][c] = 0
-                elif adjacency_matrix[r][c] == 'x':
-                    shortest_distances[r][c] = float('inf')
-                else:
-                    shortest_distances[r][c] = adjacency_matrix[r][c]
-        
-        # Use Floyd-Warshall Algorithm to find shortest paths between every pair of points
-        for k in range(V):
-            for i in range(V):
-                for j in range(V):
-                    shortest_distances[i][j] = min(shortest_distances[i][j], shortest_distances[i][k] + shortest_distances[k][j])
-        
-        # Translate home names into indices
-        home_indices = []
-        for home_name in list_of_homes:
-            home_indices.append(list_of_locations.index(home_name))
+        shortest_distances = dict(nx.floyd_warshall(G))
 
         # Determine TA dropoff
         dropoffs = {}
@@ -63,7 +44,7 @@ class BaseSolver:
 
             # Find preferred dropoff location for this TA
             best_dropoff = None
-            for dropoff in list_of_car_stops:
+            for dropoff in car_path_indices:
                 if best_dropoff == None or shortest_distances[dropoff][home] < shortest_distances[best_dropoff][home]:
                     best_dropoff = dropoff
 

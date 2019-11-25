@@ -32,8 +32,10 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     
     for solver in solvers:
 
-        list_of_car_stops = [list_of_locations.index(starting_car_location)]
-        walking_cost, dropoffs = solver.find_best_dropoffs(list_of_locations, list_of_homes, list_of_car_stops, adjacency_matrix)
+        G, message = adjacency_matrix_to_graph(adjacency_matrix)
+        home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
+        car_path_indices = convert_locations_to_indices([starting_car_location], list_of_locations)
+        walking_cost, dropoffs = solver.find_best_dropoffs(G, home_indices, car_path_indices)
 
         print(walking_cost)
 
