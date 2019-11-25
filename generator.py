@@ -2,6 +2,7 @@ import numpy as np
 import math
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import pickle
 
 class Vertex:
   def __init__(self, x, y, nodeType, numLocations):
@@ -26,7 +27,7 @@ class GraphGenerator:
   def __str__(self):
     return str(self.vertices)
 
-  def genGraph(self, ddMean=0.2):
+  def genGraph(self, ddMean=0.2, ddDecay=0.1):
 
     for i in range(self.numLocations):
       x, y = np.random.uniform(0, self.numLocations), np.random.uniform(0, self.numLocations)
@@ -42,7 +43,7 @@ class GraphGenerator:
         currHomes += 1
 
     for i in range(self.numLocations):
-      self.vertices[i].degree = int((np.random.laplace(ddMean, 0.1))*(self.numLocations - i))
+      self.vertices[i].degree = int((np.random.laplace(ddMean, ddDecay))*(self.numLocations - i))
       vs = {i}
 
       numNeighbors = 0
@@ -57,10 +58,9 @@ class GraphGenerator:
           numNeighbors += 1
     
     if (not self.checkConnectivity()):
-      print ('running')
-      self.genGraph(ddMean + 0.5)
-
-    print("Average Degree:", self.avgDegree())
+      self.genGraph(ddMean + 0.3, ddDecay - 0.1)
+    else:
+      print("Average Degree:", self.avgDegree())
 
   def dist(self, v, i):
     x_1, x_2 = self.vertices[v].x, self.vertices[i].x
@@ -111,9 +111,13 @@ class GraphGenerator:
       f.write("\n")
 
     f.close()
+  
+  def serializer(self, output_file):
+    with open(output_file, "wb") as fp:
+      pickle.dump(self, fp)
 
 class VisualGrapher:
-  def __init__(self, gen):
+  def __init__(self, gen=None):
     self.gen = gen
 
   def connectPoints(self, x, y, p1, p2):
@@ -121,7 +125,7 @@ class VisualGrapher:
     y1, y2 = y[p1], y[p2]
     plt.plot([x1,x2],[y1,y2],'k-')
 
-  def visualizer(self):
+  def visGen(self):
     X, Y = [], []
     color_map = {1:'red',2:'green',3:'blue'}
 
@@ -149,9 +153,23 @@ class VisualGrapher:
 
     plt.show()
 
-gen = GraphGenerator(100, 50) # PARAMS: NUM_LOCATIONS, NUM_HOMES
-vis = VisualGrapher(gen) # PARAM: GENERATOR INSTANCE
+  def visSerial(self, output_file):
+    with open(output_file, "rb") as fp:
+      self.gen = pickle.load(fp)
+    self.visGen()
+
+
+# ------------------------------------------------------ COMMENT OUT WHAT YOU DON'T NEED ------------------------------------------------------
+
+gen = GraphGenerator(200, 6) # PARAMS: NUM_LOCATIONS, NUM_HOMES
 
 gen.genGraph() # OPTIONAL PARAM: DEGREE_DISTRIBUTION_MEAN (DEFAULT 0.2)
 gen.writeInput() # PARAM: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
-vis.visualizer()
+gen.serializer("serialized_graphs/test0.json") # PARAM: SERIALIZED OUTPUT FILE
+
+vis = VisualGrapher(gen) # OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
+vis.visGen()
+
+vis1 = VisualGrapher()
+vis1.visSerial("serialized_graphs/test0.json") # PARAM: SERIALIZED INPUT FILE
+
