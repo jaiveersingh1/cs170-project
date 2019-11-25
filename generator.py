@@ -26,7 +26,7 @@ class GraphGenerator:
   def __str__(self):
     return str(self.vertices)
 
-  def genGraph(self):
+  def genGraph(self, ddMean=0.2):
 
     for i in range(self.numLocations):
       x, y = np.random.uniform(0, self.numLocations), np.random.uniform(0, self.numLocations)
@@ -42,7 +42,7 @@ class GraphGenerator:
         currHomes += 1
 
     for i in range(self.numLocations):
-      self.vertices[i].degree = int((np.random.laplace(0.4, 0.1))*(self.numLocations - i))
+      self.vertices[i].degree = int((np.random.laplace(ddMean, 0.1))*(self.numLocations - i))
       vs = {i}
 
       numNeighbors = 0
@@ -55,8 +55,12 @@ class GraphGenerator:
           self.vertices[i].adjList[v] = self.dist(v, i)
           self.vertices[v].adjList[i] = self.dist(v, i)
           numNeighbors += 1
+    
+    if (not self.checkConnectivity()):
+      print ('running')
+      self.genGraph(ddMean + 0.5)
 
-    print("Average Degree:", gen.avgDegree())
+    print("Average Degree:", self.avgDegree())
 
   def dist(self, v, i):
     x_1, x_2 = self.vertices[v].x, self.vertices[i].x
@@ -66,9 +70,25 @@ class GraphGenerator:
   def avgDegree(self):
     totalDegree = 0
     for i in range(self.numLocations):
-      totalDegree += self.vertices[i].degree
+      for j in range(self.numLocations):
+        if (self.vertices[i].adjList[j] != 'x'):
+          totalDegree += 1
     return totalDegree / self.numLocations
 
+  def checkConnectivity(self):
+      adj_matrix = [self.vertices[i].adjList.copy() for i in range(self.numLocations)]
+
+      for i in range(len(adj_matrix)):
+        for j in range(len(adj_matrix)):
+          if (adj_matrix[i][j] == 'x'):
+            adj_matrix[i][j] = 0
+
+      adj_mn = np.linalg.matrix_power(adj_matrix, self.numLocations)
+
+      for row in adj_mn:
+        if (0 not in set(row)):
+          return 1
+      return 0
 
   def writeInput(self, inputNum=-1):
     if (inputNum == -1):
@@ -129,9 +149,9 @@ class VisualGrapher:
 
     plt.show()
 
-gen = GraphGenerator(10, 5) # PARAMS: NUM_LOCATIONS, NUM_HOMES
-vis = VisualGrapher(gen) # PARAMS: GENERATOR INSTANCE
+gen = GraphGenerator(100, 50) # PARAMS: NUM_LOCATIONS, NUM_HOMES
+vis = VisualGrapher(gen) # PARAM: GENERATOR INSTANCE
 
-gen.genGraph()
-gen.writeInput() # PARAMS: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
+gen.genGraph() # OPTIONAL PARAM: DEGREE_DISTRIBUTION_MEAN (DEFAULT 0.2)
+gen.writeInput() # PARAM: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
 vis.visualizer()
