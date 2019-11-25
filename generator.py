@@ -8,17 +8,11 @@ class Vertex:
     self.x = x
     self.y = y
     self.nodeType = nodeType
-    self.adjList = []
+    self.adjList = ['x' for i in range(numLocations)]
     self.degree = 0
-
-    for i in range(numLocations):
-      self.adjList.append('x')
 
   def __str__(self):
     return str(self.x) + " " + str(self.y) + " " + str(self.nodeType) + " " + str(self.adjList)
-
-  def addAdjacent(self, adjVertex):
-    self.adjList.append(adjVertex)
 
 
 class GraphGenerator:
@@ -27,12 +21,11 @@ class GraphGenerator:
     self.numLocations = numLocations
     self.numHomes = numHomes
     self.startVertex = 0
-    self.homeList = []
+    self.homeList = set()
 
   def __str__(self):
     return str(self.vertices)
 
-  # START = 1 | TA = 2
   def genGraph(self):
 
     for i in range(self.numLocations):
@@ -44,8 +37,8 @@ class GraphGenerator:
     currHomes = 0
     while (currHomes < self.numHomes):
       v = np.random.randint(0, self.numLocations - 1)
-      if (v not in set(self.homeList)):
-        self.homeList.append(v)
+      if (v not in self.homeList):
+        self.homeList.add(v)
         currHomes += 1
 
     for i in range(self.numLocations):
@@ -85,8 +78,8 @@ class GraphGenerator:
       f.write(str(i) + " ")
     f.write("\n")
 
-    for i in range(self.numHomes):
-      f.write(str(self.homeList[i]) + " ")
+    for home in self.homeList:
+      f.write(str(home) + " ")
     f.write("\n" + str(self.startVertex) + "\n")
 
     for i in range(self.numLocations):
@@ -116,7 +109,7 @@ class VisualGrapher:
       color = 0
       if (i == self.gen.startVertex):
         color = 1
-      elif (i in set(self.gen.homeList)):
+      elif (i in self.gen.homeList):
         color = 2
       else:
         color = 3
@@ -133,7 +126,7 @@ class VisualGrapher:
 
     plt.show()
 
-gen = GraphGenerator(10, 5)
+gen = GraphGenerator(50, 25)
 vis = VisualGrapher(gen)
 
 gen.genGraph()
