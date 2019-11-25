@@ -118,7 +118,7 @@ class GraphGenerator:
             pickle.dump(self, fp)
 
 
-class VisualGrapher:
+class GraphVisualizer:
     def __init__(self, gen=None):
         self.gen = gen
 
@@ -169,9 +169,9 @@ gen.genGraph()  # OPTIONAL PARAM: DEGREE_DISTRIBUTION_MEAN (DEFAULT 0.2)
 gen.writeInput()  # PARAM: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
 gen.serializer("serialized_graphs/test0.pickle") # PARAM: SERIALIZED OUTPUT FILE
 
-vis = VisualGrapher(gen) # OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
+vis = GraphVisualizer(gen) # OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
 vis.visGen()
 
-vis1 = VisualGrapher()
+vis1 = GraphVisualizer()
 vis1.visSerial("serialized_graphs/test0.pickle") # PARAM: SERIALIZED INPUT FILE
 
