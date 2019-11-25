@@ -56,7 +56,7 @@ class GraphGenerator:
           self.vertices[v].adjList[i] = self.dist(v, i)
           numNeighbors += 1
 
-    print(gen.avgDegree())
+    print("Average Degree:", gen.avgDegree())
 
   def dist(self, v, i):
     x_1, x_2 = self.vertices[v].x, self.vertices[i].x
@@ -70,7 +70,10 @@ class GraphGenerator:
     return totalDegree / self.numLocations
 
 
-  def writeInput(self, inputNum):
+  def writeInput(self, inputNum=-1):
+    if (inputNum == -1):
+      return 
+    
     f = open("input" + str(inputNum) + ".txt", "w")
     f.write(str(self.numLocations) + "\n" + str(self.numHomes) + "\n")
 
@@ -126,8 +129,9 @@ class VisualGrapher:
 
     plt.show()
 
-gen = GraphGenerator(50, 25)
-vis = VisualGrapher(gen)
+gen = GraphGenerator(10, 5) # PARAMS: NUM_LOCATIONS, NUM_HOMES
+vis = VisualGrapher(gen) # PARAMS: GENERATOR INSTANCE
 
 gen.genGraph()
+gen.writeInput() # PARAMS: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
 vis.visualizer()
