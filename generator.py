@@ -168,7 +168,6 @@ gen = GraphGenerator(5, 3)  # PARAMS: NUM_LOCATIONS, NUM_HOMES
 
 gen.genGraph()  # OPTIONAL PARAM: DEGREE_DISTRIBUTION_MEAN (DEFAULT 0.2)
 gen.writeInput()  # PARAM: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
-
 gen.serializer("serialized_graphs/test0.pickle") # PARAM: SERIALIZED OUTPUT FILE
 
 vis = GraphVisualizer(gen) # OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
