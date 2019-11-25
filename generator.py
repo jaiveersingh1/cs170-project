@@ -32,8 +32,7 @@ class GraphGenerator:
 	def genGraph(self, ddMean=0.2, ddDecay=0.1):
 
 		for i in range(self.numLocations):
-			x, y = np.random.uniform(
-				0, self.numLocations), np.random.uniform(0, self.numLocations)
+			x, y = np.random.uniform(0, self.numLocations), np.random.uniform(0, self.numLocations)
 			self.vertices.append(Vertex(x, y, 0, self.numLocations))
 
 		self.startVertex = np.random.randint(0, self.numLocations - 1)
@@ -46,8 +45,7 @@ class GraphGenerator:
 				currHomes += 1
 
 		for i in range(self.numLocations):
-			self.vertices[i].degree = int(
-				(np.random.laplace(ddMean, ddDecay))*(self.numLocations - i))
+			self.vertices[i].degree = int((np.random.laplace(ddMean, ddDecay))*(self.numLocations - i))
 			vs = {i}
 
 			numNeighbors = 0
@@ -83,8 +81,7 @@ class GraphGenerator:
 		return totalDegree / self.numLocations
 
 	def checkConnectivity(self):
-		adj_matrix = [self.vertices[i].adjList.copy()
-					  for i in range(self.numLocations)]
+		adj_matrix = [self.vertices[i].adjList.copy() for i in range(self.numLocations)]
 
 		for i in range(len(adj_matrix)):
 			for j in range(len(adj_matrix)):
@@ -171,13 +168,11 @@ gen = GraphGenerator(5, 3)  # PARAMS: NUM_LOCATIONS, NUM_HOMES
 
 gen.genGraph()  # OPTIONAL PARAM: DEGREE_DISTRIBUTION_MEAN (DEFAULT 0.2)
 gen.writeInput()  # PARAM: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
-# PARAM: SERIALIZED OUTPUT FILE
-gen.serializer("serialized_graphs/test0.pickle")
 
-# OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
-vis = GraphVisualizer(gen)
+gen.serializer("serialized_graphs/test0.pickle") # PARAM: SERIALIZED OUTPUT FILE
+
+vis = GraphVisualizer(gen) # OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
 vis.visGen()
 
 vis1 = GraphVisualizer()
-# PARAM: SERIALIZED INPUT FILE
-vis1.visSerial("serialized_graphs/test0.pickle")
+vis1.visSerial("serialized_graphs/test0.pickle") # PARAM: SERIALIZED INPUT FILE
