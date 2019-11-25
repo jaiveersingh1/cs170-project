@@ -133,8 +133,10 @@ class VisualGrapher:
 
     plt.show()
 
-gen = GraphGenerator(100, 50)
+gen = GraphGenerator(10, 5)
 vis = VisualGrapher(gen)
 
 gen.genGraph()
 vis.visualizer()
+
+gen.writeInput(1)
