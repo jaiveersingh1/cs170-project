@@ -4,7 +4,7 @@ sys.path.append('..')
 sys.path.append('../..')
 import argparse
 import utils
-from solver_toolbox import BaseSolver
+from solver_toolbox import *
 
 from student_utils import *
 """
@@ -27,17 +27,10 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
         NOTE: both outputs should be in terms of indices not the names of the locations themselves
     """
     
-    solvers = [BaseSolver()]
+    solvers = [BruteForceJSSolver()]
     best_solution = None
     
     for solver in solvers:
-
-        G, message = adjacency_matrix_to_graph(adjacency_matrix)
-        home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
-        car_path_indices = convert_locations_to_indices([starting_car_location], list_of_locations)
-        walking_cost, dropoffs = solver.find_best_dropoffs(G, home_indices, car_path_indices)
-
-        print(walking_cost)
 
         solution = solver.solve(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
         if best_solution == None or solution[0] < best_solution[0]:
