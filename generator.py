@@ -21,8 +21,6 @@ class Vertex:
 class GraphGenerator:
 	def __init__(self, numLocations, numHomes):
 		self.vertices = []
-		self.edges = []
-		self.cycles = []
 		self.numLocations = numLocations
 		self.numHomes = numHomes
 		self.startVertex = 0
@@ -94,67 +92,40 @@ class GraphGenerator:
 
 		return connected_components(csgraph=adj_matrix, return_labels=False)
 
-	def cycleFinder(self, edges=None):
-		if (not edges):
-			connected = set()
+	def cycleFinder(self, graph=None):
+		if (not graph):
+			graph = {}
 			for i in range(self.numLocations):
+				if (i not in graph):
+					graph[i] = []
 				for j in range(self.numLocations):
 					if (self.vertices[i].adjList[j] != 'x'):
-						if tuple([i, j]) not in connected and tuple([j, i]) not in connected:
-							self.edges.append([i, j])
-							connected.add(tuple([i, j]))
-		else:
-			self.edges = edges
+						graph[i].append(j)
 
-		for edge in self.edges:
-			for node in edge:
-				self.findNewCycles([node])
-		print("-----------------------------------------\nCycles:")
-		for cy in self.cycles:
+		cycles = [[node]+path  for node in graph for path in self.dfs(graph, node, node)]
+		cycles = [cy for cy in cycles if cy[0] != cy[2]]
+
+		print("------------------------------\nCycles: ")
+		
+		for cy in cycles:
 			path = [str(node) for node in cy]
 			s = " -> ".join(path)
 			print(s)
-			return
-		print("None found!")
 
-	def findNewCycles(self, path):
-		start_node = path[0]
-		next_node= None
-		sub = []
+		if (len(cycles) == 0):
+			print("None found!")
 
-		#visit each edge and each node of each edge
-		for edge in self.edges:
-			node1, node2 = edge
-			if start_node in edge:
-					if node1 == start_node:
-						next_node = node2
-					else:
-						next_node = node1
-					if not self.visited(next_node, path):
-							# neighbor node not on path yet
-							sub = [next_node]
-							sub.extend(path)
-							# explore extended path
-							self.findNewCycles(sub);
-					elif len(path) > 2  and next_node == path[-1]:
-							# cycle found
-							p = self.rotate_to_smallest(path);
-							inv = self.invert(p)
-							if self.isNew(p) and self.isNew(inv):
-								self.cycles.append(p)
-
-	def invert(self, path):
-		return self.rotate_to_smallest(path[::-1])
-
-	def rotate_to_smallest(self, path):
-		n = path.index(min(path))
-		return path[n:]+path[:n]
-
-	def isNew(self, path):
-		return not path in self.cycles
-
-	def visited(self, node, path):
-		return node in path
+	def dfs(self, graph, start, end):
+		fringe = [(start, [])]
+		while fringe:
+			state, path = fringe.pop()
+			if path and state == end:
+				yield path
+				continue
+			for next_state in graph[state]:
+				if next_state in path:
+					continue
+				fringe.append((next_state, path+[next_state]))
 
 	def writeInput(self, inputNum=-1):
 		if (inputNum == -1):
@@ -231,12 +202,12 @@ class GraphVisualizer:
 
 gen = GraphGenerator(8, 3)  # PARAMS: NUM_LOCATIONS, NUM_HOMES
 
-gen.genGraph()  # OPTIONAL PARAM: DEGREE_DISTRIBUTION_MEAN | DEFAULT: 0.2
-gen.cycleFinder() # OPTIONAL PARAM: LIST OF EDGES (TWO-ITEM LISTS) | DEFAULT: EDGES OF GENERATED GRAPH FROM GEN INSTANCE
+gen.genGraph()  # OPTIONAL PARAM: DEGREE_DISTRIBUTION_MEAN (DEFAULT 0.2)
 gen.writeInput(0)  # PARAM: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
+gen.cycleFinder() # OPTIONAL PARAM: ADJACENCY DICT ({V1: [U1, U2, ...], V2...}) | DEFAULT: ADJ DICT OF GENERATED GRAPH FROM GEN INSTANCE
 gen.serializer("serialized_graphs/test0.pickle") # PARAM: SERIALIZED OUTPUT FILE
 
-vis = GraphVisualizer(gen) # OPTIONAL PARAM: GENERATOR INSTANCE | DEFAULT: NONE => VISUALIZING SERIALIZED GRAPH
+vis = GraphVisualizer(gen) # OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
 vis.visGen()
 
 vis1 = GraphVisualizer()
