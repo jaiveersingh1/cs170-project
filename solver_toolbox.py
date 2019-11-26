@@ -119,7 +119,7 @@ class BruteForceJSSolver(BaseSolver):
 class MinSpanTreeAJSolver(BaseSolver):
     def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
         """
-        Solve the problem using brute force.
+        Solve the problem using an MST/DFS approach.
         Input:
             list_of_locations: A list of locations such that node i of the graph corresponds to name at index i of the list
             list_of_homes: A list of homes
@@ -138,6 +138,6 @@ class MinSpanTreeAJSolver(BaseSolver):
 
         starting_car_index = list_of_locations.index(starting_car_location)
         best_solution = (float('inf'), [], {})
-                
+
         print("\n\nBest cost was", best_solution[0])
         return best_solution
