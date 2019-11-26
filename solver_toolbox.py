@@ -115,3 +115,29 @@ class BruteForceJSSolver(BaseSolver):
         
         print("\n\nBest cost was", best_solution[0])
         return best_solution
+
+class MinSpanTreeAJSolver(BaseSolver):
+    def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
+        """
+        Solve the problem using brute force.
+        Input:
+            list_of_locations: A list of locations such that node i of the graph corresponds to name at index i of the list
+            list_of_homes: A list of homes
+            starting_car_location: The name of the starting location for the car
+            adjacency_matrix: The adjacency matrix from the input file
+        Output:
+            A cost of how expensive the current solution is
+            A list of locations representing the car path
+            A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
+            NOTE: all outputs should be in terms of indices not the names of the locations themselves
+        """
+        home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
+
+        G, message = adjacency_matrix_to_graph(adjacency_matrix)
+        E = G.to_directed().edges(data='weight')
+
+        starting_car_index = list_of_locations.index(starting_car_location)
+        best_solution = (float('inf'), [], {})
+                
+        print("\n\nBest cost was", best_solution[0])
+        return best_solution
