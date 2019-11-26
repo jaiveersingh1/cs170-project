@@ -80,7 +80,7 @@ class BruteForceJSSolver(BaseSolver):
         G, message = adjacency_matrix_to_graph(adjacency_matrix)
         E = G.to_directed().edges(data='weight')
 
-        starting_car_index = list_of_homes.index(starting_car_location)
+        starting_car_index = list_of_locations.index(starting_car_location)
         best_solution = (float('inf'), [], {})
 
         def powerset(L):

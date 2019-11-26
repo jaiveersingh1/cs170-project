@@ -145,6 +145,7 @@ class GraphVisualizer:
 				color = 3
 
 			plt.scatter(X[i], Y[i], color=color_map.get(color, 'black'))
+			plt.annotate(i, (X[i], Y[i]))
 
 		connected = set()
 		for i in range(self.gen.numLocations):
@@ -164,10 +165,10 @@ class GraphVisualizer:
 
 # ------------------------------------------------------ COMMENT OUT WHAT YOU DON'T NEED ------------------------------------------------------
 
-gen = GraphGenerator(15, 6)  # PARAMS: NUM_LOCATIONS, NUM_HOMES
+gen = GraphGenerator(8, 3)  # PARAMS: NUM_LOCATIONS, NUM_HOMES
 
 gen.genGraph()  # OPTIONAL PARAM: DEGREE_DISTRIBUTION_MEAN (DEFAULT 0.2)
-gen.writeInput()  # PARAM: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
+gen.writeInput(0)  # PARAM: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
 gen.serializer("serialized_graphs/test0.pickle") # PARAM: SERIALIZED OUTPUT FILE
 
 vis = GraphVisualizer(gen) # OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
