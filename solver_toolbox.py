@@ -116,7 +116,7 @@ class BruteForceJSSolver(BaseSolver):
         print("\n\nBest cost was", best_solution[0])
         return best_solution
 
-class MinSpanTreeAJSolver(BaseSolver):
+class ILPSolver(BaseSolver):
     def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
         """
         Solve the problem using an MST/DFS approach.
