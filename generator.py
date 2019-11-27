@@ -1,10 +1,11 @@
-import numpy as np
 import math
+import utils
+import pickle
+import networkx
+import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import pickle
 from scipy.sparse.csgraph import connected_components
-
 
 class Vertex:
 	def __init__(self, x, y, nodeType, numLocations):
@@ -197,6 +198,22 @@ class GraphVisualizer:
 			self.gen = pickle.load(fp)
 		self.visGen()
 
+	def visFromAdj(self, input_matrix):
+		if (type(input_matrix) == str):
+			input_data = utils.read_file(input_matrix)
+			num_of_locations, num_houses, list_locations, list_houses, starting_car_location, adjacency_matrix = data_parser(input_data)
+		else:
+			adjacency_matrix = input_matrix
+
+		for i in range(len(adjacency_matrix)):
+			for j in range(len(adjacency_matrix)):
+				if (adjacency_matrix[i][j] == 'x'):
+					adjacency_matrix[i][j] = 0
+
+		G = nx.Graph(np.array(adjacency_matrix))
+		nx.draw(G)
+		plt.show()
+
 
 # ------------------------------------------------------ COMMENT OUT WHAT YOU DON'T NEED ------------------------------------------------------
 
@@ -212,3 +229,4 @@ vis.visGen()
 
 vis1 = GraphVisualizer()
 vis1.visSerial("serialized_graphs/test0.pickle") # PARAM: SERIALIZED INPUT FILE
+vis1.visFromAdj("input/32_50.in")

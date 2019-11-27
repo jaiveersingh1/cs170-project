@@ -3,6 +3,8 @@ import itertools
 from itertools import product
 from sys import stdout as out
 from mip import Model, xsum, minimize, BINARY
+import matplotlib.pyplot as plt
+import networkx
 import utils
 
 class BaseSolver:
@@ -193,12 +195,12 @@ class ILPSolver(BaseSolver):
 tsp = ILPSolver()
 input_data = utils.read_file("inputs/300_50.in")
 num_of_locations, num_houses, list_locations, list_houses, starting_car_location, adjacency_matrix = data_parser(input_data)
+
 for i in range(len(adjacency_matrix)):
     for j in range(len(adjacency_matrix)):
         if (adjacency_matrix[i][j] == 'x' and i == j):
             adjacency_matrix[i][j] = 0
         elif (adjacency_matrix[i][j] == 'x'):
-            adjacency_matrix[i][j] = 90865313 # big number
+            adjacency_matrix[i][j] = 43298432 # big number
 
-print(adjacency_matrix)
 tsp.solve(list_locations, list_houses, starting_car_location, adjacency_matrix)
