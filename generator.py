@@ -129,9 +129,9 @@ class VisualGrapher:
 
     plt.show()
 
-gen = GraphGenerator(10, 5) # PARAMS: NUM_LOCATIONS, NUM_HOMES
+gen = GraphGenerator(10, 2) # PARAMS: NUM_LOCATIONS, NUM_HOMES
 vis = VisualGrapher(gen) # PARAMS: GENERATOR INSTANCE
 
 gen.genGraph()
-gen.writeInput() # PARAMS: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
+gen.writeInput(2) # PARAMS: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
 vis.visualizer()
