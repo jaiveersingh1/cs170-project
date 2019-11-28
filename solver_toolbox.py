@@ -59,7 +59,26 @@ class BaseSolver:
         
         return total_cost, dropoffs
 
+    def construct_path(self, start, edges):
+        """
+        Constructs a path from an unordered list of edges given some starting vertex
+        Input:
+            start: starting vertex
+            edges: list of edges represented by integer pairs
+        Output:
+            List of edges in a path
+        """
+        mp = {}
+        for e in edges:
+            mp[e[1]] = e[0]
 
+        ret = [start]
+        to = mp[start]
+        while to:
+            ret.append(to)
+            to = mp[to]
+
+        return ret
 
 def randomSolveJS(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
     
