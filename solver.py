@@ -32,7 +32,7 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     
     for solver in solvers:
 
-        solution = solver.solve(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
+        solution = solver.solve(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params)
         if best_solution == None or solution[0] < best_solution[0]:
             best_solution = solution
 

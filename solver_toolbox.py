@@ -2,7 +2,7 @@ from student_utils import *
 import itertools
 from itertools import product
 from sys import stdout as out
-from mip import Model, xsum, minimize, BINARY, INTEGER
+from mip import Model, xsum, minimize, BINARY, INTEGER, OptimizationStatus
 import matplotlib.pyplot as plt
 import networkx
 import utils
@@ -84,7 +84,7 @@ class BaseSolver:
                 current = next_vertex                
             else:
                 for edge in next_edges:
-                    if current in edge_dict.get(edge):
+                    if current in edge_dict.get(edge, []):
                         next_vertex = edge
                         edge_dict[current].remove(next_vertex)
 
@@ -180,7 +180,7 @@ class ILPSolver(BaseSolver):
 
         # number of nodes and list of vertices, not including source or sink
         n, V, H = len(list_of_locations), location_indices, home_indices 
-        bigNum = (n ** 2) 
+        bigNum = (2 * n) 
 
         model = Model()
 
@@ -246,40 +246,54 @@ class ILPSolver(BaseSolver):
         model.objective = minimize(cost_function)
 
         # WINNING ONLINE
-        model.optimize()
+        model.max_gap = 0.05
+        status = model.optimize(max_seconds=300)
+        if status == OptimizationStatus.OPTIMAL:
+            print('optimal solution cost {} found'.format(model.objective_value))
+        elif status == OptimizationStatus.FEASIBLE:
+            print('sol.cost {} found, best possible: {}'.format(model.objective_value, model.objective_bound))
+        elif status == OptimizationStatus.NO_SOLUTION_FOUND:
+            print('no feasible solution found, lower bound is: {}'.format(model.objective_bound))
+        if status == OptimizationStatus.OPTIMAL or status == OptimizationStatus.FEASIBLE:
+            print('solution:')
 
         # printing the solution if found
         if model.num_solutions:
             out.write('Route with total cost %g found. \n' % (model.objective_value))
 
-            out.write('\nEdges (In, Out, Weight):\n')  
-            for i in E:
-                out.write(str(i) + ' ')  
+            if "-V" in params:
+                out.write('\nEdges (In, Out, Weight):\n')  
+                for i in E:
+                    out.write(str(i) + ' ')  
 
-            out.write('\n\nCar - Chosen Edges:\n')       
-            for i in x:
-                out.write(str(i.x) + ' ')
+                out.write('\n\nCar - Chosen Edges:\n')       
+                for i in x:
+                    out.write(str(i.x) + ' ')
 
-            out.write('\n\nTAs - Chosen Edges:\n')  
-            for i in t:
-                for j in range(len(i)):
-                    out.write(str(i[j].x) + ' ')
+                out.write('\n\nTAs - Chosen Edges:\n')  
+                for i in t:
+                    for j in range(len(i)):
+                        out.write(str(i[j].x) + ' ')
+                    out.write('\n') 
+
+                out.write('\nFlow Capacities:\n')  
+                for i in f:
+                    out.write(str(i.x) + ' ')
                 out.write('\n') 
 
-            out.write('\nFlow Capacities:\n')  
-            for i in f:
-                out.write(str(i.x) + ' ')
-            out.write('\n') 
+                out.write('\nActive Edges:\n')  
 
-            out.write('\nActive Edges:\n')  
-
-            for i in range(len(x)):
-                if (x[i].x >= 1.0):
-                    out.write('Edge from %i to %i with weight %f \n' % (E[i][0], E[i][1], E[i][2]))
-            out.write('\n')
+                for i in range(len(x)):
+                    if (x[i].x >= 1.0):
+                        out.write('Edge from %i to %i with weight %f \n' % (E[i][0], E[i][1], E[i][2]))
+                out.write('\n')
 
         list_of_edges = [E[i] for i in range(len(x)) if x[i].x >= 1.0]
         car_path_indices = self.construct_path(starting_car_index, list_of_edges)
+        
+        if not "-S" in params:
+            print(car_path_indices)
+
         walk_cost, dropoffs_dict = self.find_best_dropoffs(G, home_indices, car_path_indices)
 
         return model.objective_value, car_path_indices, dropoffs_dict
