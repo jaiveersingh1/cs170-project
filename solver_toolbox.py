@@ -68,17 +68,30 @@ class BaseSolver:
         Output:
             List of edges in a path
         """
-        mp = {}
-        for e in edges:
-            mp[e[1]] = e[0]
+        edge_dict = {}
+        for edge in edges:
+            edge_dict[edge[0]] = edge_dict.get(edge[0], []) + [edge[1]]
 
-        ret = [start]
-        to = mp[start]
-        while to:
-            ret.append(to)
-            to = mp[to]
+        path = [start]
+        current = start
+        for _ in range(len(edges)):
+            next_edges = edge_dict.get(current)
+            if len(next_edges) == 1:
+                next_vertex = next_edges[0]
+                edge_dict.pop(current)
 
-        return ret
+                path.append(next_vertex)
+                current = next_vertex                
+            else:
+                for edge in next_edges:
+                    if current in edge_dict.get(edge):
+                        next_vertex = edge
+                        edge_dict[current].remove(next_vertex)
+
+                        path.append(next_vertex)
+                        current = next_vertex
+                        break
+        return path
 
 def randomSolveJS(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
     
@@ -260,16 +273,8 @@ class ILPSolver(BaseSolver):
                     out.write('Edge from %i to %i with weight %f \n' % (E[i][0], E[i][1], E[i][2]))
             out.write('\n')
 
-        car_path_indices = []
         list_of_edges = [E[i] for i in range(len(x)) if x[i].x >= 1.0]
-        dropoffs_dict = self.find_best_dropoffs(G, home_indices, car_path_indices)
+        car_path_indices = self.construct_path(starting_car_index, list_of_edges)
+        walk_cost, dropoffs_dict = self.find_best_dropoffs(G, home_indices, car_path_indices)
 
-        return model.objective_value, car_path, dropoffs_dict
-
-'''
-tsp = ILPSolver()
-input_data = utils.read_file("input0.txt")
-num_of_locations, num_houses, list_locations, list_houses, starting_car_location, adjacency_matrix = data_parser(input_data)
-
-tsp.solve(list_locations, list_houses, starting_car_location, adjacency_matrix)
-'''
+        return model.objective_value, car_path_indices, dropoffs_dict

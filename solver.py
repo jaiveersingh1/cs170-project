@@ -28,14 +28,14 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     """
     
     solvers = [ILPSolver()]
-    best_solution = None
+    best_solution = (float('inf'), [], {})
     
     for solver in solvers:
 
         solution = solver.solve(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix)
         if best_solution == None or solution[0] < best_solution[0]:
             best_solution = solution
-    
+
     return best_solution[1], best_solution[2]
 
 """
