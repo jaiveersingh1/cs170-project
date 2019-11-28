@@ -247,8 +247,10 @@ class ILPSolver(BaseSolver):
 
         return model.objective_value, car_path, dropoffs_dict
 
+'''
 tsp = ILPSolver()
 input_data = utils.read_file("input0.txt")
 num_of_locations, num_houses, list_locations, list_houses, starting_car_location, adjacency_matrix = data_parser(input_data)
 
 tsp.solve(list_locations, list_houses, starting_car_location, adjacency_matrix)
+'''
