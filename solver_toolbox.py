@@ -4,8 +4,9 @@ from itertools import product
 from sys import stdout as out
 from mip import Model, xsum, minimize, BINARY, INTEGER, OptimizationStatus
 import matplotlib.pyplot as plt
-import networkx
 import utils
+import time
+from colorama import init, Fore, Style
 
 class BaseSolver:
     """ Base class for solvers """
@@ -68,30 +69,29 @@ class BaseSolver:
         Output:
             List of edges in a path
         """
-        edge_dict = {}
-        for edge in edges:
-            edge_dict[edge[0]] = edge_dict.get(edge[0], []) + [edge[1]]
-
+        G = nx.DiGraph()
+        G.add_weighted_edges_from(edges)
         path = [start]
-        current = start
-        for _ in range(len(edges)):
-            next_edges = edge_dict.get(current)
-            if len(next_edges) == 1:
-                next_vertex = next_edges[0]
-                edge_dict.pop(current)
-
-                path.append(next_vertex)
-                current = next_vertex                
-            else:
-                for edge in next_edges:
-                    if current in edge_dict.get(edge, []):
-                        next_vertex = edge
-                        edge_dict[current].remove(next_vertex)
-
-                        path.append(next_vertex)
-                        current = next_vertex
-                        break
+        if not edges:
+            self.log_update_entry(Fore.YELLOW + "No edges." + Style.RESET_ALL)
+        elif nx.is_eulerian(G):
+            path_edges = list(nx.eulerian_circuit(G, start))
+            path += [edge[1] for edge in path_edges]
+        else:
+            self.log_update_entry(Fore.YELLOW + "Graph was not Eulerian." + Style.RESET_ALL)
         return path
+
+    logfile = "logfile_default.txt"
+    
+    def log_new_entry(self, input_file):
+        msg = "\n{}\t{}  \t".format(time.ctime(), input_file)
+        self.log_update_entry(msg)
+
+    def log_update_entry(self, msg):
+        f = open(self.logfile, "a+")
+        f.write(msg + " ")
+        f.close()
+        
 
 
 def randomSolveJS(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
@@ -171,6 +171,8 @@ class ILPSolver(BaseSolver):
             NOTE: all outputs should be in terms of indices not the names of the locations themselves
         """
         
+        self.log_new_entry(params[-1])
+
         home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
         location_indices = convert_locations_to_indices(list_of_locations, list_of_locations)
 
@@ -246,16 +248,22 @@ class ILPSolver(BaseSolver):
         model.objective = minimize(cost_function)
 
         # WINNING ONLINE
-        model.max_gap = 0.05
+        model.max_gap = 0.00001
+        model.emphasis = 2
         status = model.optimize(max_seconds=300)
         if status == OptimizationStatus.OPTIMAL:
             print('optimal solution cost {} found'.format(model.objective_value))
-        elif status == OptimizationStatus.FEASIBLE:
-            print('sol.cost {} found, best possible: {}'.format(model.objective_value, model.objective_bound))
-        elif status == OptimizationStatus.NO_SOLUTION_FOUND:
-            print('no feasible solution found, lower bound is: {}'.format(model.objective_bound))
-        if status == OptimizationStatus.OPTIMAL or status == OptimizationStatus.FEASIBLE:
-            print('solution:')
+            self.log_update_entry(Fore.GREEN + "Optimal cost={}.".format(model.objective_value) + Style.RESET_ALL)
+        else:
+            print("!!!! TIMEOUT !!!!")
+            self.log_update_entry(Fore.RED + "Timeout!" + Style.RESET_ALL)
+
+            if status == OptimizationStatus.FEASIBLE:
+                print('sol.cost {} found, best possible: {}'.format(model.objective_value, model.objective_bound))
+                self.log_update_entry("Feasible cost={}, bound={}.".format(model.objective_value, model.objective_bound))
+            elif status == OptimizationStatus.NO_SOLUTION_FOUND:
+                print('no feasible solution found, lower bound is: {}'.format(model.objective_bound))
+                self.log_update_entry("Failed, bound={}.".format(model.objective_bound))
 
         # printing the solution if found
         if model.num_solutions:

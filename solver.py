@@ -13,6 +13,14 @@ from student_utils import *
 ======================================================================
 """
 
+# One-time initialization of logfiles for this run
+solvers = [ILPSolver()]
+for solver in solvers:
+    timestamp = time.strftime("%d-%m-%y_%H-%M-%S")
+    solver.logfile = "logfile_{}.txt".format(timestamp)
+
+colorama.init()
+
 def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
     """
     Write your algorithm here.
@@ -27,7 +35,6 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
         NOTE: both outputs should be in terms of indices not the names of the locations themselves
     """
     
-    solvers = [ILPSolver()]
     best_solution = (float('inf'), [], {})
     
     for solver in solvers:
@@ -71,7 +78,7 @@ def solve_from_file(input_file, output_directory, params=[]):
 
     input_data = utils.read_file(input_file)
     num_of_locations, num_houses, list_locations, list_houses, starting_car_location, adjacency_matrix = data_parser(input_data)
-    car_path, drop_offs = solve(list_locations, list_houses, starting_car_location, adjacency_matrix, params=params)
+    car_path, drop_offs = solve(list_locations, list_houses, starting_car_location, adjacency_matrix, params=params + [input_file])
 
     basename, filename = os.path.split(input_file)
     if not os.path.exists(output_directory):
