@@ -71,7 +71,7 @@ def solve_from_file(input_file, output_directory, params=[]):
 
     input_data = utils.read_file(input_file)
     num_of_locations, num_houses, list_locations, list_houses, starting_car_location, adjacency_matrix = data_parser(input_data)
-    car_path, drop_offs = solve(list_locations, list_houses, starting_car_location, adjacency_matrix, params=params)
+    car_path, drop_offs = solve(list_locations, list_houses, starting_car_location, adjacency_matrix, params=params + [input_file])
 
     basename, filename = os.path.split(input_file)
     if not os.path.exists(output_directory):
