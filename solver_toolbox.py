@@ -73,6 +73,7 @@ class BaseSolver:
         path = [edge[0] for edge in path_edges] + [start]
         return path
 
+
 def randomSolveJS(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
     
     return 0, [], dict()
