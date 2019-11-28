@@ -145,12 +145,6 @@ class ILPSolver(BaseSolver):
         E = list(G.to_directed().edges(data='weight'))
 
         starting_car_index = list_of_locations.index(starting_car_location)
-        '''
-        best_solution = (float('inf'), [], {})
-
-        print("\n\nBest cost was", best_solution[0])
-        return best_solution
-        '''
 
         # number of nodes and list of vertices, not including source or sink
         n, V, H = len(list_of_locations), location_indices, home_indices 
@@ -214,30 +208,30 @@ class ILPSolver(BaseSolver):
         # WINNING ONLINE
         model.optimize()
 
-        # checking if a solution was found
+        # printing the solution if found
         if model.num_solutions:
             out.write('Route with total cost %g found. \n' % (model.objective_value))
 
-            out.write('\nEdge Stuff\n')  
+            out.write('\nEdges (In, Out, Weight):\n')  
             for i in E:
                 out.write(str(i) + ' ')  
-            out.write('\n\nX Stuff\n')       
 
+            out.write('\n\nCar - Chosen Edges:\n')       
             for i in x:
                 out.write(str(i.x) + ' ')
-            out.write('\n\nT Stuff\n')  
 
+            out.write('\n\nTAs - Chosen Edges:\n')  
             for i in t:
                 for j in range(len(i)):
                     out.write(str(i[j].x) + ' ')
                 out.write('\n') 
-            out.write('\nF Stuff\n')  
 
+            out.write('\nFlow Capacities:\n')  
             for i in f:
                 out.write(str(i.x) + ' ')
             out.write('\n') 
 
-            out.write('\nResult Stuff\n')  
+            out.write('\nActive Edges:\n')  
             for i in range(len(x)):
                 if (x[i] >= 1):
                     out.write('Edge from %i to %i with weight %f \n' % (E[i][0], E[i][1], E[i][2]))
