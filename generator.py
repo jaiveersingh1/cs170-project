@@ -1,6 +1,7 @@
 import math
 import utils
 import pickle
+import argparse
 import networkx
 import numpy as np
 import matplotlib as mpl
@@ -232,11 +233,11 @@ class GraphVisualizer:
 					   node_size=100)
 		nx.draw_networkx_edges(G, pos, width=1.0, alpha=0.5)
 
-		if (solution_file):
-			with open(solution_file) as f:
+		if (type(solution_file[0]) == str):
+			with open(solution_file[0]) as f:
 				path = list(f.readline().split())
 
-			path_edges = [[int(path[i]) - 1, int(path[i+1]) - 1] for i in range(len(path) - 1)]
+			path_edges = [[list_of_locations.index(path[i]), list_of_locations.index(path[i+1])] for i in range(len(path) - 1)]
 			nx.draw_networkx_edges(G, pos,
 						edgelist=path_edges,
 						width=3, alpha=0.5, edge_color='r')
@@ -253,10 +254,14 @@ class GraphVisualizer:
 
 
 if __name__=="__main__":
-    parser.add_argument('input', type=str, help='The path to the input file or directory')
-    parser.add_argument('output', type=str, help='The path to the input file or directory')
-    args = parser.parse_args()
-    input_dir = args.input
+	parser = argparse.ArgumentParser(description='Parsing arguments')
+	parser.add_argument('action', type=str, help='The type of action to execute.')
+	parser.add_argument('input', type=str, help='The path to the input file or directory')
+	parser.add_argument('output', type=str, nargs=argparse.REMAINDER, default=None, help='The path to the input file or directory')
+	args = parser.parse_args()
+	action = args.action
+	input_dir = args.input
 	output_dir = args.output
-	vis = GraphVisualizer() # OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
-	vis.visFromAdj(input_dir, output_dir)
+	if (action == "visualize" or action == "vis" or action == "visual"):
+		vis = GraphVisualizer() # OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
+		vis.visFromAdj(input_dir, output_dir)
