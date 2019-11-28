@@ -217,16 +217,10 @@ class GraphVisualizer:
 
 # ------------------------------------------------------ COMMENT OUT WHAT YOU DON'T NEED ------------------------------------------------------
 
-gen = GraphGenerator(20, 15)  # PARAMS: NUM_LOCATIONS, NUM_HOMES
+gen = GraphGenerator(5, 3)  # PARAMS: NUM_LOCATIONS, NUM_HOMES
 
 gen.genGraph()  # OPTIONAL PARAM: DEGREE_DISTRIBUTION_MEAN (DEFAULT 0.2)
 gen.writeInput(0)  # PARAM: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
-gen.cycleFinder() # OPTIONAL PARAM: ADJACENCY DICT ({V1: [U1, U2, ...], V2...}) | DEFAULT: ADJ DICT OF GENERATED GRAPH FROM GEN INSTANCE
-gen.serializer("serialized_graphs/test0.pickle") # PARAM: SERIALIZED OUTPUT FILE
 
 vis = GraphVisualizer(gen) # OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
 vis.visGen()
-
-vis1 = GraphVisualizer()
-vis1.visSerial("serialized_graphs/test0.pickle") # PARAM: SERIALIZED INPUT FILE
-vis1.visFromAdj("input/32_50.in")

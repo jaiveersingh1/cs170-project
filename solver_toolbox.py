@@ -2,7 +2,7 @@ from student_utils import *
 import itertools
 from itertools import product
 from sys import stdout as out
-from mip import Model, xsum, minimize, BINARY
+from mip import Model, xsum, minimize, BINARY, INTEGER
 import matplotlib.pyplot as plt
 import networkx
 import utils
@@ -137,70 +137,115 @@ class ILPSolver(BaseSolver):
             A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
             NOTE: all outputs should be in terms of indices not the names of the locations themselves
         """
-        '''
+        
         home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
+        location_indices = convert_locations_to_indices(list_of_locations, list_of_locations)
 
         G, message = adjacency_matrix_to_graph(adjacency_matrix)
-        E = G.to_directed().edges(data='weight')
+        E = list(G.to_directed().edges(data='weight'))
 
         starting_car_index = list_of_locations.index(starting_car_location)
+        '''
         best_solution = (float('inf'), [], {})
 
         print("\n\nBest cost was", best_solution[0])
         return best_solution
         '''
 
-        # number of nodes and list of vertices
-        n, V, H = len(list_of_locations), range(len(list_of_locations)), range(len(list_of_homes))    
+        # number of nodes and list of vertices, not including source or sink
+        n, V, H = len(list_of_locations), location_indices, home_indices 
+        bigNum = (n ** 2) 
 
         model = Model()
 
-        # binary variables indicating if arc (i,j) is used on the route or not
-        x = [[model.add_var(var_type=BINARY) for j in V] for i in V]
+        # does the car drive from i to j?
+        x = [model.add_var(var_type=BINARY) for e in E]
 
-        # continuous variable to prevent subtours: each city will have a
-        # different sequential id in the planned route except the first one
-        y = [model.add_var() for i in V]
+        # does the kth TA walk from i to j? over all num_homes TAs
+        t = [[model.add_var(var_type=BINARY) for e in E] for k in H]
+
+        # f_(u, v) = N; flow from vertex u to vertex v
+        f = [model.add_var(var_type=INTEGER) for e in E] \
+        + [model.add_var(var_type=INTEGER) for v in V] \
+        + [model.add_var(var_type=INTEGER)]
+
+        for i in range(len(f)):
+            model += f[i] >= 0
+
+        # For each vertex v where v != source and v != sink, Sum{x_(u, v)} = Sum{x_(v, w)}
+        print(E)
+        for v in V:
+            model += xsum([x[i] for i in range(len(E)) if E[i][1] == v]) == xsum([x[i] for i in range(len(E)) if E[i][0] == v])
+
+        # For each vertex v where v != source and v != sink, Sum{f_(u, v)} = Sum{f_(v, w)}
+        for j in range(len(V)):
+            model += xsum([f[i] for i in range(len(E)) if E[i][1] == V[j]]) + (f[-1] if V[j] == starting_car_index else 0) \
+                 == xsum([f[i] for i in range(len(E)) if E[i][0] == V[j]]) + f[len(E) + j]
+
+        # For each edge (u, v) where u != source and v != sink, f_(u, v) <= (big number) * x_(u, v)
+        for i in range(len(E)):
+            model += f[i] <= bigNum * x[i]
+
+        # For edge (source, start vertex), f_(source, start vertex) <= (big number)
+        model += f[-1] <= bigNum
+
+        # For each edge (u, sink), f_(u, sink) <= Sum{x_(w, u)}
+        for j in range(len(V)):
+            model += f[j + len(E)] \
+                 <= xsum([x[i] for i in range(len(E)) if E[i][1] \
+                 == V[j]])
+
+        # For just the source vertex, f_(source,start vertex)} = Sum{x_(a, b)}
+        model += f[-1] == xsum(x)
+
+        # For each TA k, for each vertex v, Sum{t^(i)_(u, v)} + Sum{x_(u, v)} >= Sum{t^(i)_(v, w)}
+        for k in t:
+            for v in V:
+                model += xsum([k[i] for i in range(len(E)) if E[i][1] == v]) + xsum([x[i] for i in range(len(E)) if E[i][1] == v]) \
+                 >= xsum([k[i] for i in range(len(E)) if E[i][0] == v])
+
+        # For each TA k, for each home h, Sum{t^(i)_(u, h)} + Sum(x_(u, h)} > 0
+        for j in range(len(t)):
+            model += xsum([t[j][i] for i in range(len(E)) if E[i][1] == H[j]]) + xsum([x[i] for i in range(len(E)) if E[i][1] == H[j]]) >= 1
 
         # objective function: minimize the distance
-        model.objective = minimize(xsum(adjacency_matrix[i][j]*x[i][j] for i in V for j in V))
+        model.objective = minimize( 2.0/3.0 * xsum([x[i] * E[i][2] for i in range(len(E))]) + xsum([xsum(t[i]) for i in range(len(t))]) )
 
-        # constraint : leave each city only once
-        for i in V:
-            model += xsum(x[i][j] for j in set(V) - {i}) == 1
-
-        # constraint : enter each city only once
-        for i in V:
-            model += xsum(x[j][i] for j in set(V) - {i}) == 1
-
-        # subtour elimination
-        for (i, j) in set(product(set(V) - {0}, set(V) - {0})):
-                model += y[i] - (n+1)*x[i][j] >= y[j]-n
-
-        # optimizing
+        # WINNING ONLINE
         model.optimize()
 
         # checking if a solution was found
         if model.num_solutions:
-            out.write('Route with total distance %g found: %s' % (model.objective_value, starting_car_location))
-            nc = 0
-            while True:
-                nc = [i for i in V if x[nc][i].x >= 0.99][0]
-                out.write(' -> %s' % list_of_locations[nc])
-                if nc == 0:
-                    break
+            out.write('Route with total cost %g found. \n' % (model.objective_value))
+
+            out.write('\nEdge Stuff\n')  
+            for i in E:
+                out.write(str(i) + ' ')  
+            out.write('\n\nX Stuff\n')       
+
+            for i in x:
+                out.write(str(i.x) + ' ')
+            out.write('\n\nT Stuff\n')  
+
+            for i in t:
+                for j in range(len(i)):
+                    out.write(str(i[j].x) + ' ')
+                out.write('\n') 
+            out.write('\nF Stuff\n')  
+
+            for i in f:
+                out.write(str(i.x) + ' ')
+            out.write('\n') 
+
+            out.write('\nResult Stuff\n')  
+            for i in range(len(x)):
+                if (x[i] >= 1):
+                    out.write('Edge from %i to %i with weight %f \n' % (E[i][0], E[i][1], E[i][2]))
             out.write('\n')
 
 
 tsp = ILPSolver()
-input_data = utils.read_file("inputs/300_50.in")
+input_data = utils.read_file("input0.txt")
 num_of_locations, num_houses, list_locations, list_houses, starting_car_location, adjacency_matrix = data_parser(input_data)
-
-for i in range(len(adjacency_matrix)):
-    for j in range(len(adjacency_matrix)):
-        if (adjacency_matrix[i][j] == 'x' and i == j):
-            adjacency_matrix[i][j] = 0
-        elif (adjacency_matrix[i][j] == 'x'):
-            adjacency_matrix[i][j] = 43298432 # big number
 
 tsp.solve(list_locations, list_houses, starting_car_location, adjacency_matrix)
