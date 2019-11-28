@@ -202,8 +202,11 @@ class ILPSolver(BaseSolver):
         for j in range(len(t)):
             model += xsum([t[j][i] for i in range(len(E)) if E[i][1] == H[j]]) + xsum([x[i] for i in range(len(E)) if E[i][1] == H[j]]) >= 1
 
+        cost_function = 2.0/3.0 * xsum([x[i] * E[i][2] for i in range(len(E))]) \
+            + xsum([xsum([t[i][j] * E[j][2] for j in range(len(E))]) for i in range(len(t))])
+
         # objective function: minimize the distance
-        model.objective = minimize( 2.0/3.0 * xsum([x[i] * E[i][2] for i in range(len(E))]) + xsum([xsum(t[i]) for i in range(len(t))]) )
+        model.objective = minimize(cost_function)
 
         # WINNING ONLINE
         model.optimize()
@@ -233,10 +236,14 @@ class ILPSolver(BaseSolver):
 
             out.write('\nActive Edges:\n')  
             for i in range(len(x)):
-                if (x[i] >= 1):
+                if (x[i].x >= 1.0):
                     out.write('Edge from %i to %i with weight %f \n' % (E[i][0], E[i][1], E[i][2]))
             out.write('\n')
 
+        car_path_indices = None
+        dropoffs_dict = self.find_best_dropoffs(G, home_indices, car_path_indices)
+
+        return model.objective_value, car_path, dropoffs_dict
 
 tsp = ILPSolver()
 input_data = utils.read_file("input0.txt")
