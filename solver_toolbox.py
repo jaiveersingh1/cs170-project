@@ -200,7 +200,6 @@ class ILPSolver(BaseSolver):
             model += f[i] >= 0
 
         # For each vertex v where v != source and v != sink, Sum{x_(u, v)} = Sum{x_(v, w)}
-        print(E)
         for v in V:
             model += xsum([x[i] for i in range(len(E)) if E[i][1] == v]) == xsum([x[i] for i in range(len(E)) if E[i][0] == v])
 

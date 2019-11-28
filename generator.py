@@ -206,13 +206,6 @@ class GraphVisualizer:
 		home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
 		location_indices = convert_locations_to_indices(list_of_locations, list_of_locations)
 
-		with open(solution_file) as f:
-			path = list(f.readline().split())
-
-		path_edges = [[int(path[i]) - 1, int(path[i+1]) - 1] for i in range(len(path) - 1)]
-
-		print(home_indices)
-
 		for i in range(len(adjacency_matrix)):
 			for j in range(len(adjacency_matrix)):
 				if (adjacency_matrix[i][j] == 'x'):
@@ -238,10 +231,16 @@ class GraphVisualizer:
 					   node_color='r',
 					   node_size=100)
 		nx.draw_networkx_edges(G, pos, width=1.0, alpha=0.5)
-		nx.draw_networkx_edges(G, pos,
-					   edgelist=path_edges,
-					   width=3, alpha=0.5, edge_color='r')
-		nx.draw_networkx_labels(G, pos, labels, font_size=8)
+
+		if (solution_file):
+			with open(solution_file) as f:
+				path = list(f.readline().split())
+
+			path_edges = [[int(path[i]) - 1, int(path[i+1]) - 1] for i in range(len(path) - 1)]
+			nx.draw_networkx_edges(G, pos,
+						edgelist=path_edges,
+						width=3, alpha=0.5, edge_color='r')
+			nx.draw_networkx_labels(G, pos, labels, font_size=8)
 
 		plt.show()
 
@@ -252,5 +251,12 @@ class GraphVisualizer:
 # gen.genGraph()  # OPTIONAL PARAM: DEGREE_DISTRIBUTION_MEAN (DEFAULT 0.2)
 # gen.writeInput(0)  # PARAM: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
 
-vis = GraphVisualizer() # OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
-vis.visFromAdj("inputs/10_50.in", "submission/10_50.out")
+
+if __name__=="__main__":
+    parser.add_argument('input', type=str, help='The path to the input file or directory')
+    parser.add_argument('output', type=str, help='The path to the input file or directory')
+    args = parser.parse_args()
+    input_dir = args.input
+	output_dir = args.output
+	vis = GraphVisualizer() # OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
+	vis.visFromAdj(input_dir, output_dir)
