@@ -240,7 +240,7 @@ class GraphVisualizer:
 		nx.draw_networkx_edges(G, pos, width=1.0, alpha=0.5)
 		nx.draw_networkx_edges(G, pos,
 					   edgelist=path_edges,
-					   width=8, alpha=0.5, edge_color='r')
+					   width=3, alpha=0.5, edge_color='r')
 		nx.draw_networkx_labels(G, pos, labels, font_size=8)
 
 		plt.show()
@@ -253,4 +253,4 @@ class GraphVisualizer:
 # gen.writeInput(0)  # PARAM: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
 
 vis = GraphVisualizer() # OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
-vis.visFromAdj("input0.txt", "output0.txt")
+vis.visFromAdj("inputs/1_50.in", "submission/1_50.out")
