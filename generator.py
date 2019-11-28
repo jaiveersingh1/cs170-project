@@ -209,9 +209,9 @@ class GraphVisualizer:
 		with open(solution_file) as f:
 			path = list(f.readline().split())
 
-		path_edges = [[int(path[i]), int(path[i+1])] for i in range(len(path) - 1)]
+		path_edges = [[int(path[i]) - 1, int(path[i+1]) - 1] for i in range(len(path) - 1)]
 
-		print(path_edges)
+		print(home_indices)
 
 		for i in range(len(adjacency_matrix)):
 			for j in range(len(adjacency_matrix)):
@@ -222,16 +222,16 @@ class GraphVisualizer:
 		pos = nx.spring_layout(G)
 
 		labels = {}
-		for i in range(len(list_of_locations)):
-			labels[i] = i
+		for i in range(1, num_of_locations + 1):
+			labels[i - 1] = i
 				
 		nx.draw_networkx_nodes(G, pos,
-					   nodelist=[i for i in range(len(list_of_locations)) if i in set(home_indices)],
-					   node_color='g',
+					   nodelist=location_indices,
+					   node_color='b',
 					   node_size=100)
 		nx.draw_networkx_nodes(G, pos,
-					   nodelist=[i for i in range(len(list_of_locations)) if i not in set(home_indices)],
-					   node_color='b',
+					   nodelist=home_indices,
+					   node_color='g',
 					   node_size=100)
 		nx.draw_networkx_nodes(G, pos,
 					   nodelist=[list_of_locations.index(starting_car_location)],
@@ -253,4 +253,4 @@ class GraphVisualizer:
 # gen.writeInput(0)  # PARAM: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
 
 vis = GraphVisualizer() # OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
-vis.visFromAdj("inputs/1_50.in", "submission/1_50.out")
+vis.visFromAdj("inputs/10_50.in", "submission/10_50.out")
