@@ -234,10 +234,15 @@ class ILPSolver(BaseSolver):
         for j in range(len(t)):
             model += xsum([t[j][i] for i in range(len(E)) if E[i][1] == H[j]]) + xsum([x[i] for i in range(len(E)) if E[i][1] == H[j]]) >= 1
 
+        # For each TA i, for each vertex v, Sum{t^(i)_(u, v)} <= 1
+        for k in t:
+            for v in V:
+                model += xsum([k[i] for i in range(len(E)) if E[i][1] == v]) <= 1
+
+        # objective function: minimize the distance
         cost_function = 2.0/3.0 * xsum([x[i] * E[i][2] for i in range(len(E))]) \
             + xsum([xsum([t[i][j] * E[j][2] for j in range(len(E))]) for i in range(len(t))])
 
-        # objective function: minimize the distance
         model.objective = minimize(cost_function)
 
         # WINNING ONLINE
