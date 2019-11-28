@@ -93,6 +93,7 @@ class BaseSolver:
                         break
         return path
 
+
 def randomSolveJS(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
     
     return 0, [], dict()

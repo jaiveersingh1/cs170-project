@@ -5,6 +5,8 @@ import networkx
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+
+from student_utils import *
 from scipy.sparse.csgraph import connected_components
 
 class Vertex:
@@ -198,29 +200,57 @@ class GraphVisualizer:
 			self.gen = pickle.load(fp)
 		self.visGen()
 
-	def visFromAdj(self, input_matrix):
-		if (type(input_matrix) == str):
-			input_data = utils.read_file(input_matrix)
-			num_of_locations, num_houses, list_locations, list_houses, starting_car_location, adjacency_matrix = data_parser(input_data)
-		else:
-			adjacency_matrix = input_matrix
+	def visFromAdj(self, input_matrix, solution_file):
+		input_data = utils.read_file(input_matrix)
+		num_of_locations, num_houses, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix = data_parser(input_data)
+		home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
+		location_indices = convert_locations_to_indices(list_of_locations, list_of_locations)
+
+		with open(solution_file) as f:
+			path = list(f.readline().split())
+
+		path_edges = [[int(path[i]), int(path[i+1])] for i in range(len(path) - 1)]
+
+		print(path_edges)
 
 		for i in range(len(adjacency_matrix)):
 			for j in range(len(adjacency_matrix)):
 				if (adjacency_matrix[i][j] == 'x'):
 					adjacency_matrix[i][j] = 0
 
-		G = nx.Graph(np.array(adjacency_matrix))
-		nx.draw(G)
+		G = nx.from_numpy_matrix(np.matrix(adjacency_matrix), create_using=nx.DiGraph)
+		pos = nx.spring_layout(G)
+
+		labels = {}
+		for i in range(len(list_of_locations)):
+			labels[i] = i
+				
+		nx.draw_networkx_nodes(G, pos,
+					   nodelist=[i for i in range(len(list_of_locations)) if i in set(home_indices)],
+					   node_color='g',
+					   node_size=100)
+		nx.draw_networkx_nodes(G, pos,
+					   nodelist=[i for i in range(len(list_of_locations)) if i not in set(home_indices)],
+					   node_color='b',
+					   node_size=100)
+		nx.draw_networkx_nodes(G, pos,
+					   nodelist=[list_of_locations.index(starting_car_location)],
+					   node_color='r',
+					   node_size=100)
+		nx.draw_networkx_edges(G, pos, width=1.0, alpha=0.5)
+		nx.draw_networkx_edges(G, pos,
+					   edgelist=path_edges,
+					   width=8, alpha=0.5, edge_color='r')
+		nx.draw_networkx_labels(G, pos, labels, font_size=8)
+
 		plt.show()
 
 
 # ------------------------------------------------------ COMMENT OUT WHAT YOU DON'T NEED ------------------------------------------------------
+# gen = GraphGenerator(7, 3)  # PARAMS: NUM_LOCATIONS, NUM_HOMES
 
-gen = GraphGenerator(7, 3)  # PARAMS: NUM_LOCATIONS, NUM_HOMES
+# gen.genGraph()  # OPTIONAL PARAM: DEGREE_DISTRIBUTION_MEAN (DEFAULT 0.2)
+# gen.writeInput(0)  # PARAM: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
 
-gen.genGraph()  # OPTIONAL PARAM: DEGREE_DISTRIBUTION_MEAN (DEFAULT 0.2)
-gen.writeInput(0)  # PARAM: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
-
-vis = GraphVisualizer(gen) # OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
-vis.visGen()
+vis = GraphVisualizer() # OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
+vis.visFromAdj("input0.txt", "output0.txt")
