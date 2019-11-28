@@ -235,12 +235,14 @@ class ILPSolver(BaseSolver):
             out.write('\n') 
 
             out.write('\nActive Edges:\n')  
+
             for i in range(len(x)):
                 if (x[i].x >= 1.0):
                     out.write('Edge from %i to %i with weight %f \n' % (E[i][0], E[i][1], E[i][2]))
             out.write('\n')
 
-        car_path_indices = None
+        car_path_indices = []
+        list_of_edges = [E[i] for i in range(len(x)) if x[i].x >= 1.0]
         dropoffs_dict = self.find_best_dropoffs(G, home_indices, car_path_indices)
 
         return model.objective_value, car_path, dropoffs_dict
