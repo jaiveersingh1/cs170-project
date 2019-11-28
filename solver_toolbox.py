@@ -5,6 +5,8 @@ from sys import stdout as out
 from mip import Model, xsum, minimize, BINARY, INTEGER, OptimizationStatus
 import matplotlib.pyplot as plt
 import utils
+import time
+from colorama import init, Fore, Style
 
 class BaseSolver:
     """ Base class for solvers """
@@ -69,9 +71,27 @@ class BaseSolver:
         """
         G = nx.DiGraph()
         G.add_weighted_edges_from(edges)
-        path_edges = list(nx.eulerian_circuit(G, start))
-        path = [edge[0] for edge in path_edges] + [start]
+        path = [start]
+        if not edges:
+            self.log_update_entry(Fore.YELLOW + "No edges." + Style.RESET_ALL)
+        elif nx.is_eulerian(G):
+            path_edges = list(nx.eulerian_circuit(G, start))
+            path += [edge[1] for edge in path_edges]
+        else:
+            self.log_update_entry(Fore.YELLOW + "Graph was not Eulerian." + Style.RESET_ALL)
         return path
+
+    logfile = "logfile_default.txt"
+    
+    def log_new_entry(self, input_file):
+        msg = "\n{}\t{}  \t".format(time.ctime(), input_file)
+        self.log_update_entry(msg)
+
+    def log_update_entry(self, msg):
+        f = open(self.logfile, "a+")
+        f.write(msg + " ")
+        f.close()
+        
 
 
 def randomSolveJS(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
@@ -151,6 +171,8 @@ class ILPSolver(BaseSolver):
             NOTE: all outputs should be in terms of indices not the names of the locations themselves
         """
         
+        self.log_new_entry(params[-1])
+
         home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
         location_indices = convert_locations_to_indices(list_of_locations, list_of_locations)
 
@@ -231,19 +253,17 @@ class ILPSolver(BaseSolver):
         status = model.optimize(max_seconds=300)
         if status == OptimizationStatus.OPTIMAL:
             print('optimal solution cost {} found'.format(model.objective_value))
+            self.log_update_entry(Fore.GREEN + "Optimal cost={}.".format(model.objective_value) + Style.RESET_ALL)
         else:
             print("!!!! TIMEOUT !!!!")
-            f = open("nonoptimals.txt", "a+")
-            f.write(params[-1])
-            f.write("\n")
-            f.close()
+            self.log_update_entry(Fore.RED + "Timeout!" + Style.RESET_ALL)
 
             if status == OptimizationStatus.FEASIBLE:
                 print('sol.cost {} found, best possible: {}'.format(model.objective_value, model.objective_bound))
+                self.log_update_entry("Feasible cost={}, bound={}.".format(model.objective_value, model.objective_bound))
             elif status == OptimizationStatus.NO_SOLUTION_FOUND:
                 print('no feasible solution found, lower bound is: {}'.format(model.objective_bound))
-        if status == OptimizationStatus.OPTIMAL or status == OptimizationStatus.FEASIBLE:
-            print('solution:')
+                self.log_update_entry("Failed, bound={}.".format(model.objective_bound))
 
         # printing the solution if found
         if model.num_solutions:
