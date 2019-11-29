@@ -1,2 +1,0 @@
-
-Fri Nov 29 02:01:50 2019	input0.txt  	 [32mOptimal cost=26.227266666666665.[0m 
