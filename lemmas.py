@@ -1,6 +1,7 @@
 # doc consisting of functions that check verify the enforcement of the improvements lemmas
 
 from solver_toolbox import *
+from student_utils import *
 
 def twoTAWalk(G, sol):
 	"""
@@ -9,27 +10,25 @@ def twoTAWalk(G, sol):
 
 	Input:
 		G: A NetworkX graph that represents the input problem
-		sol: list of edges in the solution path
+		sol: List of edges in the solution path
 	Returns:
-		boolean value indicating if the solution enforces this lemma
+		Boolean value indicating if the solution enforces this lemma
 	"""
 	return True
 
-def closeTAs(G, sol, homes):
+def closeTAs(G, sol, drops, walk_cost):
 	"""
 	TAs should get off at the closest vertex to their home.
 
 	Input:
 		G: A NetworkX graph that represents the input problem
-		sol: list of edges in the solution path
-		homes: The indices of the vertices in G that are TA homes
+		sol: List of edges in the solution path
+		drops: A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
+		walk_cost: Total walking cost (TA ONLY)
 	Returns:
-		boolean value indicating if the solution enforces this lemma
+		Boolean value indicating if the solution enforces this lemma
 	"""
-	bs = BaseSolver()
-	cost, best_drops = bs.find_best_dropoffs(G, homes, [n for n in sol])
-
-	return True
+	return walk_cost == cost_of_solution(G, [e[0] for e in sol], drops)
 
 def noSameEdge(G, sol):
 	"""
@@ -37,9 +36,9 @@ def noSameEdge(G, sol):
 
 	Input:
 		G: A NetworkX graph that represents the input problem
-		sol: list of edges in the solution path
+		sol: List of edges in the solution path
 	Returns:
-		boolean value indicating if the solution enforces this lemma
+		Boolean value indicating if the solution enforces this lemma
 	"""
 	seen = {}
 	for edge in sol:
@@ -58,9 +57,9 @@ def kBridge(G, sol):
 
 	Input:
 		G: A NetworkX graph that represents the input problem
-		sol: list of edges in the solution path
+		sol: List of edges in the solution path
 	Returns:
-		boolean value indicating if the solution enforces this lemma
+		Boolean value indicating if the solution enforces this lemma
 	"""
 	return True
 
@@ -71,9 +70,9 @@ def groupWalk(G, sol):
 
 	Input:
 		G: A NetworkX graph that represents the input problem
-		sol: list of edges in the solution path
+		sol: List of edges in the solution path
 	Returns:
-		boolean value indicating if the solution enforces this lemma
+		Boolean value indicating if the solution enforces this lemma
 	"""
 	return True
 
@@ -84,8 +83,8 @@ def shortcut(G, sol):
 
 	Input:
 		G: A NetworkX graph that represents the input problem
-		sol: list of edges in the solution path
+		sol: List of edges in the solution path
 	Returns:
-		boolean value indicating if the solution enforces this lemma
+		Boolean value indicating if the solution enforces this lemma
 	"""
 	return True
