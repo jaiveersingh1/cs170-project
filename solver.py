@@ -19,7 +19,7 @@ for solver in solvers:
     timestamp = time.strftime("%d-%m-%y_%H-%M-%S")
     solver.logfile = "logfile_{}.txt".format(timestamp)
 
-colorama.init()
+init()
 
 def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
     """

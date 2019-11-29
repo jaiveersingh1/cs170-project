@@ -233,8 +233,8 @@ class GraphVisualizer:
 					   node_size=100)
 		nx.draw_networkx_edges(G, pos, width=1.0, alpha=0.5)
 
-		if (type(solution_file[0]) == str):
-			with open(solution_file[0]) as f:
+		if (type(solution_file) == str):
+			with open(solution_file) as f:
 				path = list(f.readline().split())
 
 			path_edges = [[list_of_locations.index(path[i]), list_of_locations.index(path[i+1])] for i in range(len(path) - 1)]
@@ -256,12 +256,21 @@ class GraphVisualizer:
 if __name__=="__main__":
 	parser = argparse.ArgumentParser(description='Parsing arguments')
 	parser.add_argument('action', type=str, help='The type of action to execute.')
-	parser.add_argument('input', type=str, help='The path to the input file or directory')
-	parser.add_argument('output', type=str, nargs=argparse.REMAINDER, default=None, help='The path to the input file or directory')
+	parser.add_argument('input1', type=str, help='The path to the input file or directory')
+	parser.add_argument('input2', type=str, nargs=None, default=None, help='The path to the input file or directory')
 	args = parser.parse_args()
 	action = args.action
-	input_dir = args.input
-	output_dir = args.output
+	input_1 = args.input1
+	input_2 = args.input2
 	if (action == "visualize" or action == "vis" or action == "visual"):
 		vis = GraphVisualizer() # OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
-		vis.visFromAdj(input_dir, output_dir)
+		vis.visFromAdj(input_1, input_2)
+	if (action == "generate" or action == "gen"):
+		gen = GraphGenerator(int(input_1), int(input_2))
+		gen.genGraph()
+
+		gen.writeInput(0)
+		gen.serializer("serialized_graphs/test0.pickle")
+
+		vis = GraphVisualizer(gen)
+		vis.visGen()
