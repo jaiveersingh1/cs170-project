@@ -99,6 +99,6 @@ def shortcut(G, sol, drops):
 		Boolean value indicating if the solution enforces this lemma
 	"""
 	for i in range(1, len(sol) - 1):
-		if not drops[i] and G.edges[i - 1, i] + G.edges[i, i + 1] > G.edges[i - 1, i + 1]:
+		if not drops[sol[i]] and G.edges[sol[i - 1], sol[i]] + G.edges[sol[i], sol[i + 1]] > G.edges[sol[i - 1], sol[i + 1]]:
 			return False
 	return True
