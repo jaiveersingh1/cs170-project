@@ -86,7 +86,7 @@ def groupWalk(G, sol):
 	"""
 	return True
 
-def shortcut(G, sol):
+def shortcut(G, sol, drops):
 	"""
 	If 0 TAs get off at some vertex b, and a shorter path exists from a->c as 
 	opposed to a->b->c, then take the path from a->c. 
@@ -94,7 +94,11 @@ def shortcut(G, sol):
 	Input:
 		G: A NetworkX graph that represents the input problem
 		sol: List of edges in the solution path
+		drops: A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
 	Returns:
 		Boolean value indicating if the solution enforces this lemma
 	"""
+	for i in range(1, len(sol) - 1):
+		if not drops[i] and G.edges[i - 1, i] + G.edges[i, i + 1] > G.edges[i - 1, i + 1]:
+			return False
 	return True
