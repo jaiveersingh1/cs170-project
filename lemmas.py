@@ -3,7 +3,7 @@
 from solver_toolbox import *
 from student_utils import *
 
-def twoTAWalk(G, sol):
+def twoTAWalk(G, sol, drops):
 	"""
 	If at least two TAs are walking along some edge, we would do better by 
 	driving the car along that edge.
@@ -11,10 +11,20 @@ def twoTAWalk(G, sol):
 	Input:
 		G: A NetworkX graph that represents the input problem
 		sol: List of edges in the solution path
+		drops: A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
 	Returns:
 		Boolean value indicating if the solution enforces this lemma
 	"""
-	return True
+	numTAs = {}
+
+	for d in drops:
+		homes = drops[d]
+		for h in homes:
+			sp = nx.shortest_path(G, d, h)
+			for i in range(len(sp) - 1):
+				numTAs[(sp[i], sp[i + 1])] = numTAs.get((sp[i], sp[i + 1]), 0) + 1
+
+	return max([numTAs[key] for key in numTAs]) <= 1
 
 def closeTAs(G, sol, drops, walk_cost):
 	"""
