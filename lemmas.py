@@ -1,41 +1,54 @@
 # doc consisting of functions that check verify the enforcement of the improvements lemmas
 
+from solver_toolbox import *
+
 def twoTAWalk(G, sol):
 	"""
 	If at least two TAs are walking along some edge, we would do better by 
 	driving the car along that edge.
 
 	Input:
-		G - graph that represents the input problem
-		sol - cycle that represents the outputted solution
+		G: A NetworkX graph that represents the input problem
+		sol: list of edges in the solution path
 	Returns:
 		boolean value indicating if the solution enforces this lemma
 	"""
-	return true
+	return True
 
-def closeTAs(G, sol):
+def closeTAs(G, sol, homes):
 	"""
 	TAs should get off at the closest vertex to their home.
 
 	Input:
-		G - graph that represents the input problem
-		sol - cycle that represents the outputted solution
+		G: A NetworkX graph that represents the input problem
+		sol: list of edges in the solution path
+		homes: The indices of the vertices in G that are TA homes
 	Returns:
 		boolean value indicating if the solution enforces this lemma
 	"""
-	return true
+	bs = BaseSolver()
+	cost, best_drops = bs.find_best_dropoffs(G, homes, [n for n in sol])
+
+	return True
 
 def noSameEdge(G, sol):
 	"""
 	The car should never drive along the same directed edge more than once.
 
 	Input:
-		G - graph that represents the input problem
-		sol - cycle that represents the outputted solution
+		G: A NetworkX graph that represents the input problem
+		sol: list of edges in the solution path
 	Returns:
 		boolean value indicating if the solution enforces this lemma
 	"""
-	return true
+	seen = {}
+	for edge in sol:
+		s, e = edge[0], edge[1]
+		if e in seen.get(s, []):
+			return False
+		else:
+			seen[s] = seen.get(s, []) + [e]
+	return True
 
 def kBridge(G, sol):
 	"""
@@ -44,12 +57,12 @@ def kBridge(G, sol):
 	should not cross that bridge.
 
 	Input:
-		G - graph that represents the input problem
-		sol - cycle that represents the outputted solution
+		G: A NetworkX graph that represents the input problem
+		sol: list of edges in the solution path
 	Returns:
 		boolean value indicating if the solution enforces this lemma
 	"""
-	return true
+	return True
 
 def groupWalk(G, sol):
 	"""
@@ -57,12 +70,12 @@ def groupWalk(G, sol):
 	take path l because there are savings induced from walking with more TAs.
 
 	Input:
-		G - graph that represents the input problem
-		sol - cycle that represents the outputted solution
+		G: A NetworkX graph that represents the input problem
+		sol: list of edges in the solution path
 	Returns:
 		boolean value indicating if the solution enforces this lemma
 	"""
-	return true
+	return True
 
 def shortcut(G, sol):
 	"""
@@ -70,9 +83,9 @@ def shortcut(G, sol):
 	opposed to a->b->c, then take the path from a->c. 
 
 	Input:
-		G - graph that represents the input problem
-		sol - cycle that represents the outputted solution
+		G: A NetworkX graph that represents the input problem
+		sol: list of edges in the solution path
 	Returns:
 		boolean value indicating if the solution enforces this lemma
 	"""
-	return true
+	return True
