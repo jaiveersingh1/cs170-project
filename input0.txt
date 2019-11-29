@@ -1,15 +1,15 @@
 10
 5
 0 1 2 3 4 5 6 7 8 9 
-1 2 6 7 8 
-1
-x x x x x x x x x 6.37528 
-x x x x x 1.26335 x x x x 
-x x x x x x x x 8.70421 4.35547 
-x x x x 7.9857 x x 2.84995 x x 
-x x x 7.9857 x x 1.65381 x x 5.27334 
-x 1.26335 x x x x x x 6.82434 x 
-x x x x 1.65381 x x x x x 
-x x x 2.84995 x x x x x x 
-x x 8.70421 x x 6.82434 x x x x 
-6.37528 x 4.35547 x 5.27334 x x x x x 
+0 1 3 4 6 
+8
+x x x 2.84273 1.07243 x x x x 8.66866 
+x x x x x 4.56833 3.45358 x x x 
+x x x x x x x x x 0.80131 
+2.84273 x x x 3.42416 x 7.14284 x x x 
+1.07243 x x 3.42416 x x x 2.68862 x x 
+x 4.56833 x x x x x x 7.49256 x 
+x 3.45358 x 7.14284 x x x x x x 
+x x x x 2.68862 x x x x x 
+x x x x x 7.49256 x x x x 
+8.66866 x 0.80131 x x x x x x x 

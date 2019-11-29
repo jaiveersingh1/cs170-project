@@ -246,28 +246,26 @@ class GraphVisualizer:
 		plt.show()
 
 
-# ------------------------------------------------------ COMMENT OUT WHAT YOU DON'T NEED ------------------------------------------------------
-# gen = GraphGenerator(7, 3)  # PARAMS: NUM_LOCATIONS, NUM_HOMES
-
-# gen.genGraph()  # OPTIONAL PARAM: DEGREE_DISTRIBUTION_MEAN (DEFAULT 0.2)
-# gen.writeInput(0)  # PARAM: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
-
-
+# -------------------------------------------------------------- COMMAND LINE INTERFACE -------------------------------------------------------------- #
 if __name__=="__main__":
 	parser = argparse.ArgumentParser(description='Parsing arguments')
 	parser.add_argument('action', type=str, help='The type of action to execute.')
 	parser.add_argument('input1', type=str, help='The path to the input file or directory')
 	parser.add_argument('input2', type=str, nargs=None, default=None, help='The path to the input file or directory')
+
 	args = parser.parse_args()
 	action = args.action
 	input_1 = args.input1
 	input_2 = args.input2
+
 	if (action == "visualize" or action == "vis" or action == "visual"):
-		vis = GraphVisualizer() # OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
+		vis = GraphVisualizer()
 		vis.visFromAdj(input_1, input_2)
+
 	if (action == "generate" or action == "gen"):
 		gen = GraphGenerator(int(input_1), int(input_2))
 		gen.genGraph()
+		gen.cycleFinder()
 
 		gen.writeInput(0)
 		gen.serializer("serialized_graphs/test0.pickle")
