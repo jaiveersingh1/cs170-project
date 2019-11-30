@@ -231,14 +231,11 @@ class ILPSolver(BaseSolver):
 
         # Exactly 1 flow coming out of each vertex car visits
         for j in range(len(V)):
-            model += xsum([x[j].x * f[i] for i in range(len(E)) if E[i][0] == V[j]]) >= 1
-            
+            model += xsum([x[j].x * f[i] for i in range(len(E)) if E[i][0] == V[j]]) == 1
+
         # Exactly 1 flow coming into of each vertex that is a home
         for h in H:
-            model += xsum([f[i] for i in range(len(E)) if E[i][1] == h]) >= 1
-
-        for h in H:
-            model += xsum([f[i] for i in range(len(E)) if E[i][1] == h]) <= 1
+            model += xsum([f[i] for i in range(len(E)) if E[i][1] == h]) == 1
 
         # For each TA k, for each vertex v, Sum{t^(i)_(u, v)} + Sum{x_(u, v)} >= Sum{t^(i)_(v, w)}
         for k in t:
