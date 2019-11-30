@@ -256,7 +256,7 @@ class ILPSolver(BaseSolver):
 
         # For every TA, flow into the home vertex is exactly 1
         for i in range(len(H)):
-            model += xsum(f_t[i][j] for j in range(len(E)) if E[j][1] == H[i]) == 1
+            model += xsum(f_t[i][j] for j in range(len(E)) if E[j][1] == H[i]) + f_t[i][len(E) + H[i]] == 1
 
 
 
@@ -300,7 +300,11 @@ class ILPSolver(BaseSolver):
                 for i in f:
                     out.write(str(i.x) + '\t')
 
-                out.write('\n\nTAs - Chosen Edges:\n')  
+                out.write('\n\nTAs - Home Indices:\n')  
+                for i in H:
+                    out.write(str(i) + '\n')
+
+                out.write('\nTAs - Chosen Edges:\n')  
                 for i in t:
                     for j in range(len(i)):
                         out.write(str(i[j].x) + '\t')
