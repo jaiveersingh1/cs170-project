@@ -26,7 +26,7 @@ solvers_mode = {
 # One-time initialization of logfiles for this run
 for solver in solvers_mode["all"]:
     timestamp = time.strftime("%d-%m-%y_%H-%M-%S")
-    solver.logfile = "logfile_{}.txt".format(timestamp)
+    solver.logfile = "logfiles/logfile_{}.txt".format(timestamp)
 
 # Init colorama
 init()

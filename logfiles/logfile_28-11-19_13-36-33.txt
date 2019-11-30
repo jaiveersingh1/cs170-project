@@ -1,0 +1,45 @@
+
+Thu Nov 28 13:36:33 2019	batches/batch//357_50.in  	 [32mOptimal cost=1758528836.1015332.[0m 
+Thu Nov 28 13:37:59 2019	batches/batch//309_50.in  	 [31mTimeout![0m Feasible cost=5159942647.90083, bound=5108780395.820083. 
+Thu Nov 28 13:43:01 2019	batches/batch//334_50.in  	 [32mOptimal cost=4986040583.241133.[0m 
+Thu Nov 28 13:43:24 2019	batches/batch//314_50.in  	 [32mOptimal cost=69002.66666666666.[0m 
+Thu Nov 28 13:43:40 2019	batches/batch//351_50.in  	 [32mOptimal cost=32.0.[0m [33mNo edges.[0m 
+Thu Nov 28 13:43:40 2019	batches/batch//329_50.in  	 [32mOptimal cost=33.99999999999999.[0m 
+Thu Nov 28 13:43:45 2019	batches/batch//316_50.in  	 [32mOptimal cost=16.66666666666666.[0m 
+Thu Nov 28 13:43:48 2019	batches/batch//332_50.in  	 [32mOptimal cost=4.666666666666666.[0m 
+Thu Nov 28 13:43:48 2019	batches/batch//311_50.in  	 [32mOptimal cost=3989288.408756667.[0m 
+Thu Nov 28 13:43:58 2019	batches/batch//335_50.in  	 [32mOptimal cost=2.40762.[0m 
+Thu Nov 28 13:44:56 2019	batches/batch//337_50.in  	 [32mOptimal cost=22.333333333333336.[0m 
+Thu Nov 28 13:45:16 2019	batches/batch//356_50.in  	 [32mOptimal cost=433255.62454.[0m 
+Thu Nov 28 13:45:19 2019	batches/batch//352_50.in  	 [32mOptimal cost=337.33333333333337.[0m 
+Thu Nov 28 13:45:22 2019	batches/batch//331_50.in  	 [32mOptimal cost=19.856666666666662.[0m 
+Thu Nov 28 13:45:26 2019	batches/batch//350_50.in  	 [31mTimeout![0m Feasible cost=245.26139999999992, bound=212.18722196166007. 
+Thu Nov 28 13:50:30 2019	batches/batch//315_50.in  	 [32mOptimal cost=4.218946666666667.[0m 
+Thu Nov 28 13:50:30 2019	batches/batch//319_50.in  	 [32mOptimal cost=31.333333333333343.[0m 
+Thu Nov 28 13:51:13 2019	batches/batch//324_50.in  	 [31mTimeout![0m Feasible cost=580.0, bound=563.6666666666666. 
+Thu Nov 28 13:56:16 2019	batches/batch//300_50.in  	 [32mOptimal cost=23.759116666666667.[0m 
+Thu Nov 28 13:56:20 2019	batches/batch//345_50.in  	 [32mOptimal cost=912.6666666666666.[0m 
+Thu Nov 28 13:56:23 2019	batches/batch//326_50.in  	 [32mOptimal cost=746.3672333333333.[0m 
+Thu Nov 28 13:56:32 2019	batches/batch//363_50.in  	 [32mOptimal cost=15.999999999999993.[0m 
+Thu Nov 28 13:56:36 2019	batches/batch//322_50.in  	 [32mOptimal cost=33.0.[0m 
+Thu Nov 28 13:56:37 2019	batches/batch//306_50.in  	 [32mOptimal cost=17333333333.33333.[0m 
+Thu Nov 28 13:56:42 2019	batches/batch//343_50.in  	 [32mOptimal cost=16.66666666666666.[0m 
+Thu Nov 28 13:56:45 2019	batches/batch//304_50.in  	 [32mOptimal cost=16.66666666666666.[0m 
+Thu Nov 28 13:56:49 2019	batches/batch//358_50.in  	 [32mOptimal cost=18273304368.305813.[0m 
+Thu Nov 28 13:57:02 2019	batches/batch//320_50.in  	 [32mOptimal cost=37662497.333333336.[0m 
+Thu Nov 28 13:57:08 2019	batches/batch//365_50.in  	 [32mOptimal cost=1093.3333333333333.[0m 
+Thu Nov 28 13:57:08 2019	batches/batch//303_50.in  	 [32mOptimal cost=0.19612.[0m 
+Thu Nov 28 13:57:15 2019	batches/batch//362_50.in  	 [32mOptimal cost=295.8135291569257.[0m 
+Thu Nov 28 13:57:39 2019	batches/batch//327_50.in  	 [31mTimeout![0m Feasible cost=20.14333333333334, bound=19.643333333333334. 
+Thu Nov 28 14:02:41 2019	batches/batch//360_50.in  	 [32mOptimal cost=445.19111000000004.[0m 
+Thu Nov 28 14:03:09 2019	batches/batch//325_50.in  	 [32mOptimal cost=19474.666666666664.[0m 
+Thu Nov 28 14:03:13 2019	batches/batch//318_50.in  	 [32mOptimal cost=20.66666666666666.[0m 
+Thu Nov 28 14:03:18 2019	batches/batch//301_50.in  	 [32mOptimal cost=15.333333333333334.[0m 
+Thu Nov 28 14:03:18 2019	batches/batch//340_50.in  	 [32mOptimal cost=820.20688.[0m 
+Thu Nov 28 14:03:32 2019	batches/batch//305_50.in  	 [32mOptimal cost=18856102749.97229.[0m 
+Thu Nov 28 14:03:40 2019	batches/batch//364_50.in  	 [32mOptimal cost=26.333333333333332.[0m 
+Thu Nov 28 14:03:40 2019	batches/batch//321_50.in  	 [32mOptimal cost=17.999999999999993.[0m 
+Thu Nov 28 14:03:45 2019	batches/batch//359_50.in  	 [32mOptimal cost=189.0.[0m 
+Thu Nov 28 14:03:49 2019	batches/batch//366_50.in  	 [32mOptimal cost=10108.289713333332.[0m 
+Thu Nov 28 14:04:00 2019	batches/batch//342_50.in  	 [32mOptimal cost=6157.0.[0m 
+Thu Nov 28 14:05:02 2019	batches/batch//307_50.in  	 [32mOptimal cost=1244.3333333333333.[0m 

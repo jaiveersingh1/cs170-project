@@ -1,0 +1,49 @@
+
+Sat Nov 30 01:58:43 2019	batches/batch_euler_50/45_50.in  	 [32mOptimal cost=435.57162666666665.[0m 
+Sat Nov 30 01:58:50 2019	batches/batch_euler_50/24_50.in  	 [32mOptimal cost=18.8.[0m 
+Sat Nov 30 01:58:58 2019	batches/batch_euler_50/7_50.in  	 [32mOptimal cost=219.33333333333334.[0m 
+Sat Nov 30 01:59:03 2019	batches/batch_euler_50/5_50.in  	 [32mOptimal cost=13190778823.777452.[0m 
+Sat Nov 30 01:59:09 2019	batches/batch_euler_50/26_50.in  	 [32mOptimal cost=3399.999999999999.[0m 
+Sat Nov 30 01:59:16 2019	batches/batch_euler_50/43_50.in  	 [32mOptimal cost=140780.0.[0m 
+Sat Nov 30 01:59:18 2019	batches/batch_euler_50/1_50.in  	 [32mOptimal cost=12533.579999999998.[0m 
+Sat Nov 30 01:59:24 2019	batches/batch_euler_50/22_50.in  	 [32mOptimal cost=109.0.[0m 
+Sat Nov 30 01:59:25 2019	batches/batch_euler_50/20_50.in  	 [32mOptimal cost=3945520471.9548173.[0m 
+Sat Nov 30 02:00:13 2019	batches/batch_euler_50/3_50.in  	 [31mTimeout![0m Feasible cost=1953.4756666666667, bound=1574.5684098892955. 
+Sat Nov 30 02:01:15 2019	batches/batch_euler_50/39_50.in  	 [31mTimeout![0m Feasible cost=9948545346.138174, bound=9792077804.242256. 
+Sat Nov 30 02:02:15 2019	batches/batch_euler_50/41_50.in  	 [32mOptimal cost=436.0.[0m 
+Sat Nov 30 02:02:22 2019	batches/batch_euler_50/27_50.in  	 [32mOptimal cost=13.999999999999995.[0m 
+Sat Nov 30 02:02:24 2019	batches/batch_euler_50/4_50.in  	 [32mOptimal cost=6776997058.729902.[0m 
+Sat Nov 30 02:02:32 2019	batches/batch_euler_50/46_50.in  	 [32mOptimal cost=13662735025.643661.[0m 
+Sat Nov 30 02:02:46 2019	batches/batch_euler_50/44_50.in  	 [32mOptimal cost=3699.9999999999995.[0m 
+Sat Nov 30 02:02:53 2019	batches/batch_euler_50/6_50.in  	 [32mOptimal cost=382.7275866666667.[0m 
+Sat Nov 30 02:03:05 2019	batches/batch_euler_50/18_50.in  	 [32mOptimal cost=118.68266666666668.[0m 
+Sat Nov 30 02:03:09 2019	batches/batch_euler_50/25_50.in  	 [32mOptimal cost=16.66666666666666.[0m 
+Sat Nov 30 02:03:13 2019	batches/batch_euler_50/2_50.in  	 [32mOptimal cost=45272.39042132891.[0m 
+Sat Nov 30 02:04:13 2019	batches/batch_euler_50/21_50.in  	 [32mOptimal cost=1029.3333333333333.[0m 
+Sat Nov 30 02:04:21 2019	batches/batch_euler_50/40_50.in  	 [32mOptimal cost=124369.66666666667.[0m 
+Sat Nov 30 02:04:27 2019	batches/batch_euler_50/38_50.in  	 [32mOptimal cost=681.3333333333333.[0m 
+Sat Nov 30 02:04:35 2019	batches/batch_euler_50/42_50.in  	 [32mOptimal cost=23.33333333333333.[0m 
+Sat Nov 30 02:04:35 2019	batches/batch_euler_50/23_50.in  	 [31mTimeout![0m Feasible cost=31.333333333333336, bound=19.333333333333332. 
+Sat Nov 30 02:05:37 2019	batches/batch_euler_50/12_50.in  	 [32mOptimal cost=214.33333333333331.[0m 
+Sat Nov 30 02:06:12 2019	batches/batch_euler_50/36_50.in  	 [32mOptimal cost=19.666666666666664.[0m 
+Sat Nov 30 02:06:12 2019	batches/batch_euler_50/34_50.in  	 [32mOptimal cost=3.9999999999999996.[0m 
+Sat Nov 30 02:06:12 2019	batches/batch_euler_50/10_50.in  	 [32mOptimal cost=11.110666666666667.[0m 
+Sat Nov 30 02:06:35 2019	batches/batch_euler_50/29_50.in  	 [31mTimeout![0m Feasible cost=3343.435253763437, bound=3101.034527341576. 
+Sat Nov 30 02:07:37 2019	batches/batch_euler_50/14_50.in  	 [31mTimeout![0m Feasible cost=4943.20539, bound=4616.498623258348. 
+Sat Nov 30 02:08:40 2019	batches/batch_euler_50/30_50.in  	 [32mOptimal cost=236.28967333333333.[0m 
+Sat Nov 30 02:08:47 2019	batches/batch_euler_50/48_50.in  	 [32mOptimal cost=3242.666666666667.[0m 
+Sat Nov 30 02:09:26 2019	batches/batch_euler_50/32_50.in  	 [32mOptimal cost=11.333333333333334.[0m 
+Sat Nov 30 02:09:26 2019	batches/batch_euler_50/8_50.in  	 [32mOptimal cost=1252.9546666666665.[0m 
+Sat Nov 30 02:09:39 2019	batches/batch_euler_50/16_50.in  	 [32mOptimal cost=40.0.[0m 
+Sat Nov 30 02:09:40 2019	batches/batch_euler_50/35_50.in  	 [32mOptimal cost=28.666666666666668.[0m 
+Sat Nov 30 02:09:47 2019	batches/batch_euler_50/11_50.in  	 [32mOptimal cost=279098.33333333326.[0m 
+Sat Nov 30 02:10:03 2019	batches/batch_euler_50/13_50.in  	 [32mOptimal cost=11695921503.0.[0m 
+Sat Nov 30 02:10:31 2019	batches/batch_euler_50/37_50.in  	 [32mOptimal cost=703.1942033333333.[0m 
+Sat Nov 30 02:10:53 2019	batches/batch_euler_50/33_50.in  	 [32mOptimal cost=599.6666666666666.[0m 
+Sat Nov 30 02:10:59 2019	batches/batch_euler_50/17_50.in  	 [32mOptimal cost=98.00000000000006.[0m 
+Sat Nov 30 02:11:09 2019	batches/batch_euler_50/9_50.in  	 [32mOptimal cost=11.319696666666664.[0m 
+Sat Nov 30 02:11:41 2019	batches/batch_euler_50/15_50.in  	 [32mOptimal cost=7160330520.751633.[0m 
+Sat Nov 30 02:12:11 2019	batches/batch_euler_50/50_50.in  	 [31mTimeout![0m Feasible cost=137.09754325673637, bound=100.20922827913452. 
+Sat Nov 30 02:13:12 2019	batches/batch_euler_50/28_50.in  	 [32mOptimal cost=1093057669.6974332.[0m 
+Sat Nov 30 02:13:42 2019	batches/batch_euler_50/49_50.in  	 [32mOptimal cost=945.3333333333334.[0m 
+Sat Nov 30 02:13:56 2019	batches/batch_euler_50/31_50.in  	 [32mOptimal cost=73068615992.34671.[0m 

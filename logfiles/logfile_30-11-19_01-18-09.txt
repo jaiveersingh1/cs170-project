@@ -1,0 +1,2 @@
+
+Sat Nov 30 01:18:09 2019	batches/inputs/67_50.in  	 [32mOptimal cost=33.33333333333333.[0m 
