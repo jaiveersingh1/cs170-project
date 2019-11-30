@@ -19,7 +19,7 @@ brute_force_solver = BruteForceJSSolver()
 
 solvers_mode = {
     "all": [ilp_solver, brute_force_solver],
-    "brute": [brute_force_solver],
+    "bf": [brute_force_solver],
     "ilp": [ilp_solver]
 }
 

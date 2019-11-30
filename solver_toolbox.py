@@ -196,10 +196,13 @@ class ILPSolver(BaseSolver):
         # does the kth TA walk from i to j? over all num_homes TAs
         t = [[model.add_var(var_type=BINARY) for e in E] for k in H]
 
-        # flow from vertex u to vertex v
+        # car flow from vertex u to vertex v
         f = [model.add_var(var_type=INTEGER) for e in E] \
         + [model.add_var(var_type=INTEGER) for v in V] \
         + [model.add_var(var_type=INTEGER)]
+
+        # kth TA flow from vertex u to vertex v
+        f_t = [[model.add_var(var_type=BINARY) for e in E] + [model.add_var(var_type=BINARY) for v in V] for k in H]
 
         for i in range(len(f)):
             model += f[i] >= 0
@@ -223,34 +226,40 @@ class ILPSolver(BaseSolver):
         # For each edge (u, sink), f_(u, sink) <= Sum{x_(w, u)}
         for j in range(len(V)):
             model += f[j + len(E)] \
-                 <= xsum([x[i] for i in range(len(E)) if E[i][1] \
-                 == V[j]])
+                 <= xsum([x[i] for i in range(len(E)) if E[i][1] == V[j]])
 
         # For just the source vertex, f_(source,start vertex)} = Sum{x_(a, b)}
         model += f[-1] == xsum(x)
 
-        # # Exactly 1 flow coming out of each vertex car visits
-        for j in range(len(V)):
-            model += xsum([f[i]*x[j] for i in range(len(E)) if E[i][0] == V[j]]) == x[j]
 
-        # Exactly 1 flow coming into of each vertex that is a home
-        for h in H:
-            model += xsum([f[i] for i in range(len(E)) if E[i][1] == h]) == 1
 
-        # For each TA k, for each vertex v, Sum{t^(i)_(u, v)} + Sum{x_(u, v)} >= Sum{t^(i)_(v, w)}
-        for k in t:
-            for v in V:
-                model += xsum([k[i] for i in range(len(E)) if E[i][1] == v]) + xsum([x[i] for i in range(len(E)) if E[i][1] == v]) \
-                 >= xsum([k[i] for i in range(len(E)) if E[i][0] == v])
+        # For every TA for every edge, can't flow unless edge is walked along
+        for i in range(len(t)):
+            for j in range(len(E)):
+                model += f_t[i][j] <= t[i][j]
 
-        # For each TA k, for each home h, Sum{t^(i)_(u, h)} + Sum(x_(u, h)} > 0
-        for j in range(len(t)):
-            model += xsum([t[j][i] for i in range(len(E)) if E[i][1] == H[j]]) + xsum([x[i] for i in range(len(E)) if E[i][1] == H[j]]) >= 1
+        # For every TA for every non-home vertex, flow in equals flow out
+        for i in range(len(H)):
+            for j in range(len(V)):
+                if V[j] != H[i]:
+                    model += xsum(f_t[i][k] for k in range(len(E)) if E[k][1] == V[j]) + f_t[i][len(E) + j] \
+                        == xsum(f_t[i][k] for k in range(len(E)) if E[k][0] == V[j])
 
-        # For each TA i, for each vertex v, Sum{t^(i)_(u, v)} <= 1
-        for k in t:
-            for v in V:
-                model += xsum([k[i] for i in range(len(E)) if E[i][1] == v]) <= 1
+        # For every TA, flow out of the source vertex is exactly 1
+        for k in f_t:
+            model += xsum(k[len(E) + i] for i in range(len(V))) == 1
+
+        # For every TA for every edge out of source, can't flow unless car visits vertex
+        for k in f_t:
+            for i in range(len(V)):
+                model += k[len(E) + i] <= xsum(x[j] for j in range(len(E)) if E[j][1] == V[i])
+
+        # For every TA, flow into the home vertex is exactly 1
+        for i in range(len(H)):
+            model += xsum(f_t[i][j] for j in range(len(E)) if E[j][1] == H[i]) == 1
+
+
+
 
         # objective function: minimize the distance
         model.objective = minimize(2.0/3.0 * xsum([x[i] * E[i][2] for i in range(len(E))]) \
@@ -281,22 +290,27 @@ class ILPSolver(BaseSolver):
             if "-v" in params:
                 out.write('\nEdges (In, Out, Weight):\n')  
                 for i in E:
-                    out.write(str(i) + ' ')  
+                    out.write(str(i) + '\t')  
 
                 out.write('\n\nCar - Chosen Edges:\n')       
                 for i in x:
-                    out.write(str(i.x) + ' ')
+                    out.write(str(i.x) + '\t')
+
+                out.write('\n\nCar - Flow Capacities:\n')  
+                for i in f:
+                    out.write(str(i.x) + '\t')
 
                 out.write('\n\nTAs - Chosen Edges:\n')  
                 for i in t:
                     for j in range(len(i)):
-                        out.write(str(i[j].x) + ' ')
+                        out.write(str(i[j].x) + '\t')
                     out.write('\n') 
 
-                out.write('\nFlow Capacities:\n')  
-                for i in f:
-                    out.write(str(i.x) + ' ')
-                out.write('\n') 
+                out.write('\nTAs - Flow Capacities:\n')  
+                for i in f_t:
+                    for j in range(len(i)):
+                        out.write(str(i[j].x) + '\t')
+                    out.write('\n')
 
                 out.write('\nActive Edges:\n')  
 
@@ -308,10 +322,10 @@ class ILPSolver(BaseSolver):
         list_of_edges = [E[i] for i in range(len(x)) if x[i].x >= 1.0]
         car_path_indices = self.construct_path(starting_car_index, list_of_edges)
         
-        if not "-S" in params:
-            print(car_path_indices)
-
         walk_cost, dropoffs_dict = self.find_best_dropoffs(G, home_indices, car_path_indices)
-        print(walk_cost)
+        
+        if not "-s" in params:
+            print(car_path_indices)
+            print("Walk cost =", walk_cost)
 
         return model.objective_value, car_path_indices, dropoffs_dict
