@@ -215,9 +215,7 @@ class GraphVisualizer:
 		G = nx.from_numpy_matrix(np.matrix(adjacency_matrix), create_using=nx.DiGraph)
 		pos = nx.spring_layout(G)
 
-		labels = {}
-		for i in range(1, num_of_locations + 1):
-			labels[i - 1] = i
+		labels = { i : i for i in location_indices }
 				
 		nx.draw_networkx_nodes(G, pos,
 					   nodelist=location_indices,
