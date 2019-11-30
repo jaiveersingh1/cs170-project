@@ -229,9 +229,9 @@ class ILPSolver(BaseSolver):
         # For just the source vertex, f_(source,start vertex)} = Sum{x_(a, b)}
         model += f[-1] == xsum(x)
 
-        # Exactly 1 flow coming out of each vertex car visits
+        # # Exactly 1 flow coming out of each vertex car visits
         for j in range(len(V)):
-            model += xsum([x[j].x * f[i] for i in range(len(E)) if E[i][0] == V[j]]) == 1
+            model += xsum([f[i]*x[j] for i in range(len(E)) if E[i][0] == V[j]]) == x[j]
 
         # Exactly 1 flow coming into of each vertex that is a home
         for h in H:
