@@ -47,7 +47,7 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     
     best_solution = (float('inf'), [], {})
     
-    mode = "all"
+    mode = "ilp"
     if "-m" in params:
         mode = params[params.index("-m") + 1]
 
