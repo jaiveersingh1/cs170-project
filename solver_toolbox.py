@@ -137,21 +137,23 @@ class BruteForceJSSolver(BaseSolver):
             exit_counts = [0 for _ in list_of_locations]
             visited = set()
             driving_cost = 0
+            contains_start = False
             
             for edge in edge_set:
-                exit_counts[edge[0]] += 1
-                entry_counts[edge[1]] += 1
                 visited.add(edge[1])
                 driving_cost += 2/3 * edge[2]
-            
-            valid_cycle = (starting_car_index in visited) and all([entry_counts[i] == exit_counts[i] for i in range(len(list_of_locations))])
-            if valid_cycle:
+                if (edge[0] == starting_car_index or edge[1] == starting_car_index):
+                    contains_start = True
+
+            G_chosen = nx.DiGraph()
+            G_chosen.add_weighted_edges_from(edge_set)
+
+            if edge_set and nx.is_eulerian(G_chosen) and contains_start:
                 walking_cost, dropoffs = self.find_best_dropoffs(G, home_indices, list(visited))
                 total_cost = walking_cost + driving_cost
-                path = self.construct_path(starting_car_index, edge_set)
-                if total_cost < best_solution[0]:
-                    best_solution = (total_cost, path, dropoffs)
 
+                if total_cost < best_solution[0]:
+                    best_solution = (total_cost, self.construct_path(starting_car_index, edge_set), dropoffs)
         
         print("\n\nBest cost was", best_solution[0])
         return best_solution
@@ -194,7 +196,7 @@ class ILPSolver(BaseSolver):
         # does the kth TA walk from i to j? over all num_homes TAs
         t = [[model.add_var(var_type=BINARY) for e in E] for k in H]
 
-        # f_(u, v) = N; flow from vertex u to vertex v
+        # flow from vertex u to vertex v
         f = [model.add_var(var_type=INTEGER) for e in E] \
         + [model.add_var(var_type=INTEGER) for v in V] \
         + [model.add_var(var_type=INTEGER)]
@@ -206,7 +208,7 @@ class ILPSolver(BaseSolver):
         for v in V:
             model += xsum([x[i] for i in range(len(E)) if E[i][1] == v]) == xsum([x[i] for i in range(len(E)) if E[i][0] == v])
 
-        # For each vertex v where v != source and v != sink, Sum{f_(u, v)} = Sum{f_(v, w)}
+        # For each vertex v where v != sink, Sum{f_(u, v)} = Sum{f_(v, w)}
         for j in range(len(V)):
             model += xsum([f[i] for i in range(len(E)) if E[i][1] == V[j]]) + (f[-1] if V[j] == starting_car_index else 0) \
                  == xsum([f[i] for i in range(len(E)) if E[i][0] == V[j]]) + f[len(E) + j]
@@ -227,6 +229,14 @@ class ILPSolver(BaseSolver):
         # For just the source vertex, f_(source,start vertex)} = Sum{x_(a, b)}
         model += f[-1] == xsum(x)
 
+        # # Exactly 1 flow coming out of each vertex car visits
+        for j in range(len(V)):
+            model += xsum([f[i]*x[j] for i in range(len(E)) if E[i][0] == V[j]]) == x[j]
+
+        # Exactly 1 flow coming into of each vertex that is a home
+        for h in H:
+            model += xsum([f[i] for i in range(len(E)) if E[i][1] == h]) == 1
+
         # For each TA k, for each vertex v, Sum{t^(i)_(u, v)} + Sum{x_(u, v)} >= Sum{t^(i)_(v, w)}
         for k in t:
             for v in V:
@@ -243,10 +253,8 @@ class ILPSolver(BaseSolver):
                 model += xsum([k[i] for i in range(len(E)) if E[i][1] == v]) <= 1
 
         # objective function: minimize the distance
-        cost_function = 2.0/3.0 * xsum([x[i] * E[i][2] for i in range(len(E))]) \
-            + xsum([xsum([t[i][j] * E[j][2] for j in range(len(E))]) for i in range(len(t))])
-
-        model.objective = minimize(cost_function)
+        model.objective = minimize(2.0/3.0 * xsum([x[i] * E[i][2] for i in range(len(E))]) \
+            + xsum([xsum([t[i][j] * E[j][2] for j in range(len(E))]) for i in range(len(t))]))
 
         # WINNING ONLINE
         model.max_gap = 0.00001
@@ -270,7 +278,7 @@ class ILPSolver(BaseSolver):
         if model.num_solutions:
             out.write('Route with total cost %g found. \n' % (model.objective_value))
 
-            if "-V" in params:
+            if "-v" in params:
                 out.write('\nEdges (In, Out, Weight):\n')  
                 for i in E:
                     out.write(str(i) + ' ')  
@@ -304,5 +312,6 @@ class ILPSolver(BaseSolver):
             print(car_path_indices)
 
         walk_cost, dropoffs_dict = self.find_best_dropoffs(G, home_indices, car_path_indices)
+        print(walk_cost)
 
         return model.objective_value, car_path_indices, dropoffs_dict

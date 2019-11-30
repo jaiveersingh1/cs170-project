@@ -1,6 +1,7 @@
 import math
 import utils
 import pickle
+import argparse
 import networkx
 import numpy as np
 import matplotlib as mpl
@@ -206,13 +207,6 @@ class GraphVisualizer:
 		home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
 		location_indices = convert_locations_to_indices(list_of_locations, list_of_locations)
 
-		with open(solution_file) as f:
-			path = list(f.readline().split())
-
-		path_edges = [[int(path[i]) - 1, int(path[i+1]) - 1] for i in range(len(path) - 1)]
-
-		print(home_indices)
-
 		for i in range(len(adjacency_matrix)):
 			for j in range(len(adjacency_matrix)):
 				if (adjacency_matrix[i][j] == 'x'):
@@ -221,9 +215,7 @@ class GraphVisualizer:
 		G = nx.from_numpy_matrix(np.matrix(adjacency_matrix), create_using=nx.DiGraph)
 		pos = nx.spring_layout(G)
 
-		labels = {}
-		for i in range(1, num_of_locations + 1):
-			labels[i - 1] = i
+		labels = { i : i for i in location_indices }
 				
 		nx.draw_networkx_nodes(G, pos,
 					   nodelist=location_indices,
@@ -238,19 +230,43 @@ class GraphVisualizer:
 					   node_color='r',
 					   node_size=100)
 		nx.draw_networkx_edges(G, pos, width=1.0, alpha=0.5)
-		nx.draw_networkx_edges(G, pos,
-					   edgelist=path_edges,
-					   width=3, alpha=0.5, edge_color='r')
-		nx.draw_networkx_labels(G, pos, labels, font_size=8)
+
+		if (type(solution_file) == str):
+			with open(solution_file) as f:
+				path = list(f.readline().split())
+
+			path_edges = [[list_of_locations.index(path[i]), list_of_locations.index(path[i+1])] for i in range(len(path) - 1)]
+			nx.draw_networkx_edges(G, pos,
+						edgelist=path_edges,
+						width=3, alpha=0.5, edge_color='r')
+			nx.draw_networkx_labels(G, pos, labels, font_size=8)
 
 		plt.show()
 
 
-# ------------------------------------------------------ COMMENT OUT WHAT YOU DON'T NEED ------------------------------------------------------
-# gen = GraphGenerator(7, 3)  # PARAMS: NUM_LOCATIONS, NUM_HOMES
+# -------------------------------------------------------------- COMMAND LINE INTERFACE -------------------------------------------------------------- #
+if __name__=="__main__":
+	parser = argparse.ArgumentParser(description='Parsing arguments')
+	parser.add_argument('action', type=str, help='The type of action to execute.')
+	parser.add_argument('input1', type=str, help='The path to the input file or directory')
+	parser.add_argument('input2', type=str, nargs=None, default=None, help='The path to the input file or directory')
 
-# gen.genGraph()  # OPTIONAL PARAM: DEGREE_DISTRIBUTION_MEAN (DEFAULT 0.2)
-# gen.writeInput(0)  # PARAM: INPUT_NUM (e.g. INPUT_NUM = 1 writes to input1.txt | INPUT_NUM = -1 does not write to file)
+	args = parser.parse_args()
+	action = args.action
+	input_1 = args.input1
+	input_2 = args.input2
 
-vis = GraphVisualizer() # OPTIONAL PARAM: GENERATOR INSTANCE (DEFAULT NONE => VISUALIZING SERIALIZED GRAPH)
-vis.visFromAdj("inputs/10_50.in", "submission/10_50.out")
+	if (action == "visualize" or action == "vis" or action == "visual"):
+		vis = GraphVisualizer()
+		vis.visFromAdj(input_1, input_2)
+
+	if (action == "generate" or action == "gen"):
+		gen = GraphGenerator(int(input_1), int(input_2))
+		gen.genGraph()
+		gen.cycleFinder()
+
+		gen.writeInput(0)
+		gen.serializer("serialized_graphs/test0.pickle")
+
+		vis = GraphVisualizer(gen)
+		vis.visGen()
