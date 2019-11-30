@@ -13,13 +13,23 @@ from student_utils import *
 ======================================================================
 """
 
+# Initialize solvers and modes
+ilp_solver = ILPSolver()
+brute_force_solver = BruteForceJSSolver()
+
+solvers_mode = {
+    "all": [ilp_solver, brute_force_solver],
+    "brute": [brute_force_solver],
+    "ilp": [ilp_solver]
+}
+
 # One-time initialization of logfiles for this run
-solvers = [ILPSolver()]
-for solver in solvers:
+for solver in solvers_mode["all"]:
     timestamp = time.strftime("%d-%m-%y_%H-%M-%S")
     solver.logfile = "logfile_{}.txt".format(timestamp)
 
-colorama.init()
+# Init colorama
+init()
 
 def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
     """
@@ -37,7 +47,11 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     
     best_solution = (float('inf'), [], {})
     
-    for solver in solvers:
+    mode = "all"
+    if "-m" in params:
+        mode = params[params.index("-m") + 1]
+
+    for solver in solvers_mode[mode]:
 
         solution = solver.solve(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params)
         if best_solution == None or solution[0] < best_solution[0]:

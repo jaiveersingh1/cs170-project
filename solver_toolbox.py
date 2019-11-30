@@ -148,8 +148,9 @@ class BruteForceJSSolver(BaseSolver):
             if valid_cycle:
                 walking_cost, dropoffs = self.find_best_dropoffs(G, home_indices, list(visited))
                 total_cost = walking_cost + driving_cost
+                path = self.construct_path(starting_car_index, edge_set)
                 if total_cost < best_solution[0]:
-                    best_solution = (total_cost, [], dropoffs)
+                    best_solution = (total_cost, path, dropoffs)
 
         
         print("\n\nBest cost was", best_solution[0])
