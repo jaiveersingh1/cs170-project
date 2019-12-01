@@ -94,12 +94,9 @@ class BaseSolver:
         f.write(msg + " ")
         f.close()
         
-
-
 def randomSolveJS(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
     
     return 0, [], dict()
-
 
 class BruteForceJSSolver(BaseSolver):
     def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params=[]):
@@ -178,9 +175,6 @@ class ILPSolver(BaseSolver):
         conn = sqlite3.connect('models.sqlite')
         c = conn.cursor()
         seen = c.execute('SELECT best_objective_bound FROM models WHERE input_file = (?)', (input_file,)).fetchone()
-        prev_objective_value = None
-        if seen:
-            prev_objective_value = seen[0]
         
         self.log_new_entry(params[-1])
 
@@ -266,9 +260,6 @@ class ILPSolver(BaseSolver):
         for i in range(len(H)):
             model += xsum(f_t[i][j] for j in range(len(E)) if E[j][1] == H[i]) + f_t[i][len(E) + H[i]] == 1
 
-
-
-
         # objective function: minimize the distance
         model.objective = minimize(2.0/3.0 * xsum([x[i] * E[i][2] for i in range(len(E))]) \
             + xsum([xsum([t[i][j] * E[j][2] for j in range(len(E))]) for i in range(len(t))]))
@@ -281,7 +272,11 @@ class ILPSolver(BaseSolver):
         if "-t" in params:
             timeout = int(params[params.index("-t") + 1])
 
+        # parameter tuning
+        if seen:
+            model.cutoff = seen[0]
         model.symmetry = 2
+
         status = model.optimize(max_seconds=timeout)
         if status == OptimizationStatus.OPTIMAL:
             print('optimal solution cost {} found'.format(model.objective_value))
@@ -342,17 +337,19 @@ class ILPSolver(BaseSolver):
         
         walk_cost, dropoffs_dict = self.find_best_dropoffs(G, home_indices, car_path_indices)
 
-        if not prev_objective_value:
-            print("inserting")
+        if not seen:
+            print("SAVING", input_file)
             c.execute('INSERT INTO models (input_file, best_objective_bound, optimal) VALUES (?, ?, ?)', \
                 (input_file, model.objective_value, status == OptimizationStatus.OPTIMAL))
             conn.commit()
-        elif model.objective_value < prev_objective_value:
+        elif model.objective_value < seen[0]:
             c.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', \
                 (model.objective_value, status == OptimizationStatus.OPTIMAL, input_file))
-        
+            conn.commit()
+
         if not "-s" in params:
             print(car_path_indices)
             print("Walk cost =", walk_cost)
 
+        conn.close()
         return model.objective_value, car_path_indices, dropoffs_dict
