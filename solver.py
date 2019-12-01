@@ -44,7 +44,11 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
         A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
         NOTE: both outputs should be in terms of indices not the names of the locations themselves
     """
-    
+    conn = sqlite3.connect('models.sqlite')
+    c = conn.cursor()
+
+    input_file = params[-1].split('/')[-1]
+
     best_solution = (float('inf'), [], {})
     
     mode = "ilp"
@@ -53,9 +57,12 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
 
     for solver in solvers_mode[mode]:
 
-        solution = solver.solve(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params)
+        solution = solver.solve(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params[0:-1])
         if best_solution == None or solution[0] < best_solution[0]:
             best_solution = solution
+
+    conn.commit()
+    conn.close()
 
     return best_solution[1], best_solution[2]
 

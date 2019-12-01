@@ -7,11 +7,13 @@ import matplotlib.pyplot as plt
 import utils
 import time
 from colorama import init, Fore, Style
+import sqlite3
+import os
 
 class BaseSolver:
     """ Base class for solvers """
 
-    def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
+    def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params=[]):
         """
         Solve the problem using a specific technique.
         Input:
@@ -100,7 +102,7 @@ def randomSolveJS(list_of_locations, list_of_homes, starting_car_location, adjac
 
 
 class BruteForceJSSolver(BaseSolver):
-    def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
+    def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params=[]):
         """
         Solve the problem using brute force.
         Input:
@@ -159,7 +161,7 @@ class BruteForceJSSolver(BaseSolver):
         return best_solution
 
 class ILPSolver(BaseSolver):
-    def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
+    def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params=[]):
         """
         Solve the problem using an MST/DFS approach.
         Input:
@@ -173,6 +175,12 @@ class ILPSolver(BaseSolver):
             A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
             NOTE: all outputs should be in terms of indices not the names of the locations themselves
         """
+        conn = sqlite3.connect('models.sqlite')
+        c = conn.cursor()
+        seen = c.execute('SELECT best_objective_bound FROM models WHERE input_file = (?)', (input_file,)).fetchone()
+        prev_objective_value = None
+        if seen:
+            prev_objective_value = seen[0]
         
         self.log_new_entry(params[-1])
 
@@ -273,6 +281,7 @@ class ILPSolver(BaseSolver):
         if "-t" in params:
             timeout = int(params[params.index("-t") + 1])
 
+        model.symmetry = 2
         status = model.optimize(max_seconds=timeout)
         if status == OptimizationStatus.OPTIMAL:
             print('optimal solution cost {} found'.format(model.objective_value))
@@ -332,6 +341,15 @@ class ILPSolver(BaseSolver):
         car_path_indices = self.construct_path(starting_car_index, list_of_edges)
         
         walk_cost, dropoffs_dict = self.find_best_dropoffs(G, home_indices, car_path_indices)
+
+        if not prev_objective_value:
+            print("inserting")
+            c.execute('INSERT INTO models (input_file, best_objective_bound, optimal) VALUES (?, ?, ?)', \
+                (input_file, model.objective_value, status == OptimizationStatus.OPTIMAL))
+            conn.commit()
+        elif model.objective_value < prev_objective_value:
+            c.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', \
+                (model.objective_value, status == OptimizationStatus.OPTIMAL, input_file))
         
         if not "-s" in params:
             print(car_path_indices)
