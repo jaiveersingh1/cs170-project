@@ -62,7 +62,7 @@ class BaseSolver:
         
         return total_cost, dropoffs
 
-    def construct_path(self, start, edges):
+    def construct_path(self, start, edges, input_file):
         """
         Constructs a path from an unordered list of edges given some starting vertex
         Input:
@@ -71,6 +71,9 @@ class BaseSolver:
         Output:
             List of edges in a path
         """
+        conn = sqlite3.connect('models.sqlite')
+        c = conn.cursor()
+
         G = nx.DiGraph()
         G.add_weighted_edges_from(edges)
         path = [start]
@@ -81,6 +84,9 @@ class BaseSolver:
             path += [edge[1] for edge in path_edges]
         else:
             self.log_update_entry(Fore.YELLOW + "Graph was not Eulerian." + Style.RESET_ALL)
+            c.execute('UPDATE models SET optimal = 0 WHERE input_file = ?', (input_file,))
+            conn.commit()
+        conn.close()
         return path
 
     logfile = "logfile_default.txt"
@@ -337,7 +343,7 @@ class ILPSolver(BaseSolver):
                 out.write('\n')
 
         list_of_edges = [E[i] for i in range(len(x)) if x[i].x >= 1.0]
-        car_path_indices = self.construct_path(starting_car_index, list_of_edges)
+        car_path_indices = self.construct_path(starting_car_index, list_of_edges, input_file)
         
         walk_cost, dropoffs_dict = self.find_best_dropoffs(G, home_indices, car_path_indices)
 
