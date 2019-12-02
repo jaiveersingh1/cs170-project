@@ -302,45 +302,49 @@ class ILPSolver(BaseSolver):
                 print('no feasible solution found, lower bound is: {}'.format(model.objective_bound))
                 self.log_update_entry("Failed, bound={}.".format(model.objective_bound))
 
+        # if no solution found, return inf cost
+        if model.num_solutions == 0:
+            conn.close()
+            return float('inf'), [], {}
+
         # printing the solution if found
-        if model.num_solutions:
-            out.write('Route with total cost %g found. \n' % (model.objective_value))
+        out.write('Route with total cost %g found. \n' % (model.objective_value))
 
-            if "-v" in params:
-                out.write('\nEdges (In, Out, Weight):\n')  
-                for i in E:
-                    out.write(str(i) + '\t')  
+        if "-v" in params:
+            out.write('\nEdges (In, Out, Weight):\n')  
+            for i in E:
+                out.write(str(i) + '\t')  
 
-                out.write('\n\nCar - Chosen Edges:\n')       
-                for i in x:
-                    out.write(str(i.x) + '\t')
+            out.write('\n\nCar - Chosen Edges:\n')       
+            for i in x:
+                out.write(str(i.x) + '\t')
 
-                out.write('\n\nCar - Flow Capacities:\n')  
-                for i in f:
-                    out.write(str(i.x) + '\t')
+            out.write('\n\nCar - Flow Capacities:\n')  
+            for i in f:
+                out.write(str(i.x) + '\t')
 
-                out.write('\n\nTAs - Home Indices:\n')  
-                for i in H:
-                    out.write(str(i) + '\n')
+            out.write('\n\nTAs - Home Indices:\n')  
+            for i in H:
+                out.write(str(i) + '\n')
 
-                out.write('\nTAs - Chosen Edges:\n')  
-                for i in t:
-                    for j in range(len(i)):
-                        out.write(str(i[j].x) + '\t')
-                    out.write('\n') 
+            out.write('\nTAs - Chosen Edges:\n')  
+            for i in t:
+                for j in range(len(i)):
+                    out.write(str(i[j].x) + '\t')
+                out.write('\n') 
 
-                out.write('\nTAs - Flow Capacities:\n')  
-                for i in f_t:
-                    for j in range(len(i)):
-                        out.write(str(i[j].x) + '\t')
-                    out.write('\n')
-
-                out.write('\nActive Edges:\n')  
-
-                for i in range(len(x)):
-                    if (x[i].x >= 1.0):
-                        out.write('Edge from %i to %i with weight %f \n' % (E[i][0], E[i][1], E[i][2]))
+            out.write('\nTAs - Flow Capacities:\n')  
+            for i in f_t:
+                for j in range(len(i)):
+                    out.write(str(i[j].x) + '\t')
                 out.write('\n')
+
+            out.write('\nActive Edges:\n')  
+
+            for i in range(len(x)):
+                if (x[i].x >= 1.0):
+                    out.write('Edge from %i to %i with weight %f \n' % (E[i][0], E[i][1], E[i][2]))
+            out.write('\n')
 
         list_of_edges = [E[i] for i in range(len(x)) if x[i].x >= 1.0]
         car_path_indices = self.construct_path(starting_car_index, list_of_edges, input_file)

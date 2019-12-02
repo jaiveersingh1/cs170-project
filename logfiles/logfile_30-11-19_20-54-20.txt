@@ -1,0 +1,2 @@
+
+Sat Nov 30 20:54:20 2019	batches/inputs/10_100.in  	 [31mTimeout![0m Feasible cost=558.5023400000001, bound=462.45936213954667. 
