@@ -49,7 +49,7 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     conn = sqlite3.connect('models.sqlite')
     c = conn.cursor()
 
-    prev = c.execute('SELECT best_objective_value FROM models WHERE input_file = (?)', (input_file_name,)).fetchone()
+    prev = c.execute('SELECT best_objective_bound FROM models WHERE input_file = (?)', (input_file,)).fetchone()
 
     conn.close()
     
