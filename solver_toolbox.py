@@ -273,7 +273,11 @@ class ILPSolver(BaseSolver):
         if "-t" in params:
             timeout = int(params[params.index("-t") + 1])
 
-        status = model.optimize(max_seconds=timeout)
+        if timeout != -1:
+            status = model.optimize(max_seconds=timeout)
+        else:
+            status = model.optimize()
+
         if status == OptimizationStatus.OPTIMAL:
             print('optimal solution cost {} found'.format(model.objective_value))
             self.log_update_entry(Fore.GREEN + "Optimal cost={}.".format(model.objective_value) + Style.RESET_ALL)
