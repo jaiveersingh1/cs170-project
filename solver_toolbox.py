@@ -176,7 +176,7 @@ class ILPSolver(BaseSolver):
         c = conn.cursor()
         seen = c.execute('SELECT best_objective_bound FROM models WHERE input_file = (?)', (input_file,)).fetchone()
         
-        self.log_new_entry(params[-1])
+        self.log_new_entry(input_file)
 
         home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
         location_indices = convert_locations_to_indices(list_of_locations, list_of_locations)
