@@ -31,7 +31,7 @@ for solver in solvers_mode["all"]:
 # Init colorama
 init()
 
-def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
+def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params=[]):
     """
     Write your algorithm here.
     Input:
@@ -44,8 +44,14 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
         A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
         NOTE: both outputs should be in terms of indices not the names of the locations themselves
     """
-    
     best_solution = (float('inf'), [], {})
+
+    conn = sqlite3.connect('models.sqlite')
+    c = conn.cursor()
+
+    prev = c.execute('SELECT best_objective_bound FROM models WHERE input_file = (?)', (input_file,)).fetchone()
+
+    conn.close()
     
     mode = "ilp"
     if "-m" in params:
@@ -53,11 +59,11 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
 
     for solver in solvers_mode[mode]:
 
-        solution = solver.solve(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params)
+        solution = solver.solve(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params)
         if best_solution == None or solution[0] < best_solution[0]:
             best_solution = solution
 
-    return best_solution[1], best_solution[2]
+    return (not prev or prev[0] > best_solution[0]), best_solution[1], best_solution[2]
 
 """
 ======================================================================
@@ -88,11 +94,29 @@ def convertToFile(path, dropoff_mapping, path_to_file, list_locs):
     utils.write_to_file(path_to_file, string)
 
 def solve_from_file(input_file, output_directory, params=[]):
-    print('Processing', input_file)
+    print('\nProcessing', input_file)
+
+    conn = sqlite3.connect('models.sqlite')
+    c = conn.cursor()
+
+    input_file_name = input_file.split('/')[-1]
+
+    optimal = c.execute('SELECT optimal FROM models WHERE input_file = (?)', (input_file_name,)).fetchone()
+    conn.close()
+
+    # skip over optimal inputs
+    if optimal and optimal[0]:
+        print('SKIPPPING', input_file_name)
+        return
 
     input_data = utils.read_file(input_file)
     num_of_locations, num_houses, list_locations, list_houses, starting_car_location, adjacency_matrix = data_parser(input_data)
-    car_path, drop_offs = solve(list_locations, list_houses, starting_car_location, adjacency_matrix, params=params + [input_file])
+    improved, car_path, drop_offs = solve(list_locations, list_houses, starting_car_location, adjacency_matrix, input_file_name, params=params)
+
+    # only write out file if we got a better cost
+    if not improved:
+        print(input_file_name, 'DIDN\'T IMPROVE')
+        return
 
     basename, filename = os.path.split(input_file)
     if not os.path.exists(output_directory):
@@ -116,7 +140,7 @@ if __name__=="__main__":
     parser.add_argument('output_directory', type=str, nargs='?', default='.', help='The path to the directory where the output should be written')
     parser.add_argument('params', nargs=argparse.REMAINDER, help='Extra arguments passed in')
     args = parser.parse_args()
-    output_directory = args.output_directory
+    output_directory = 'submissions/submission_final/'
     if args.all:
         input_directory = args.input
         solve_all(input_directory, output_directory, params=args.params)
