@@ -29,18 +29,18 @@ class BaseSolver:
         """
         return 0, [], dict()
 
-    def construct_starter(self, G, list_of_homes, car_path):
+    def construct_starter(self, G, x, t, list_of_homes, car_path):
         """
         Treating the car's cycle as constant, find a valid solution to the corresponding ILP problem.
         Input:
             G: A NetworkX graph
+            x: Model's car array
+            t: Model's TA matrix
             list_of_homes: The list of homes in the graph
             car_path: The indices of the vertices in G that are in the car path
         Output:
             MIP Model Starter, to be set as model.start
         """
-        x = [model.add_var(var_type=BINARY) for e in E]
-        t = [[model.add_var(var_type=BINARY) for e in E] for k in H]
 
 		home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
 
