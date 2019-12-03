@@ -7,11 +7,13 @@ import matplotlib.pyplot as plt
 import utils
 import time
 from colorama import init, Fore, Style
+import sqlite3
+import os
 
 class BaseSolver:
     """ Base class for solvers """
 
-    def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
+    def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params=[]):
         """
         Solve the problem using a specific technique.
         Input:
@@ -26,6 +28,49 @@ class BaseSolver:
             NOTE: all outputs should be in terms of indices not the names of the locations themselves
         """
         return 0, [], dict()
+
+    def construct_starter(self, G, list_of_homes, car_path):
+        """
+        Treating the car's cycle as constant, find a valid solution to the corresponding ILP problem.
+        Input:
+            G: A NetworkX graph
+            list_of_homes: The list of homes in the graph
+            car_path: The indices of the vertices in G that are in the car path
+        Output:
+            MIP Model Starter, to be set as model.start
+        """
+        x = [model.add_var(var_type=BINARY) for e in E]
+        t = [[model.add_var(var_type=BINARY) for e in E] for k in H]
+
+		home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
+
+        E = list(G.to_directed().edges(data='weight'))
+
+        cost, dropoffs = self.find_best_dropoffs(G, home_indices, car_path)
+        home_paths = {}
+        ta_drop = {}
+
+        for dropoff, homes in dropoffs.items():
+            for home in homes:
+                ta_drop[home] = dropoff
+
+        for i in range(len(list_of_homes)):
+            for j in range(len(car_path)):
+                home_paths[j] = [p for p in nx.all_shortest_paths(G, ta_drop[j], i, weight='weight')][0]
+
+        starter = []
+
+        for i in range(len(home_indices)):
+            curr_path = home_paths[home_indices[i]]
+            for j in range(len(curr_path) - 1):
+                for k in range(len(E)):
+                    if (E[k][0] == curr_path[j] and E[k][1] == car_path[j + 1]):
+                        starter.append((t[i][k], 1.0))
+
+        for i in range(len(car_path - 1)):
+            for j in range(len(E)):
+                if (E[j][0] == car_path[i] and E[j][1] == car_path[i + 1]):
+                    starter.append((x[j], 1.0))        
     
     def find_best_dropoffs(self, G, home_indices, car_path_indices):
         """
@@ -60,7 +105,7 @@ class BaseSolver:
         
         return total_cost, dropoffs
 
-    def construct_path(self, start, edges):
+    def construct_path(self, start, edges, input_file):
         """
         Constructs a path from an unordered list of edges given some starting vertex
         Input:
@@ -69,6 +114,9 @@ class BaseSolver:
         Output:
             List of edges in a path
         """
+        conn = sqlite3.connect('models.sqlite')
+        c = conn.cursor()
+
         G = nx.DiGraph()
         G.add_weighted_edges_from(edges)
         path = [start]
@@ -79,6 +127,9 @@ class BaseSolver:
             path += [edge[1] for edge in path_edges]
         else:
             self.log_update_entry(Fore.YELLOW + "Graph was not Eulerian." + Style.RESET_ALL)
+            c.execute('UPDATE models SET optimal = 0 WHERE input_file = ?', (input_file,))
+            conn.commit()
+        conn.close()
         return path
 
     logfile = "logfile_default.txt"
@@ -92,15 +143,12 @@ class BaseSolver:
         f.write(msg + " ")
         f.close()
         
-
-
 def randomSolveJS(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
     
     return 0, [], dict()
 
-
 class BruteForceJSSolver(BaseSolver):
-    def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
+    def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params=[]):
         """
         Solve the problem using brute force.
         Input:
@@ -159,7 +207,7 @@ class BruteForceJSSolver(BaseSolver):
         return best_solution
 
 class ILPSolver(BaseSolver):
-    def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
+    def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params=[]):
         """
         Solve the problem using an MST/DFS approach.
         Input:
@@ -173,8 +221,11 @@ class ILPSolver(BaseSolver):
             A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
             NOTE: all outputs should be in terms of indices not the names of the locations themselves
         """
+        conn = sqlite3.connect('models.sqlite')
+        c = conn.cursor()
+        seen = c.execute('SELECT best_objective_bound FROM models WHERE input_file = (?)', (input_file,)).fetchone()
         
-        self.log_new_entry(params[-1])
+        self.log_new_entry(input_file)
 
         home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
         location_indices = convert_locations_to_indices(list_of_locations, list_of_locations)
@@ -258,9 +309,6 @@ class ILPSolver(BaseSolver):
         for i in range(len(H)):
             model += xsum(f_t[i][j] for j in range(len(E)) if E[j][1] == H[i]) + f_t[i][len(E) + H[i]] == 1
 
-
-
-
         # objective function: minimize the distance
         model.objective = minimize(2.0/3.0 * xsum([x[i] * E[i][2] for i in range(len(E))]) \
             + xsum([xsum([t[i][j] * E[j][2] for j in range(len(E))]) for i in range(len(t))]))
@@ -273,7 +321,16 @@ class ILPSolver(BaseSolver):
         if "-t" in params:
             timeout = int(params[params.index("-t") + 1])
 
-        status = model.optimize(max_seconds=timeout)
+        # parameter tuning
+        if seen:
+            model.cutoff = seen[0]
+        model.symmetry = 2
+
+        if timeout != -1:
+            status = model.optimize(max_seconds=timeout)
+        else:
+            status = model.optimize()
+
         if status == OptimizationStatus.OPTIMAL:
             print('optimal solution cost {} found'.format(model.objective_value))
             self.log_update_entry(Fore.GREEN + "Optimal cost={}.".format(model.objective_value) + Style.RESET_ALL)
@@ -288,53 +345,68 @@ class ILPSolver(BaseSolver):
                 print('no feasible solution found, lower bound is: {}'.format(model.objective_bound))
                 self.log_update_entry("Failed, bound={}.".format(model.objective_bound))
 
+        # if no solution found, return inf cost
+        if model.num_solutions == 0:
+            conn.close()
+            return float('inf'), [], {}
+
         # printing the solution if found
-        if model.num_solutions:
-            out.write('Route with total cost %g found. \n' % (model.objective_value))
+        out.write('Route with total cost %g found. \n' % (model.objective_value))
 
-            if "-v" in params:
-                out.write('\nEdges (In, Out, Weight):\n')  
-                for i in E:
-                    out.write(str(i) + '\t')  
+        if "-v" in params:
+            out.write('\nEdges (In, Out, Weight):\n')  
+            for i in E:
+                out.write(str(i) + '\t')  
 
-                out.write('\n\nCar - Chosen Edges:\n')       
-                for i in x:
-                    out.write(str(i.x) + '\t')
+            out.write('\n\nCar - Chosen Edges:\n')       
+            for i in x:
+                out.write(str(i.x) + '\t')
 
-                out.write('\n\nCar - Flow Capacities:\n')  
-                for i in f:
-                    out.write(str(i.x) + '\t')
+            out.write('\n\nCar - Flow Capacities:\n')  
+            for i in f:
+                out.write(str(i.x) + '\t')
 
-                out.write('\n\nTAs - Home Indices:\n')  
-                for i in H:
-                    out.write(str(i) + '\n')
+            out.write('\n\nTAs - Home Indices:\n')  
+            for i in H:
+                out.write(str(i) + '\n')
 
-                out.write('\nTAs - Chosen Edges:\n')  
-                for i in t:
-                    for j in range(len(i)):
-                        out.write(str(i[j].x) + '\t')
-                    out.write('\n') 
+            out.write('\nTAs - Chosen Edges:\n')  
+            for i in t:
+                for j in range(len(i)):
+                    out.write(str(i[j].x) + '\t')
+                out.write('\n') 
 
-                out.write('\nTAs - Flow Capacities:\n')  
-                for i in f_t:
-                    for j in range(len(i)):
-                        out.write(str(i[j].x) + '\t')
-                    out.write('\n')
-
-                out.write('\nActive Edges:\n')  
-
-                for i in range(len(x)):
-                    if (x[i].x >= 1.0):
-                        out.write('Edge from %i to %i with weight %f \n' % (E[i][0], E[i][1], E[i][2]))
+            out.write('\nTAs - Flow Capacities:\n')  
+            for i in f_t:
+                for j in range(len(i)):
+                    out.write(str(i[j].x) + '\t')
                 out.write('\n')
 
+            out.write('\nActive Edges:\n')  
+
+            for i in range(len(x)):
+                if (x[i].x >= 1.0):
+                    out.write('Edge from %i to %i with weight %f \n' % (E[i][0], E[i][1], E[i][2]))
+            out.write('\n')
+
         list_of_edges = [E[i] for i in range(len(x)) if x[i].x >= 1.0]
-        car_path_indices = self.construct_path(starting_car_index, list_of_edges)
+        car_path_indices = self.construct_path(starting_car_index, list_of_edges, input_file)
         
         walk_cost, dropoffs_dict = self.find_best_dropoffs(G, home_indices, car_path_indices)
-        
+
+        if not seen:
+            print("SAVING", input_file)
+            c.execute('INSERT INTO models (input_file, best_objective_bound, optimal) VALUES (?, ?, ?)', \
+                (input_file, model.objective_value, status == OptimizationStatus.OPTIMAL))
+            conn.commit()
+        elif model.objective_value < seen[0]:
+            c.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', \
+                (model.objective_value, status == OptimizationStatus.OPTIMAL, input_file))
+            conn.commit()
+
         if not "-s" in params:
             print(car_path_indices)
             print("Walk cost =", walk_cost)
 
+        conn.close()
         return model.objective_value, car_path_indices, dropoffs_dict
