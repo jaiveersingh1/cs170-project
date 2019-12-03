@@ -94,7 +94,7 @@ def convertToFile(path, dropoff_mapping, path_to_file, list_locs):
     utils.write_to_file(path_to_file, string)
 
 def solve_from_file(input_file, output_directory, params=[]):
-    print('Processing', input_file)
+    print('\nProcessing', input_file)
 
     conn = sqlite3.connect('models.sqlite')
     c = conn.cursor()
