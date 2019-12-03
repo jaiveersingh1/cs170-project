@@ -282,13 +282,6 @@ class ILPSolver(BaseSolver):
             model.cutoff = seen[0]
         model.symmetry = 2
 
-        # add previous_sol
-        for s in sol:
-            for i in range(len(E)):
-                e = E[i]
-                if s == e:
-                    x[i].x = 1
-
         if timeout != -1:
             status = model.optimize(max_seconds=timeout)
         else:
