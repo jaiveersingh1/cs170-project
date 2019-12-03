@@ -4,6 +4,7 @@ sys.path.append('..')
 sys.path.append('../..')
 import argparse
 import utils
+import drawing
 from solver_toolbox import *
 
 from student_utils import *

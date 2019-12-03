@@ -1,0 +1,24 @@
+
+Mon Dec  2 20:35:19 2019	26_200.in  	 [31mTimeout![0m Failed, bound=3677.333333333333. 
+Mon Dec  2 20:45:28 2019	28_200.in  	 [31mTimeout![0m Feasible cost=929722367.0691397, bound=598970964.769798. 
+Mon Dec  2 21:02:08 2019	29_200.in  	 [31mTimeout![0m Failed, bound=3233.4294595740535. 
+Mon Dec  2 21:20:18 2019	30_200.in  	 [31mTimeout![0m Feasible cost=384.22427333333326, bound=290.29544517293976. 
+Mon Dec  2 21:30:22 2019	31_200.in  	 [31mTimeout![0m Feasible cost=256947621700.8213, bound=198839925172.79956. [33mGraph was not Eulerian.[0m 
+Mon Dec  2 21:40:31 2019	32_200.in  	 [31mTimeout![0m Feasible cost=48.666666666666664, bound=47.666666666666664. 
+Mon Dec  2 21:50:32 2019	33_200.in  	 [32mOptimal cost=2580.6666666666665.[0m 
+Mon Dec  2 21:53:17 2019	34_200.in  	 [32mOptimal cost=56.66666666666667.[0m 
+Mon Dec  2 21:58:02 2019	35_200.in  	 [32mOptimal cost=94.33333333333333.[0m 
+Mon Dec  2 21:59:32 2019	36_200.in  	 [32mOptimal cost=144.0.[0m 
+Mon Dec  2 22:03:42 2019	37_200.in  	 [31mTimeout![0m Failed, bound=855.9281415547604. 
+Mon Dec  2 22:14:40 2019	38_200.in  	 [31mTimeout![0m Feasible cost=2052.6666666666665, bound=2021.6666666666665. 
+Mon Dec  2 22:25:09 2019	39_200.in  	 [31mTimeout![0m Feasible cost=13762151198.880407, bound=7202866237.337717. 
+Mon Dec  2 22:35:40 2019	40_200.in  	 [31mTimeout![0m Failed, bound=374025.592914451. 
+Mon Dec  2 22:47:58 2019	41_200.in  	 [32mOptimal cost=2449.3333333333335.[0m 
+Mon Dec  2 22:57:06 2019	42_200.in  	 [32mOptimal cost=181.0.[0m 
+Mon Dec  2 22:58:35 2019	43_200.in  	 [32mOptimal cost=562840.6666666666.[0m 
+Mon Dec  2 23:00:24 2019	44_200.in  	 [31mTimeout![0m Failed, bound=13583.666666666666. 
+Mon Dec  2 23:13:02 2019	45_200.in  	 [31mTimeout![0m Feasible cost=1458.13716, bound=1419.309660885725. 
+Mon Dec  2 23:24:14 2019	46_200.in  	 [31mTimeout![0m Feasible cost=40944210087.61709, bound=35360232289.74381. 
+Mon Dec  2 23:35:41 2019	48_200.in  	 [31mTimeout![0m Feasible cost=501804288.0, bound=10368.0. 
+Mon Dec  2 23:50:31 2019	49_200.in  	 [31mTimeout![0m Failed, bound=3380.6666666666665. 
+Tue Dec  3 00:04:37 2019	50_200.in  	 [31mTimeout![0m Feasible cost=215690111.89827612, bound=2469.620977548858. 
