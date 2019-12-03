@@ -13,7 +13,6 @@ import os
 class BaseSolver:
     """ Base class for solvers """
 
-
     def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params=[]):
         """
         Solve the problem using a specific technique.
@@ -29,6 +28,52 @@ class BaseSolver:
             NOTE: all outputs should be in terms of indices not the names of the locations themselves
         """
         return 0, [], dict()
+
+    def construct_starter(self, G, list_of_homes, car_path):
+        """
+        Treating the car's cycle as constant, find a valid solution to the corresponding ILP problem.
+        Input:
+            G: A NetworkX graph
+            list_of_homes: The list of homes in the graph
+            car_path: The indices of the vertices in G that are in the car path
+        Output:
+            MIP Model Starter, to be set as model.start
+        """
+
+		home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
+
+        E = list(G.to_directed().edges(data='weight'))
+
+        x = ['x' for e in E]
+        t = [['x' for e in E] for h in home_indices]
+
+        cost, dropoffs = self.find_best_dropoffs(G, home_indices, car_path)
+        home_paths = {}
+        ta_drop = {}
+
+        for dropoff, homes in dropoffs.items():
+            for home in homes:
+                ta_drop[home] = dropoff
+
+        for i in range(len(list_of_homes)):
+            for j in range(len(car_path)):
+                home_paths[j] = [p for p in nx.all_shortest_paths(G, ta_drop[j], i, weight='weight')][0]
+
+        starter = []
+
+        for i in range(len(home_indices)):
+            curr_path = home_paths[home_indices[i]]
+            for j in range(len(curr_path) - 1):
+                for k in range(len(E)):
+                    if (E[k][0] == curr_path[j] and E[k][1] == car_path[j + 1]):
+                        starter.append((t[i][k], 1.0))
+
+        for i in range(len(car_path - 1)):
+            for j in range(len(E)):
+                if (E[j][0] == car_path[i] and E[j][1] == car_path[i + 1]):
+                    starter.append((x[j], 1.0))       
+
+        return starter 
     
     def find_best_dropoffs(self, G, home_indices, car_path_indices):
         """
@@ -356,13 +401,7 @@ class ILPSolver(BaseSolver):
                 (input_file, model.objective_value, status == OptimizationStatus.OPTIMAL))
             conn.commit()
         elif model.objective_value < seen[0]:
-            print("UPDATING", input_file)
-            c.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', \
-                (model.objective_value, status == OptimizationStatus.OPTIMAL, input_file))
-            conn.commit()
-
         if not "-s" in params:
-            print(car_path_indices)
             print("Walk cost =", walk_cost, "\n")
 
         conn.close()
