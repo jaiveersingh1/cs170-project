@@ -11,402 +11,402 @@ import sqlite3
 import os
 
 class BaseSolver:
-    """ Base class for solvers """
+	""" Base class for solvers """
 
-    def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params=[]):
-        """
-        Solve the problem using a specific technique.
-        Input:
-            list_of_locations: A list of locations such that node i of the graph corresponds to name at index i of the list
-            list_of_homes: A list of homes
-            starting_car_location: The name of the starting location for the car
-            adjacency_matrix: The adjacency matrix from the input file
-        Output:
-            A cost of how expensive the current solution is
-            A list of locations representing the car path
-            A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
-            NOTE: all outputs should be in terms of indices not the names of the locations themselves
-        """
-        return 0, [], dict()
+	def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params=[]):
+		"""
+		Solve the problem using a specific technique.
+		Input:
+			list_of_locations: A list of locations such that node i of the graph corresponds to name at index i of the list
+			list_of_homes: A list of homes
+			starting_car_location: The name of the starting location for the car
+			adjacency_matrix: The adjacency matrix from the input file
+		Output:
+			A cost of how expensive the current solution is
+			A list of locations representing the car path
+			A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
+			NOTE: all outputs should be in terms of indices not the names of the locations themselves
+		"""
+		return 0, [], dict()
 
-    def construct_starter(self, G, list_of_homes, car_path):
-        """
-        Treating the car's cycle as constant, find a valid solution to the corresponding ILP problem.
-        Input:
-            G: A NetworkX graph
-            list_of_homes: The list of homes in the graph
-            car_path: The indices of the vertices in G that are in the car path
-        Output:
-            MIP Model Starter, to be set as model.start
-        """
+	def construct_starter(self, G, list_of_homes, car_path):
+		"""
+		Treating the car's cycle as constant, find a valid solution to the corresponding ILP problem.
+		Input:
+			G: A NetworkX graph
+			list_of_homes: The list of homes in the graph
+			car_path: The indices of the vertices in G that are in the car path
+		Output:
+			MIP Model Starter, to be set as model.start
+		"""
 
 		home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
 
-        E = list(G.to_directed().edges(data='weight'))
+		E = list(G.to_directed().edges(data='weight'))
 
-        x = ['x' for e in E]
-        t = [['x' for e in E] for h in home_indices]
+		x = ['x' for e in E]
+		t = [['x' for e in E] for h in home_indices]
 
-        cost, dropoffs = self.find_best_dropoffs(G, home_indices, car_path)
-        home_paths = {}
-        ta_drop = {}
+		cost, dropoffs = self.find_best_dropoffs(G, home_indices, car_path)
+		home_paths = {}
+		ta_drop = {}
 
-        for dropoff, homes in dropoffs.items():
-            for home in homes:
-                ta_drop[home] = dropoff
+		for dropoff, homes in dropoffs.items():
+			for home in homes:
+				ta_drop[home] = dropoff
 
-        for i in range(len(list_of_homes)):
-            for j in range(len(car_path)):
-                home_paths[j] = [p for p in nx.all_shortest_paths(G, ta_drop[j], i, weight='weight')][0]
+		for i in range(len(list_of_homes)):
+			for j in range(len(car_path)):
+				home_paths[j] = [p for p in nx.all_shortest_paths(G, ta_drop[j], i, weight='weight')][0]
 
-        starter = []
+		starter = []
 
-        for i in range(len(home_indices)):
-            curr_path = home_paths[home_indices[i]]
-            for j in range(len(curr_path) - 1):
-                for k in range(len(E)):
-                    if (E[k][0] == curr_path[j] and E[k][1] == car_path[j + 1]):
-                        starter.append((t[i][k], 1.0))
+		for i in range(len(home_indices)):
+			curr_path = home_paths[home_indices[i]]
+			for j in range(len(curr_path) - 1):
+				for k in range(len(E)):
+					if (E[k][0] == curr_path[j] and E[k][1] == car_path[j + 1]):
+						starter.append((t[i][k], 1.0))
 
-        for i in range(len(car_path - 1)):
-            for j in range(len(E)):
-                if (E[j][0] == car_path[i] and E[j][1] == car_path[i + 1]):
-                    starter.append((x[j], 1.0))       
+		for i in range(len(car_path - 1)):
+			for j in range(len(E)):
+				if (E[j][0] == car_path[i] and E[j][1] == car_path[i + 1]):
+					starter.append((x[j], 1.0))       
 
-        return starter 
-    
-    def find_best_dropoffs(self, G, home_indices, car_path_indices):
-        """
-        Treating the car's cycle as constant, find the best dropoff locations for the TAs to minimize walking cost.
-        Input:
-            G: A NetworkX graph
-            home_indices: The indices of the vertices in G that are TA homes
-            car_path_indices: The indices of the vertices in G that are in the car path
-        Output:
-            Total walking cost (TA ONLY)
-            A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
-            NOTE: all outputs should be in terms of indices not the names of the locations themselves
-        """
+		return starter 
+	
+	def find_best_dropoffs(self, G, home_indices, car_path_indices):
+		"""
+		Treating the car's cycle as constant, find the best dropoff locations for the TAs to minimize walking cost.
+		Input:
+			G: A NetworkX graph
+			home_indices: The indices of the vertices in G that are TA homes
+			car_path_indices: The indices of the vertices in G that are in the car path
+		Output:
+			Total walking cost (TA ONLY)
+			A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
+			NOTE: all outputs should be in terms of indices not the names of the locations themselves
+		"""
 
-        # Initialize shortest_distances matrix, where shortest_distances[r][c] is the shortest distance from r to c
-        shortest_distances = dict(nx.floyd_warshall(G))
+		# Initialize shortest_distances matrix, where shortest_distances[r][c] is the shortest distance from r to c
+		shortest_distances = dict(nx.floyd_warshall(G))
 
-        # Determine TA dropoff
-        dropoffs = {}
-        total_cost = 0
+		# Determine TA dropoff
+		dropoffs = {}
+		total_cost = 0
 
-        for home in home_indices:
+		for home in home_indices:
 
-            # Find preferred dropoff location for this TA
-            best_dropoff = None
-            for dropoff in car_path_indices:
-                if best_dropoff == None or shortest_distances[dropoff][home] < shortest_distances[best_dropoff][home]:
-                    best_dropoff = dropoff
+			# Find preferred dropoff location for this TA
+			best_dropoff = None
+			for dropoff in car_path_indices:
+				if best_dropoff == None or shortest_distances[dropoff][home] < shortest_distances[best_dropoff][home]:
+					best_dropoff = dropoff
 
-            dropoffs[best_dropoff] = dropoffs.get(best_dropoff, []) + [home]
-            total_cost += shortest_distances[best_dropoff][home]
-        
-        return total_cost, dropoffs
+			dropoffs[best_dropoff] = dropoffs.get(best_dropoff, []) + [home]
+			total_cost += shortest_distances[best_dropoff][home]
+		
+		return total_cost, dropoffs
 
-    def construct_path(self, start, edges, input_file):
-        """
-        Constructs a path from an unordered list of edges given some starting vertex
-        Input:
-            start: starting vertex
-            edges: list of edges represented by integer pairs
-        Output:
-            List of edges in a path
-        """
-        conn = sqlite3.connect('models.sqlite')
-        c = conn.cursor()
+	def construct_path(self, start, edges, input_file):
+		"""
+		Constructs a path from an unordered list of edges given some starting vertex
+		Input:
+			start: starting vertex
+			edges: list of edges represented by integer pairs
+		Output:
+			List of edges in a path
+		"""
+		conn = sqlite3.connect('models.sqlite')
+		c = conn.cursor()
 
-        G = nx.DiGraph()
-        G.add_weighted_edges_from(edges)
-        path = [start]
-        if not edges:
-            self.log_update_entry(Fore.YELLOW + "No edges." + Style.RESET_ALL)
-        elif nx.is_eulerian(G):
-            path_edges = list(nx.eulerian_circuit(G, start))
-            path += [edge[1] for edge in path_edges]
-        else:
-            self.log_update_entry(Fore.YELLOW + "Graph was not Eulerian." + Style.RESET_ALL)
-            c.execute('UPDATE models SET optimal = 0 WHERE input_file = ?', (input_file,))
-            conn.commit()
-        conn.close()
-        return path
+		G = nx.DiGraph()
+		G.add_weighted_edges_from(edges)
+		path = [start]
+		if not edges:
+			self.log_update_entry(Fore.YELLOW + "No edges." + Style.RESET_ALL)
+		elif nx.is_eulerian(G):
+			path_edges = list(nx.eulerian_circuit(G, start))
+			path += [edge[1] for edge in path_edges]
+		else:
+			self.log_update_entry(Fore.YELLOW + "Graph was not Eulerian." + Style.RESET_ALL)
+			c.execute('UPDATE models SET optimal = 0 WHERE input_file = ?', (input_file,))
+			conn.commit()
+		conn.close()
+		return path
 
-    logfile = "logfile_default.txt"
-    
-    def log_new_entry(self, input_file):
-        msg = "\n{}\t{}  \t".format(time.ctime(), input_file)
-        self.log_update_entry(msg)
+	logfile = "logfile_default.txt"
+	
+	def log_new_entry(self, input_file):
+		msg = "\n{}\t{}  \t".format(time.ctime(), input_file)
+		self.log_update_entry(msg)
 
-    def log_update_entry(self, msg):
-        f = open(self.logfile, "a+")
-        f.write(msg + " ")
-        f.close()
-        
+	def log_update_entry(self, msg):
+		f = open(self.logfile, "a+")
+		f.write(msg + " ")
+		f.close()
+		
 def randomSolveJS(list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, params=[]):
-    
-    return 0, [], dict()
+	
+	return 0, [], dict()
 
 class BruteForceJSSolver(BaseSolver):
-    def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params=[]):
-        """
-        Solve the problem using brute force.
-        Input:
-            list_of_locations: A list of locations such that node i of the graph corresponds to name at index i of the list
-            list_of_homes: A list of homes
-            starting_car_location: The name of the starting location for the car
-            adjacency_matrix: The adjacency matrix from the input file
-        Output:
-            A cost of how expensive the current solution is
-            A list of locations representing the car path
-            A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
-            NOTE: all outputs should be in terms of indices not the names of the locations themselves
-        """
-        home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
+	def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params=[]):
+		"""
+		Solve the problem using brute force.
+		Input:
+			list_of_locations: A list of locations such that node i of the graph corresponds to name at index i of the list
+			list_of_homes: A list of homes
+			starting_car_location: The name of the starting location for the car
+			adjacency_matrix: The adjacency matrix from the input file
+		Output:
+			A cost of how expensive the current solution is
+			A list of locations representing the car path
+			A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
+			NOTE: all outputs should be in terms of indices not the names of the locations themselves
+		"""
+		home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
 
-        G, message = adjacency_matrix_to_graph(adjacency_matrix)
-        E = G.to_directed().edges(data='weight')
+		G, message = adjacency_matrix_to_graph(adjacency_matrix)
+		E = G.to_directed().edges(data='weight')
 
-        starting_car_index = list_of_locations.index(starting_car_location)
-        best_solution = (float('inf'), [], {})
+		starting_car_index = list_of_locations.index(starting_car_location)
+		best_solution = (float('inf'), [], {})
 
-        def powerset(L):
-          for n in range(len(L) + 1):
-            yield from itertools.combinations(L, n)
+		def powerset(L):
+		  for n in range(len(L) + 1):
+			yield from itertools.combinations(L, n)
 
-        counter = 0
-        for edge_set in powerset(E):
-            counter += 1
-            if (counter % 10000 == 0):
-                print(counter, end=" ")
+		counter = 0
+		for edge_set in powerset(E):
+			counter += 1
+			if (counter % 10000 == 0):
+				print(counter, end=" ")
 
-            # Check if edge set is valid
-            entry_counts = [0 for _ in list_of_locations]
-            exit_counts = [0 for _ in list_of_locations]
-            visited = set()
-            driving_cost = 0
-            contains_start = False
-            
-            for edge in edge_set:
-                visited.add(edge[1])
-                driving_cost += 2/3 * edge[2]
-                if (edge[0] == starting_car_index or edge[1] == starting_car_index):
-                    contains_start = True
+			# Check if edge set is valid
+			entry_counts = [0 for _ in list_of_locations]
+			exit_counts = [0 for _ in list_of_locations]
+			visited = set()
+			driving_cost = 0
+			contains_start = False
+			
+			for edge in edge_set:
+				visited.add(edge[1])
+				driving_cost += 2/3 * edge[2]
+				if (edge[0] == starting_car_index or edge[1] == starting_car_index):
+					contains_start = True
 
-            G_chosen = nx.DiGraph()
-            G_chosen.add_weighted_edges_from(edge_set)
+			G_chosen = nx.DiGraph()
+			G_chosen.add_weighted_edges_from(edge_set)
 
-            if edge_set and nx.is_eulerian(G_chosen) and contains_start:
-                walking_cost, dropoffs = self.find_best_dropoffs(G, home_indices, list(visited))
-                total_cost = walking_cost + driving_cost
+			if edge_set and nx.is_eulerian(G_chosen) and contains_start:
+				walking_cost, dropoffs = self.find_best_dropoffs(G, home_indices, list(visited))
+				total_cost = walking_cost + driving_cost
 
-                if total_cost < best_solution[0]:
-                    best_solution = (total_cost, self.construct_path(starting_car_index, edge_set), dropoffs)
-        
-        print("\n\nBest cost was", best_solution[0])
-        return best_solution
+				if total_cost < best_solution[0]:
+					best_solution = (total_cost, self.construct_path(starting_car_index, edge_set), dropoffs)
+		
+		print("\n\nBest cost was", best_solution[0])
+		return best_solution
 
 class ILPSolver(BaseSolver):
-    def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params=[]):
-        """
-        Solve the problem using an MST/DFS approach.
-        Input:
-            list_of_locations: A list of locations such that node i of the graph corresponds to name at index i of the list
-            list_of_homes: A list of homes
-            starting_car_location: The name of the starting location for the car
-            adjacency_matrix: The adjacency matrix from the input file
-        Output:
-            A cost of how expensive the current solution is
-            A list of locations representing the car path
-            A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
-            NOTE: all outputs should be in terms of indices not the names of the locations themselves
-        """
-        conn = sqlite3.connect('models.sqlite')
-        c = conn.cursor()
-        seen = c.execute('SELECT best_objective_bound FROM models WHERE input_file = (?)', (input_file,)).fetchone()
-        
-        self.log_new_entry(input_file)
+	def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params=[]):
+		"""
+		Solve the problem using an MST/DFS approach.
+		Input:
+			list_of_locations: A list of locations such that node i of the graph corresponds to name at index i of the list
+			list_of_homes: A list of homes
+			starting_car_location: The name of the starting location for the car
+			adjacency_matrix: The adjacency matrix from the input file
+		Output:
+			A cost of how expensive the current solution is
+			A list of locations representing the car path
+			A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
+			NOTE: all outputs should be in terms of indices not the names of the locations themselves
+		"""
+		conn = sqlite3.connect('models.sqlite')
+		c = conn.cursor()
+		seen = c.execute('SELECT best_objective_bound FROM models WHERE input_file = (?)', (input_file,)).fetchone()
+		
+		self.log_new_entry(input_file)
 
-        home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
-        location_indices = convert_locations_to_indices(list_of_locations, list_of_locations)
+		home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
+		location_indices = convert_locations_to_indices(list_of_locations, list_of_locations)
 
-        G, message = adjacency_matrix_to_graph(adjacency_matrix)
-        E = list(G.to_directed().edges(data='weight'))
+		G, message = adjacency_matrix_to_graph(adjacency_matrix)
+		E = list(G.to_directed().edges(data='weight'))
 
-        starting_car_index = list_of_locations.index(starting_car_location)
+		starting_car_index = list_of_locations.index(starting_car_location)
 
-        # number of nodes and list of vertices, not including source or sink
-        n, V, H = len(list_of_locations), location_indices, home_indices 
-        bigNum = (2 * n) 
+		# number of nodes and list of vertices, not including source or sink
+		n, V, H = len(list_of_locations), location_indices, home_indices 
+		bigNum = (2 * n) 
 
-        model = Model()
+		model = Model()
 
-        # does the car drive from i to j?
-        x = [model.add_var(var_type=BINARY) for e in E]
+		# does the car drive from i to j?
+		x = [model.add_var(var_type=BINARY) for e in E]
 
-        # does the kth TA walk from i to j? over all num_homes TAs
-        t = [[model.add_var(var_type=BINARY) for e in E] for k in H]
+		# does the kth TA walk from i to j? over all num_homes TAs
+		t = [[model.add_var(var_type=BINARY) for e in E] for k in H]
 
-        # car flow from vertex u to vertex v
-        f = [model.add_var(var_type=INTEGER) for e in E] \
-        + [model.add_var(var_type=INTEGER) for v in V] \
-        + [model.add_var(var_type=INTEGER)]
+		# car flow from vertex u to vertex v
+		f = [model.add_var(var_type=INTEGER) for e in E] \
+		+ [model.add_var(var_type=INTEGER) for v in V] \
+		+ [model.add_var(var_type=INTEGER)]
 
-        # kth TA flow from vertex u to vertex v
-        f_t = [[model.add_var(var_type=BINARY) for e in E] + [model.add_var(var_type=BINARY) for v in V] for k in H]
+		# kth TA flow from vertex u to vertex v
+		f_t = [[model.add_var(var_type=BINARY) for e in E] + [model.add_var(var_type=BINARY) for v in V] for k in H]
 
-        for i in range(len(f)):
-            model += f[i] >= 0
+		for i in range(len(f)):
+			model += f[i] >= 0
 
-        # For each vertex v where v != source and v != sink, Sum{x_(u, v)} = Sum{x_(v, w)}
-        for v in V:
-            model += xsum([x[i] for i in range(len(E)) if E[i][1] == v]) == xsum([x[i] for i in range(len(E)) if E[i][0] == v])
+		# For each vertex v where v != source and v != sink, Sum{x_(u, v)} = Sum{x_(v, w)}
+		for v in V:
+			model += xsum([x[i] for i in range(len(E)) if E[i][1] == v]) == xsum([x[i] for i in range(len(E)) if E[i][0] == v])
 
-        # For each vertex v where v != sink, Sum{f_(u, v)} = Sum{f_(v, w)}
-        for j in range(len(V)):
-            model += xsum([f[i] for i in range(len(E)) if E[i][1] == V[j]]) + (f[-1] if V[j] == starting_car_index else 0) \
-                 == xsum([f[i] for i in range(len(E)) if E[i][0] == V[j]]) + f[len(E) + j]
+		# For each vertex v where v != sink, Sum{f_(u, v)} = Sum{f_(v, w)}
+		for j in range(len(V)):
+			model += xsum([f[i] for i in range(len(E)) if E[i][1] == V[j]]) + (f[-1] if V[j] == starting_car_index else 0) \
+				 == xsum([f[i] for i in range(len(E)) if E[i][0] == V[j]]) + f[len(E) + j]
 
-        # For each edge (u, v) where u != source and v != sink, f_(u, v) <= (big number) * x_(u, v)
-        for i in range(len(E)):
-            model += f[i] <= bigNum * x[i]
+		# For each edge (u, v) where u != source and v != sink, f_(u, v) <= (big number) * x_(u, v)
+		for i in range(len(E)):
+			model += f[i] <= bigNum * x[i]
 
-        # For edge (source, start vertex), f_(source, start vertex) <= (big number)
-        model += f[-1] <= bigNum
+		# For edge (source, start vertex), f_(source, start vertex) <= (big number)
+		model += f[-1] <= bigNum
 
-        # For each edge (u, sink), f_(u, sink) <= Sum{x_(w, u)}
-        for j in range(len(V)):
-            model += f[j + len(E)] \
-                 <= xsum([x[i] for i in range(len(E)) if E[i][1] == V[j]])
+		# For each edge (u, sink), f_(u, sink) <= Sum{x_(w, u)}
+		for j in range(len(V)):
+			model += f[j + len(E)] \
+				 <= xsum([x[i] for i in range(len(E)) if E[i][1] == V[j]])
 
-        # For just the source vertex, f_(source,start vertex)} = Sum{x_(a, b)}
-        model += f[-1] == xsum(x)
+		# For just the source vertex, f_(source,start vertex)} = Sum{x_(a, b)}
+		model += f[-1] == xsum(x)
 
-        # For every TA for every edge, can't flow unless edge is walked along
-        for i in range(len(t)):
-            for j in range(len(E)):
-                model += f_t[i][j] <= t[i][j]
+		# For every TA for every edge, can't flow unless edge is walked along
+		for i in range(len(t)):
+			for j in range(len(E)):
+				model += f_t[i][j] <= t[i][j]
 
-        # For every TA for every non-home vertex, flow in equals flow out
-        for i in range(len(H)):
-            for j in range(len(V)):
-                if V[j] != H[i]:
-                    model += xsum(f_t[i][k] for k in range(len(E)) if E[k][1] == V[j]) + f_t[i][len(E) + j] \
-                        == xsum(f_t[i][k] for k in range(len(E)) if E[k][0] == V[j])
+		# For every TA for every non-home vertex, flow in equals flow out
+		for i in range(len(H)):
+			for j in range(len(V)):
+				if V[j] != H[i]:
+					model += xsum(f_t[i][k] for k in range(len(E)) if E[k][1] == V[j]) + f_t[i][len(E) + j] \
+						== xsum(f_t[i][k] for k in range(len(E)) if E[k][0] == V[j])
 
-        # For every TA, flow out of the source vertex is exactly 1
-        for k in f_t:
-            model += xsum(k[len(E) + i] for i in range(len(V))) == 1
+		# For every TA, flow out of the source vertex is exactly 1
+		for k in f_t:
+			model += xsum(k[len(E) + i] for i in range(len(V))) == 1
 
-        # For every TA for every edge out of source, can't flow unless car visits vertex
-        for k in f_t:
-            for i in range(len(V)):
-                model += k[len(E) + i] <= xsum(x[j] for j in range(len(E)) if E[j][1] == V[i])
+		# For every TA for every edge out of source, can't flow unless car visits vertex
+		for k in f_t:
+			for i in range(len(V)):
+				model += k[len(E) + i] <= xsum(x[j] for j in range(len(E)) if E[j][1] == V[i])
 
-        # For every TA, flow into the home vertex is exactly 1
-        for i in range(len(H)):
-            model += xsum(f_t[i][j] for j in range(len(E)) if E[j][1] == H[i]) + f_t[i][len(E) + H[i]] == 1
+		# For every TA, flow into the home vertex is exactly 1
+		for i in range(len(H)):
+			model += xsum(f_t[i][j] for j in range(len(E)) if E[j][1] == H[i]) + f_t[i][len(E) + H[i]] == 1
 
-        # objective function: minimize the distance
-        model.objective = minimize(2.0/3.0 * xsum([x[i] * E[i][2] for i in range(len(E))]) \
-            + xsum([xsum([t[i][j] * E[j][2] for j in range(len(E))]) for i in range(len(t))]))
+		# objective function: minimize the distance
+		model.objective = minimize(2.0/3.0 * xsum([x[i] * E[i][2] for i in range(len(E))]) \
+			+ xsum([xsum([t[i][j] * E[j][2] for j in range(len(E))]) for i in range(len(t))]))
 
-        # WINNING ONLINE
-        model.max_gap = 0.00001
-        model.emphasis = 2
+		# WINNING ONLINE
+		model.max_gap = 0.00001
+		model.emphasis = 2
 
-        timeout = 300
-        if "-t" in params:
-            timeout = int(params[params.index("-t") + 1])
+		timeout = 300
+		if "-t" in params:
+			timeout = int(params[params.index("-t") + 1])
 
-        # parameter tuning
-        if seen:
-            model.cutoff = seen[0]
-        model.symmetry = 2
+		# parameter tuning
+		if seen:
+			model.cutoff = seen[0]
+		model.symmetry = 2
 
-        if timeout != -1:
-            status = model.optimize(max_seconds=timeout)
-        else:
-            status = model.optimize()
+		if timeout != -1:
+			status = model.optimize(max_seconds=timeout)
+		else:
+			status = model.optimize()
 
-        if status == OptimizationStatus.OPTIMAL:
-            print('optimal solution cost {} found'.format(model.objective_value))
-            self.log_update_entry(Fore.GREEN + "Optimal cost={}.".format(model.objective_value) + Style.RESET_ALL)
-        else:
-            print("!!!! TIMEOUT !!!!")
-            self.log_update_entry(Fore.RED + "Timeout!" + Style.RESET_ALL)
+		if status == OptimizationStatus.OPTIMAL:
+			print('optimal solution cost {} found'.format(model.objective_value))
+			self.log_update_entry(Fore.GREEN + "Optimal cost={}.".format(model.objective_value) + Style.RESET_ALL)
+		else:
+			print("!!!! TIMEOUT !!!!")
+			self.log_update_entry(Fore.RED + "Timeout!" + Style.RESET_ALL)
 
-            if status == OptimizationStatus.FEASIBLE:
-                print('sol.cost {} found, best possible: {}'.format(model.objective_value, model.objective_bound))
-                self.log_update_entry("Feasible cost={}, bound={}.".format(model.objective_value, model.objective_bound))
-            elif status == OptimizationStatus.NO_SOLUTION_FOUND:
-                print('no feasible solution found, lower bound is: {}'.format(model.objective_bound))
-                self.log_update_entry("Failed, bound={}.".format(model.objective_bound))
+			if status == OptimizationStatus.FEASIBLE:
+				print('sol.cost {} found, best possible: {}'.format(model.objective_value, model.objective_bound))
+				self.log_update_entry("Feasible cost={}, bound={}.".format(model.objective_value, model.objective_bound))
+			elif status == OptimizationStatus.NO_SOLUTION_FOUND:
+				print('no feasible solution found, lower bound is: {}'.format(model.objective_bound))
+				self.log_update_entry("Failed, bound={}.".format(model.objective_bound))
 
-        # if no solution found, return inf cost
-        if model.num_solutions == 0:
-            conn.close()
-            return float('inf'), [], {}
+		# if no solution found, return inf cost
+		if model.num_solutions == 0:
+			conn.close()
+			return float('inf'), [], {}
 
-        # printing the solution if found
-        out.write('Route with total cost %g found. \n' % (model.objective_value))
+		# printing the solution if found
+		out.write('Route with total cost %g found. \n' % (model.objective_value))
 
-        if "-v" in params:
-            out.write('\nEdges (In, Out, Weight):\n')  
-            for i in E:
-                out.write(str(i) + '\t')  
+		if "-v" in params:
+			out.write('\nEdges (In, Out, Weight):\n')  
+			for i in E:
+				out.write(str(i) + '\t')  
 
-            out.write('\n\nCar - Chosen Edges:\n')       
-            for i in x:
-                out.write(str(i.x) + '\t')
+			out.write('\n\nCar - Chosen Edges:\n')       
+			for i in x:
+				out.write(str(i.x) + '\t')
 
-            out.write('\n\nCar - Flow Capacities:\n')  
-            for i in f:
-                out.write(str(i.x) + '\t')
+			out.write('\n\nCar - Flow Capacities:\n')  
+			for i in f:
+				out.write(str(i.x) + '\t')
 
-            out.write('\n\nTAs - Home Indices:\n')  
-            for i in H:
-                out.write(str(i) + '\n')
+			out.write('\n\nTAs - Home Indices:\n')  
+			for i in H:
+				out.write(str(i) + '\n')
 
-            out.write('\nTAs - Chosen Edges:\n')  
-            for i in t:
-                for j in range(len(i)):
-                    out.write(str(i[j].x) + '\t')
-                out.write('\n') 
+			out.write('\nTAs - Chosen Edges:\n')  
+			for i in t:
+				for j in range(len(i)):
+					out.write(str(i[j].x) + '\t')
+				out.write('\n') 
 
-            out.write('\nTAs - Flow Capacities:\n')  
-            for i in f_t:
-                for j in range(len(i)):
-                    out.write(str(i[j].x) + '\t')
-                out.write('\n')
+			out.write('\nTAs - Flow Capacities:\n')  
+			for i in f_t:
+				for j in range(len(i)):
+					out.write(str(i[j].x) + '\t')
+				out.write('\n')
 
-            out.write('\nActive Edges:\n')  
+			out.write('\nActive Edges:\n')  
 
-            for i in range(len(x)):
-                if (x[i].x >= 1.0):
-                    out.write('Edge from %i to %i with weight %f \n' % (E[i][0], E[i][1], E[i][2]))
-            out.write('\n')
+			for i in range(len(x)):
+				if (x[i].x >= 1.0):
+					out.write('Edge from %i to %i with weight %f \n' % (E[i][0], E[i][1], E[i][2]))
+			out.write('\n')
 
-        list_of_edges = [E[i] for i in range(len(x)) if x[i].x >= 1.0]
-        car_path_indices = self.construct_path(starting_car_index, list_of_edges, input_file)
-        
-        walk_cost, dropoffs_dict = self.find_best_dropoffs(G, home_indices, car_path_indices)
+		list_of_edges = [E[i] for i in range(len(x)) if x[i].x >= 1.0]
+		car_path_indices = self.construct_path(starting_car_index, list_of_edges, input_file)
+		
+		walk_cost, dropoffs_dict = self.find_best_dropoffs(G, home_indices, car_path_indices)
 
-        if not seen:
-            print("SAVING", input_file)
-            c.execute('INSERT INTO models (input_file, best_objective_bound, optimal) VALUES (?, ?, ?)', \
-                (input_file, model.objective_value, status == OptimizationStatus.OPTIMAL))
-            conn.commit()
-        elif model.objective_value < seen[0]:
-            print("UPDATING", input_file)
-            c.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', \
-                (model.objective_value, status == OptimizationStatus.OPTIMAL, input_file))
-            conn.commit()
-        if not "-s" in params:
-            print("Walk cost =", walk_cost, "\n")
+		if not seen:
+			print("SAVING", input_file)
+			c.execute('INSERT INTO models (input_file, best_objective_bound, optimal) VALUES (?, ?, ?)', \
+				(input_file, model.objective_value, status == OptimizationStatus.OPTIMAL))
+			conn.commit()
+		elif model.objective_value < seen[0]:
+			print("UPDATING", input_file)
+			c.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', \
+				(model.objective_value, status == OptimizationStatus.OPTIMAL, input_file))
+			conn.commit()
+		if not "-s" in params:
+			print("Walk cost =", walk_cost, "\n")
 
-        conn.close()
-        return model.objective_value, car_path_indices, dropoffs_dict
+		conn.close()
+		return model.objective_value, car_path_indices, dropoffs_dict
