@@ -1,0 +1,83 @@
+
+Sun Dec  1 22:15:29 2019	29_100.in  	 [31mTimeout![0m Failed, bound=39881.63327661859. 
+Sun Dec  1 22:23:28 2019	54_100.in  	 [32mOptimal cost=165347.6893888737.[0m [33mGraph was not Eulerian.[0m 
+Sun Dec  1 22:30:58 2019	37_100.in  	 [32mOptimal cost=684.9637566666668.[0m 
+Sun Dec  1 22:35:06 2019	46_100.in  	 [32mOptimal cost=19155064752.929054.[0m 
+Sun Dec  1 22:37:06 2019	58_100.in  	 [31mTimeout![0m Feasible cost=3465.7599999999984, bound=3107.6845013229245. 
+Sun Dec  1 22:44:42 2019	83_100.in  	 [32mOptimal cost=195.60000000000008.[0m 
+Sun Dec  1 22:48:09 2019	81_100.in  	 [32mOptimal cost=18521043.002926666.[0m 
+Sun Dec  1 22:50:24 2019	93_100.in  	 [31mTimeout![0m Feasible cost=136.80333333333334, bound=77.82056111678993. 
+Sun Dec  1 22:58:20 2019	60_100.in  	 [32mOptimal cost=161671.76616333326.[0m 
+Sun Dec  1 23:03:09 2019	72_100.in  	 [31mTimeout![0m Feasible cost=827.3333333333335, bound=787.0. 
+Sun Dec  1 23:10:42 2019	39_100.in  	 [31mTimeout![0m Feasible cost=8995587165.80015, bound=8205824935.367442. 
+Sun Dec  1 23:18:17 2019	44_100.in  	 [32mOptimal cost=7022.0.[0m 
+Sun Dec  1 23:19:45 2019	35_100.in  	 [32mOptimal cost=68.0.[0m 
+Sun Dec  1 23:20:14 2019	48_100.in  	 [31mTimeout![0m Feasible cost=6485.333333333332, bound=5504.0. 
+Sun Dec  1 23:28:24 2019	56_100.in  	 [32mOptimal cost=102.66666666666666.[0m 
+Sun Dec  1 23:28:35 2019	97_100.in  	 [31mTimeout![0m Feasible cost=115.0, bound=58.666666666666664. 
+Sun Dec  1 23:36:55 2019	89_100.in  	 [32mOptimal cost=66.9999999999814.[0m [33mGraph was not Eulerian.[0m 
+Sun Dec  1 23:41:34 2019	85_100.in  	 [31mTimeout![0m Feasible cost=564.4260433333334, bound=482.335673502016. 
+Sun Dec  1 23:49:23 2019	31_100.in  	 [32mOptimal cost=34000000.00000002.[0m 
+Sun Dec  1 23:49:24 2019	52_100.in  	 [32mOptimal cost=1383.6561700000002.[0m 
+Sun Dec  1 23:57:05 2019	23_100.in  	 [31mTimeout![0m Failed, bound=19.0. 
+Mon Dec  2 00:04:45 2019	40_100.in  	 [32mOptimal cost=205070.66666666666.[0m 
+Mon Dec  2 00:09:28 2019	68_100.in  	 [31mTimeout![0m Feasible cost=4178.333333333334, bound=3848.333333333333. 
+Mon Dec  2 00:17:27 2019	76_100.in  	 [32mOptimal cost=191.33333333333326.[0m 
+Mon Dec  2 00:18:33 2019	64_100.in  	 [32mOptimal cost=448.00000000000006.[0m 
+Mon Dec  2 00:20:14 2019	42_100.in  	 [32mOptimal cost=59.000000000000014.[0m 
+Mon Dec  2 00:20:15 2019	21_100.in  	 [32mOptimal cost=3004.666666666666.[0m 
+Mon Dec  2 00:26:26 2019	50_100.in  	 [31mTimeout![0m Feasible cost=3082.5743259661017, bound=2794.804273785359. [33mGraph was not Eulerian.[0m 
+Mon Dec  2 00:34:22 2019	33_100.in  	 [32mOptimal cost=1980.9999999999995.[0m 
+Mon Dec  2 00:34:33 2019	66_100.in  	 [32mOptimal cost=39.82844000000001.[0m 
+Mon Dec  2 00:42:20 2019	78_100.in  	 [31mTimeout![0m Feasible cost=40.94463333333333, bound=29.732895939015545. 
+Mon Dec  2 00:49:53 2019	17_100.in  	 [32mOptimal cost=206.6666666666667.[0m 
+Mon Dec  2 00:52:01 2019	2_100.in  	 [31mTimeout![0m Feasible cost=71539.32349333332, bound=64814.25244789055. 
+Mon Dec  2 00:59:49 2019	99_100.in  	 [32mOptimal cost=3616530461.7569323.[0m 
+Mon Dec  2 01:07:31 2019	87_100.in  	 [32mOptimal cost=39.666666666666664.[0m 
+Mon Dec  2 01:08:22 2019	95_100.in  	 [32mOptimal cost=35386212540.76906.[0m 
+Mon Dec  2 01:11:16 2019	7_100.in  	 [32mOptimal cost=465.99999999999994.[0m 
+Mon Dec  2 01:12:45 2019	90_100.in  	 [32mOptimal cost=43.33333333333332.[0m 
+Mon Dec  2 01:14:23 2019	82_100.in  	 [31mTimeout![0m Feasible cost=1282.0000000000002, bound=334.3333333333333. 
+Mon Dec  2 01:22:35 2019	36_100.in  	 [32mOptimal cost=66.66666666666666.[0m 
+Mon Dec  2 01:22:51 2019	55_100.in  	 [31mTimeout![0m Feasible cost=47268.78255408128, bound=44300.030229445336. [33mGraph was not Eulerian.[0m 
+Mon Dec  2 01:30:46 2019	28_100.in  	 [32mOptimal cost=4687877689.804391.[0m 
+Mon Dec  2 01:37:01 2019	24_100.in  	 [32mOptimal cost=35.733333333333356.[0m 
+Mon Dec  2 01:40:28 2019	12_100.in  	 [32mOptimal cost=408.0.[0m 
+Mon Dec  2 01:46:55 2019	71_100.in  	 [32mOptimal cost=52226290.09670003.[0m 
+Mon Dec  2 01:48:19 2019	63_100.in  	 [32mOptimal cost=106.66666666666663.[0m 
+Mon Dec  2 01:49:12 2019	45_100.in  	 [32mOptimal cost=786.7440933333335.[0m 
+Mon Dec  2 01:51:00 2019	38_100.in  	 [32mOptimal cost=1101.3333333333335.[0m 
+Mon Dec  2 01:51:52 2019	26_100.in  	 [31mTimeout![0m Feasible cost=407.6666666666667, bound=406.66666666666674. 
+Mon Dec  2 01:59:24 2019	57_100.in  	 [32mOptimal cost=8295.666666666666.[0m 
+Mon Dec  2 02:00:09 2019	49_100.in  	 [32mOptimal cost=1774.6666666666663.[0m 
+Mon Dec  2 02:04:35 2019	34_100.in  	 [32mOptimal cost=33.33333333333335.[0m 
+Mon Dec  2 02:05:04 2019	61_100.in  	 [32mOptimal cost=295132.2691572387.[0m 
+Mon Dec  2 02:05:54 2019	73_100.in  	 [32mOptimal cost=33.000000000000014.[0m 
+Mon Dec  2 02:06:28 2019	10_100.in  	 [32mOptimal cost=529.17989.[0m 
+Mon Dec  2 02:09:27 2019	5_100.in  	 [32mOptimal cost=24718993170.98882.[0m 
+Mon Dec  2 02:10:47 2019	9_100.in  	 [32mOptimal cost=8.697396666666664.[0m 
+Mon Dec  2 02:15:15 2019	77_100.in  	 [32mOptimal cost=24793.393040000003.[0m 
+Mon Dec  2 02:17:38 2019	14_100.in  	 [31mTimeout![0m Feasible cost=6858.917833333334, bound=5373.731586761186. 
+Mon Dec  2 02:25:34 2019	18_100.in  	 [31mTimeout![0m Feasible cost=177.66666666666663, bound=129.33333333333331. 
+Mon Dec  2 02:33:39 2019	65_100.in  	 [32mOptimal cost=1222.6666666666665.[0m 
+Mon Dec  2 02:33:42 2019	53_100.in  	 [32mOptimal cost=115.66666666666671.[0m 
+Mon Dec  2 02:33:45 2019	30_100.in  	 [32mOptimal cost=491.32616333333334.[0m 
+Mon Dec  2 02:38:10 2019	41_100.in  	 [32mOptimal cost=1122.6666666666667.[0m 
+Mon Dec  2 02:38:51 2019	100_100.in  	 [32mOptimal cost=344017.33333333343.[0m 
+Mon Dec  2 02:43:42 2019	22_100.in  	 [32mOptimal cost=206.33333333333331.[0m 
+Mon Dec  2 02:44:43 2019	88_100.in  	 [32mOptimal cost=133.5627266666667.[0m 
+Mon Dec  2 02:45:24 2019	96_100.in  	 [32mOptimal cost=80.13870666666668.[0m 
+Mon Dec  2 02:46:17 2019	84_100.in  	 [31mTimeout![0m Feasible cost=110.17748333333334, bound=105.68568791064804. 
+Mon Dec  2 02:53:49 2019	1_100.in  	 [32mOptimal cost=19453.618999999995.[0m 
+Mon Dec  2 02:57:44 2019	86_100.in  	 [32mOptimal cost=58.53536000000001.[0m 
+Mon Dec  2 02:57:45 2019	98_100.in  	 [32mOptimal cost=164.17572000000004.[0m 
+Mon Dec  2 03:01:13 2019	94_100.in  	 [31mTimeout![0m Feasible cost=2783.0, bound=2679.0. 
+Mon Dec  2 03:08:58 2019	3_100.in  	 [32mOptimal cost=8945.788333333334.[0m 
+Mon Dec  2 03:11:49 2019	79_100.in  	 [32mOptimal cost=22935.0.[0m 
+Mon Dec  2 03:12:19 2019	67_100.in  	 [32mOptimal cost=40.33333333333333.[0m 
+Mon Dec  2 03:12:20 2019	16_100.in  	 [32mOptimal cost=2506.0.[0m 
+Mon Dec  2 03:12:39 2019	75_100.in  	 [32mOptimal cost=68.66666666666664.[0m 
+Mon Dec  2 03:13:53 2019	20_100.in  	 [31mTimeout![0m Feasible cost=6624236619.034226, bound=4216393351.422176. 
+Mon Dec  2 03:21:55 2019	43_100.in  	 [32mOptimal cost=281501.3333333333.[0m 
+Mon Dec  2 03:22:13 2019	32_100.in  	 [32mOptimal cost=51.66666666666668.[0m 
+Mon Dec  2 03:24:48 2019	51_100.in  	 [32mOptimal cost=684897.3333333331.[0m 

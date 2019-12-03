@@ -70,7 +70,9 @@ class BaseSolver:
         for i in range(len(car_path - 1)):
             for j in range(len(E)):
                 if (E[j][0] == car_path[i] and E[j][1] == car_path[i + 1]):
-                    starter.append((x[j], 1.0))        
+                    starter.append((x[j], 1.0))       
+
+        return starter 
     
     def find_best_dropoffs(self, G, home_indices, car_path_indices):
         """
@@ -282,8 +284,6 @@ class ILPSolver(BaseSolver):
         # For just the source vertex, f_(source,start vertex)} = Sum{x_(a, b)}
         model += f[-1] == xsum(x)
 
-
-
         # For every TA for every edge, can't flow unless edge is walked along
         for i in range(len(t)):
             for j in range(len(E)):
@@ -400,13 +400,8 @@ class ILPSolver(BaseSolver):
                 (input_file, model.objective_value, status == OptimizationStatus.OPTIMAL))
             conn.commit()
         elif model.objective_value < seen[0]:
-            c.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', \
-                (model.objective_value, status == OptimizationStatus.OPTIMAL, input_file))
-            conn.commit()
-
         if not "-s" in params:
-            print(car_path_indices)
-            print("Walk cost =", walk_cost)
+            print("Walk cost =", walk_cost, "\n")
 
         conn.close()
         return model.objective_value, car_path_indices, dropoffs_dict

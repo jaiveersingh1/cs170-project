@@ -1,0 +1,5 @@
+
+Sun Dec  1 21:58:58 2019	70_100.in  	 [32mOptimal cost=73.66666666666669.[0m 
+Sun Dec  1 21:59:04 2019	13_100.in  	 [32mOptimal cost=1160.9999999999998.[0m 
+Sun Dec  1 22:03:18 2019	62_100.in  	 [32mOptimal cost=39.33333333333333.[0m 
+Sun Dec  1 22:03:19 2019	29_100.in  	 [31mTimeout![0m Failed, bound=39881.63327661859. 

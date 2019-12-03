@@ -1,0 +1,22 @@
+
+Mon Dec  2 12:02:29 2019	276_100.in  	 [32mOptimal cost=1963.4868666666666.[0m 
+Mon Dec  2 12:05:08 2019	277_100.in  	 [31mTimeout![0m Feasible cost=26078191255.666664, bound=25092420071.19496. 
+Mon Dec  2 12:12:43 2019	278_100.in  	 [31mTimeout![0m Feasible cost=2860.611726666666, bound=2523.4999749751983. 
+Mon Dec  2 12:21:11 2019	279_100.in  	 [31mTimeout![0m Feasible cost=759989253.4733633, bound=673951424.9172236. 
+Mon Dec  2 12:29:00 2019	281_100.in  	 [31mTimeout![0m Feasible cost=823.11193, bound=781.9682881467535. 
+Mon Dec  2 12:36:43 2019	282_100.in  	 [32mOptimal cost=45.99999999999999.[0m 
+Mon Dec  2 12:37:19 2019	284_100.in  	 [32mOptimal cost=311.6666666666667.[0m 
+Mon Dec  2 12:40:00 2019	285_100.in  	 [31mTimeout![0m Feasible cost=88174.58747, bound=70031.09300459326. 
+Mon Dec  2 12:47:35 2019	286_100.in  	 [31mTimeout![0m Feasible cost=88.66666666666666, bound=59.666666666666664. 
+Mon Dec  2 12:55:54 2019	287_100.in  	 [32mOptimal cost=500267.6666666666.[0m 
+Mon Dec  2 12:56:26 2019	288_100.in  	 [32mOptimal cost=34.0.[0m 
+Mon Dec  2 12:57:40 2019	289_100.in  	 [32mOptimal cost=32.33333333333333.[0m 
+Mon Dec  2 12:57:46 2019	290_100.in  	 [31mTimeout![0m Feasible cost=511.503, bound=503.7612936199508. 
+Mon Dec  2 13:05:31 2019	291_100.in  	 [32mOptimal cost=1442639348.6666667.[0m 
+Mon Dec  2 13:08:47 2019	293_100.in  	 [32mOptimal cost=4.333333333333333.[0m 
+Mon Dec  2 13:08:48 2019	294_100.in  	 [31mTimeout![0m Feasible cost=108.33333333333333, bound=100.66666666666666. 
+Mon Dec  2 13:16:38 2019	295_100.in  	 [32mOptimal cost=34.666666666666664.[0m 
+Mon Dec  2 13:17:28 2019	296_100.in  	 [31mTimeout![0m Feasible cost=7359769911.246381, bound=3132984631.8519745. 
+Mon Dec  2 13:25:43 2019	297_100.in  	 [32mOptimal cost=15831.33333333333.[0m 
+Mon Dec  2 13:27:52 2019	298_100.in  	 [32mOptimal cost=2042.3333333333335.[0m 
+Mon Dec  2 13:31:04 2019	299_100.in  	 [31mTimeout![0m Feasible cost=578708.8899066667, bound=506690.3545212548. 

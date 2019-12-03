@@ -1,0 +1,47 @@
+
+Mon Dec  2 16:44:20 2019	131_100.in  	 [31mTimeout![0m Feasible cost=62212882.89315332, bound=46090237.856899604. 
+Mon Dec  2 16:52:30 2019	123_100.in  	 [32mOptimal cost=10282.666666666668.[0m 
+Mon Dec  2 16:53:13 2019	140_100.in  	 [31mTimeout![0m Feasible cost=4142905662.7163296, bound=3694185857.206313. 
+Mon Dec  2 17:01:14 2019	115_100.in  	 [32mOptimal cost=62.33333333333331.[0m 
+Mon Dec  2 17:01:45 2019	107_100.in  	 [31mTimeout![0m Feasible cost=0.029490000000000006, bound=0.028114719669682337. 
+Mon Dec  2 17:09:35 2019	142_100.in  	 [32mOptimal cost=46345.66666666666.[0m 
+Mon Dec  2 17:14:20 2019	121_100.in  	 [32mOptimal cost=254.66666666666657.[0m 
+Mon Dec  2 17:15:35 2019	150_100.in  	 [31mTimeout![0m Feasible cost=622562263.3296429, bound=614307559.883839. [33mGraph was not Eulerian.[0m 
+Mon Dec  2 17:23:18 2019	133_100.in  	 [31mTimeout![0m Feasible cost=1693060627.1634698, bound=1468423837.4675772. 
+Mon Dec  2 17:31:21 2019	105_100.in  	 [32mOptimal cost=406.46115000000003.[0m 
+Mon Dec  2 17:31:39 2019	109_100.in  	 [31mTimeout![0m Feasible cost=820795259.0614133, bound=617760079.3304638. 
+Mon Dec  2 17:39:45 2019	117_100.in  	 [32mOptimal cost=404.66666666666674.[0m 
+Mon Dec  2 17:39:56 2019	113_100.in  	 [32mOptimal cost=2517.0.[0m 
+Mon Dec  2 17:40:14 2019	101_100.in  	 [32mOptimal cost=130.0.[0m 
+Mon Dec  2 17:44:33 2019	137_100.in  	 [32mOptimal cost=4977.333333333334.[0m 
+Mon Dec  2 17:44:50 2019	146_100.in  	 [32mOptimal cost=7.366406666666666.[0m 
+Mon Dec  2 17:49:26 2019	125_100.in  	 [32mOptimal cost=20846709.145566665.[0m 
+Mon Dec  2 17:49:46 2019	103_100.in  	 [31mTimeout![0m Feasible cost=1297.4544666666668, bound=1138.6584469442691. 
+Mon Dec  2 17:57:49 2019	111_100.in  	 [32mOptimal cost=50.000000000000014.[0m 
+Mon Dec  2 17:58:16 2019	127_100.in  	 [32mOptimal cost=680.0.[0m 
+Mon Dec  2 17:59:10 2019	139_100.in  	 [32mOptimal cost=67999999965.99995.[0m 
+Mon Dec  2 18:03:01 2019	144_100.in  	 [32mOptimal cost=313496.3333333334.[0m 
+Mon Dec  2 18:03:31 2019	135_100.in  	 [32mOptimal cost=1911.3333333333333.[0m 
+Mon Dec  2 18:05:49 2019	148_100.in  	 [32mOptimal cost=9.0.[0m 
+Mon Dec  2 18:05:49 2019	114_100.in  	 [32mOptimal cost=22869076.3271478.[0m 
+Mon Dec  2 18:13:36 2019	118_100.in  	 [31mTimeout![0m Feasible cost=59052153.87499333, bound=48599830.164651655. 
+Mon Dec  2 18:21:46 2019	106_100.in  	 [32mOptimal cost=145.6836133333333.[0m 
+Mon Dec  2 18:22:21 2019	130_100.in  	 [31mTimeout![0m Feasible cost=36420078872.666664, bound=34853137862.45037. 
+Mon Dec  2 18:30:49 2019	141_100.in  	 [32mOptimal cost=77.33333333333334.[0m 
+Mon Dec  2 18:30:50 2019	122_100.in  	 [32mOptimal cost=14321968.999999998.[0m 
+Mon Dec  2 18:31:42 2019	104_100.in  	 [32mOptimal cost=10830.333333333334.[0m 
+Mon Dec  2 18:32:53 2019	116_100.in  	 [32mOptimal cost=910.6666666666667.[0m 
+Mon Dec  2 18:32:54 2019	108_100.in  	 [32mOptimal cost=6985849597.333333.[0m 
+Mon Dec  2 18:32:57 2019	120_100.in  	 [32mOptimal cost=4714.666666666666.[0m 
+Mon Dec  2 18:32:59 2019	132_100.in  	 [31mTimeout![0m Feasible cost=1527.3333333333328, bound=769.1333333333333. 
+Mon Dec  2 18:40:48 2019	136_100.in  	 [32mOptimal cost=119.99999999999999.[0m 
+Mon Dec  2 18:42:19 2019	128_100.in  	 [31mTimeout![0m Feasible cost=7043839617.361453, bound=6819260540.308957. 
+Mon Dec  2 18:49:54 2019	124_100.in  	 [32mOptimal cost=11782933.249939146.[0m 
+Mon Dec  2 18:50:33 2019	147_100.in  	 [32mOptimal cost=1461.3333333333326.[0m 
+Mon Dec  2 18:50:38 2019	112_100.in  	 [32mOptimal cost=10.670333333333334.[0m 
+Mon Dec  2 18:52:11 2019	145_100.in  	 [32mOptimal cost=31881982902.82025.[0m 
+Mon Dec  2 18:53:23 2019	126_100.in  	 [32mOptimal cost=10000366832.0.[0m 
+Mon Dec  2 18:53:38 2019	149_100.in  	 [32mOptimal cost=356.0.[0m 
+Mon Dec  2 18:54:28 2019	134_100.in  	 [32mOptimal cost=42.0.[0m 
+Mon Dec  2 18:54:30 2019	102_100.in  	 [31mTimeout![0m Feasible cost=439440.9438, bound=256171.20494346542. 
+Mon Dec  2 19:02:39 2019	110_100.in  	 [32mOptimal cost=24370348352.536396.[0m 
