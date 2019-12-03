@@ -357,13 +357,14 @@ class ILPSolver(BaseSolver):
                 (input_file, model.objective_value, status == OptimizationStatus.OPTIMAL))
             conn.commit()
         elif model.objective_value < seen[0]:
+            print("UPDATING", input_file)
             c.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', \
                 (model.objective_value, status == OptimizationStatus.OPTIMAL, input_file))
             conn.commit()
 
         if not "-s" in params:
             print(car_path_indices)
-            print("Walk cost =", walk_cost)
+            print("Walk cost =", walk_cost, "\n")
 
         conn.close()
         return model.objective_value, car_path_indices, dropoffs_dict
