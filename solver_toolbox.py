@@ -29,13 +29,11 @@ class BaseSolver:
         """
         return 0, [], dict()
 
-    def construct_starter(self, G, x, t, list_of_homes, car_path):
+    def construct_starter(self, G, list_of_homes, car_path):
         """
         Treating the car's cycle as constant, find a valid solution to the corresponding ILP problem.
         Input:
             G: A NetworkX graph
-            x: Model's car array
-            t: Model's TA matrix
             list_of_homes: The list of homes in the graph
             car_path: The indices of the vertices in G that are in the car path
         Output:
@@ -45,6 +43,9 @@ class BaseSolver:
 		home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
 
         E = list(G.to_directed().edges(data='weight'))
+
+        x = ['x' for e in E]
+        t = [['x' for e in E] for h in home_indices]
 
         cost, dropoffs = self.find_best_dropoffs(G, home_indices, car_path)
         home_paths = {}
