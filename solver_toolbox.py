@@ -13,6 +13,7 @@ import os
 class BaseSolver:
     """ Base class for solvers """
 
+
     def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params=[]):
         """
         Solve the problem using a specific technique.
@@ -239,8 +240,6 @@ class ILPSolver(BaseSolver):
         # For just the source vertex, f_(source,start vertex)} = Sum{x_(a, b)}
         model += f[-1] == xsum(x)
 
-
-
         # For every TA for every edge, can't flow unless edge is walked along
         for i in range(len(t)):
             for j in range(len(E)):
@@ -282,6 +281,13 @@ class ILPSolver(BaseSolver):
         if seen:
             model.cutoff = seen[0]
         model.symmetry = 2
+
+        # add previous_sol
+        for s in sol:
+            for i in range(len(E)):
+                e = E[i]
+                if s == e:
+                    x[i].x = 1
 
         if timeout != -1:
             status = model.optimize(max_seconds=timeout)

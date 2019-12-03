@@ -1,0 +1,4 @@
+
+Mon Dec  2 19:30:30 2019	26_200.in  	 [31mTimeout![0m Feasible cost=3959.3333333333326, bound=3823.333333333333. 
+Mon Dec  2 20:27:40 2019	27_200.in  	 [32mOptimal cost=54.0.[0m 
+Mon Dec  2 20:32:14 2019	28_200.in  	 
