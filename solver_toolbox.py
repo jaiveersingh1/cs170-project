@@ -174,8 +174,8 @@ class BruteForceJSSolver(BaseSolver):
 		best_solution = (float('inf'), [], {})
 
 		def powerset(L):
-		  for n in range(len(L) + 1):
-			yield from itertools.combinations(L, n)
+			for n in range(len(L) + 1):
+				yield from itertools.combinations(L, n)
 
 		counter = 0
 		for edge_set in powerset(E):
