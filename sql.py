@@ -93,9 +93,15 @@ def merge_tables():
     new_table = input("Where to save new output? ")
     new_conn = sqlite3.connect(new_table)
     new_cursor = new_conn.cursor()
+    new_cursor.execute("DROP TABLE IF EXISTS models")
     new_cursor.execute("CREATE TABLE IF NOT EXISTS models (input_file TEXT PRIMARY KEY, best_objective_bound NUMERIC, optimal INTEGER)")
     for result in best_results:
-        new_cursor.execute('REPLACE INTO models (input_file, best_objective_bound, optimal) VALUES (?, ?, ?)', result)
+        seen = new_cursor.execute('SELECT best_objective_bound FROM models WHERE input_file = (?)', [result[0]]).fetchone()
+        if not seen:
+            new_cursor.execute('INSERT INTO models (input_file, best_objective_bound, optimal) VALUES (?, ?, ?)', result)
+        else:
+            new_cursor.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', result)
+            
     new_conn.commit()
     new_conn.close()
     
