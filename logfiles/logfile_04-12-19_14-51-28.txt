@@ -1,0 +1,2 @@
+
+Wed Dec  4 14:51:28 2019	67_50.in  	 [32mOptimal cost=31.0.[0m 
