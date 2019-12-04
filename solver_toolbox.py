@@ -29,7 +29,7 @@ class BaseSolver:
 		"""
 		return 0, [], dict()
 
-	def construct_starter(self, G, list_of_homes, car_path):
+	def construct_starter(self, x, t, G, list_of_homes, car_path):
 		"""
 		Treating the car's cycle as constant, find a valid solution to the corresponding ILP problem.
 		Input:
@@ -43,9 +43,6 @@ class BaseSolver:
 		home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
 
 		E = list(G.to_directed().edges(data='weight'))
-
-		x = ['x' for e in E]
-		t = [['x' for e in E] for h in home_indices]
 
 		cost, dropoffs = self.find_best_dropoffs(G, home_indices, car_path)
 		home_paths = {}
