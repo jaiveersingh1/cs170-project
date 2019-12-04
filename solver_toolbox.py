@@ -362,35 +362,13 @@ class ILPSolver(BaseSolver):
 		model.symmetry = 2
 
 		random_path = self.generate_random(G, starting_car_index)
-		#random_path = [0, 2, 5, 3, 0]
-		model.start = self.construct_starter(x, t, G, home_indices, random_path)
 
-		starter_dict = dict(model.start)       
-		
-		# for starter_variable in starter_dict:
-		# 	model += starter_variable == starter_dict[starter_variable]
+		if "-nms" not in params:
+			model.start = self.construct_starter(x, t, G, home_indices, random_path)
 
 		print("Starting path:")
 		print(random_path)
 		print()
-
-		# print('\nEdges (In, Out, Weight):\n')  
-		# for i in E:
-		# 	print(str(i), end=" ")
-		# print()
-
-		# print('Car - Chosen Edges:')
-		# for x_i in x:
-		# 	print(starter_dict.get(x_i, 999.0), end=" ")
-		# print()
-
-		# print('TAs - Chosen Edges:')  
-		# for t_i in t:
-		# 	for x_i in t_i:
-		# 		print(starter_dict.get(x_i, 999.0), end=" ")
-		# 	print()
-		
-		# input("Enter to continue:")
 
 		if timeout != -1:
 			status = model.optimize(max_seconds=timeout)
