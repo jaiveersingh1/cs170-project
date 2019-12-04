@@ -33,22 +33,19 @@ def run_queries():
         print()
 
 def merge_tables():
-
-    NUM_ENTRIES = 500
-
     saved_tables = utils.get_files_with_extension("models/", 'sqlite')
 
     local_conn = sqlite3.connect('models.sqlite')
     local_cursor = local_conn.cursor()
-    orig_local_res = local_cursor.execute("SELECT * FROM models ORDER BY input_file LIMIT {}".format(NUM_ENTRIES)).fetchall()
+    orig_local_res = local_cursor.execute("SELECT * FROM models ORDER BY input_file").fetchall()
     
     for table in saved_tables:
         print(table)
         remote_conn = sqlite3.connect(table)
         remote_cursor = remote_conn.cursor()
 
-        local_results = local_cursor.execute("SELECT * FROM models ORDER BY input_file LIMIT {}".format(NUM_ENTRIES)).fetchall()
-        remote_results = remote_cursor.execute("SELECT * FROM models ORDER BY input_file LIMIT {}".format(NUM_ENTRIES)).fetchall()
+        local_results = local_cursor.execute("SELECT * FROM models ORDER BY input_file").fetchall()
+        remote_results = remote_cursor.execute("SELECT * FROM models ORDER BY input_file").fetchall()
 
         best_results = []
 
@@ -99,6 +96,7 @@ def merge_tables():
     new_cursor.execute("CREATE TABLE IF NOT EXISTS models (input_file TEXT PRIMARY KEY, best_objective_bound NUMERIC, optimal INTEGER)")
     for result in best_results:
         new_cursor.execute('REPLACE INTO models (input_file, best_objective_bound, optimal) VALUES (?, ?, ?)', result)
+    new_conn.commit()
     new_conn.close()
     
     print("Local: ")
