@@ -34,6 +34,7 @@ def run_queries(filename):
 
 def merge_tables(filename):
     saved_tables = utils.get_files_with_extension("models/", 'sqlite')
+    new_table = input("Where to save new output? ")
 
     local_conn = sqlite3.connect(filename)
     local_cursor = local_conn.cursor()
@@ -88,22 +89,22 @@ def merge_tables(filename):
         best_results += local_results + remote_results            
         
         remote_conn.close()
-    local_conn.close()
 
-    new_table = input("Where to save new output? ")
-    new_conn = sqlite3.connect(new_table)
-    new_cursor = new_conn.cursor()
-    new_cursor.execute("DROP TABLE IF EXISTS models")
-    new_cursor.execute("CREATE TABLE IF NOT EXISTS models (input_file TEXT PRIMARY KEY, best_objective_bound NUMERIC, optimal INTEGER)")
-    for result in best_results:
-        seen = new_cursor.execute('SELECT best_objective_bound FROM models WHERE input_file = (?)', [result[0]]).fetchone()
-        if not seen:
-            new_cursor.execute('INSERT INTO models (input_file, best_objective_bound, optimal) VALUES (?, ?, ?)', result)
-        else:
-            new_cursor.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', result)
-            
-    new_conn.commit()
-    new_conn.close()
+        new_conn = sqlite3.connect(new_table)
+        new_cursor = new_conn.cursor()
+        new_cursor.execute("DROP TABLE IF EXISTS models")
+        new_cursor.execute("CREATE TABLE IF NOT EXISTS models (input_file TEXT PRIMARY KEY, best_objective_bound NUMERIC, optimal INTEGER)")
+        for result in best_results:
+            seen = new_cursor.execute('SELECT best_objective_bound FROM models WHERE input_file = (?)', [result[0]]).fetchone()
+            if not seen:
+                new_cursor.execute('INSERT INTO models (input_file, best_objective_bound, optimal) VALUES (?, ?, ?)', result)
+            else:
+                new_cursor.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', result)
+                
+        new_conn.commit()
+        new_conn.close()
+
+    local_conn.close()
     
     print("Local: ")
     [print(i) for i in orig_local_res]
