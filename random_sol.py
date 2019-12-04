@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
-def generate(G, start):
+def generate(G, start, list_of_locations):
 	"""
 	Generate a random cycle starting at start
 	Inputs:
@@ -19,11 +19,9 @@ def generate(G, start):
 	seen = set([])
 	curr = start
 	while curr not in seen:
-		# print(curr)
 		seen.add(curr)
 		path.append(curr)
 		edges = [e for e in G.edges([curr])]
-		# print(edges)
 		curr = random.choice(edges)[1]
 	if curr == start:
 		return path + [start]
