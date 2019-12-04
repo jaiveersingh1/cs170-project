@@ -2,8 +2,7 @@ import sqlite3
 import argparse
 import utils
 
-def print_local_table():
-    filename = input("SQLite Table to open: ")
+def print_local_table(filename):
     conn = sqlite3.connect(filename)
     c = conn.cursor()
     results = c.execute("SELECT * FROM models ORDER BY input_file").fetchall()
@@ -15,13 +14,12 @@ def print_local_table():
     conn.commit()
     conn.close()
 
-def run_queries():
-    filename = input("SQLite Table to open: ")
+def run_queries(filename):
     conn = sqlite3.connect(filename)
     c = conn.cursor()
 
     while True:
-        command = input("Enter SQL command, or exit to quit: ")
+        command = input("Enter SQL command, or 'exit' to quit: ")
         
         if command == "exit":
             conn.commit()
@@ -34,10 +32,10 @@ def run_queries():
         [print(i) for i in results]
         print()
 
-def merge_tables():
+def merge_tables(filename):
     saved_tables = utils.get_files_with_extension("models/", 'sqlite')
 
-    local_conn = sqlite3.connect('models.sqlite')
+    local_conn = sqlite3.connect(filename)
     local_cursor = local_conn.cursor()
     orig_local_res = local_cursor.execute("SELECT * FROM models ORDER BY input_file").fetchall()
     
@@ -119,12 +117,13 @@ def merge_tables():
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description='Parsing arguments')
     parser.add_argument('command', type=str, choices=['print', 'merge', 'query'], help='The command to run')
+    parser.add_argument('input', type=str, help='The path to the input table')
     args = parser.parse_args()
     if args.command == 'print':
-        print_local_table()
+        print_local_table(args.input)
     elif args.command == 'merge':
-        merge_tables()
+        merge_tables(args.input)
     elif args.command == 'query':
-        run_queries()
+        run_queries(args.input)
     else:
         print("Unsupported command")
