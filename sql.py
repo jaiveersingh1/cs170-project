@@ -3,7 +3,8 @@ import argparse
 import utils
 
 def print_local_table():
-    conn = sqlite3.connect('models.sqlite')
+    filename = input("SQLite Table to open: ")
+    conn = sqlite3.connect(filename)
     c = conn.cursor()
     results = c.execute("SELECT * FROM models ORDER BY input_file").fetchall()
     optimal = c.execute("SELECT * FROM models WHERE optimal = 1").fetchall()
@@ -15,7 +16,8 @@ def print_local_table():
     conn.close()
 
 def run_queries():
-    conn = sqlite3.connect('models.sqlite')
+    filename = input("SQLite Table to open: ")
+    conn = sqlite3.connect(filename)
     c = conn.cursor()
 
     while True:
