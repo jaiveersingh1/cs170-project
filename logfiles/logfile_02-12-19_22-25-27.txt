@@ -1,0 +1,5 @@
+
+Mon Dec  2 22:25:27 2019	300_200.in  	 [32mOptimal cost=84.25852322887323.[0m [33mGraph was not Eulerian.[0m 
+Mon Dec  2 22:37:30 2019	301_200.in  	 [32mOptimal cost=124.33333333333331.[0m 
+Mon Dec  2 22:37:47 2019	303_200.in  	 [31mTimeout![0m Feasible cost=835.1545866666665, bound=690.3635581381943. 
+Mon Dec  2 22:55:05 2019	304_200.in  	 

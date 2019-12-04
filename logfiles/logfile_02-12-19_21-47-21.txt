@@ -1,0 +1,2 @@
+
+Mon Dec  2 21:47:21 2019	batches/inputs/1_50.in  	 [32mOptimal cost=12533.58.[0m 
