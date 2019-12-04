@@ -4,7 +4,6 @@ sys.path.append('..')
 sys.path.append('../..')
 import argparse
 import utils
-import drawing
 from solver_toolbox import *
 
 from student_utils import *
@@ -106,7 +105,7 @@ def solve_from_file(input_file, output_directory, params=[]):
     conn.close()
 
     # skip over optimal inputs
-    if optimal and optimal[0]:
+    if optimal and optimal[0] and "-n" not in params:
         print('SKIPPPING', input_file_name)
         return
 

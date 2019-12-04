@@ -9,6 +9,7 @@ import time
 from colorama import init, Fore, Style
 import sqlite3
 import os
+import random
 
 class BaseSolver:
 	""" Base class for solvers """
@@ -29,48 +30,84 @@ class BaseSolver:
 		"""
 		return 0, [], dict()
 
-	def construct_starter(self, x, t, G, list_of_homes, car_path):
+	def construct_starter(self, x, t, G, home_indices, car_path_indices):
 		"""
 		Treating the car's cycle as constant, find a valid solution to the corresponding ILP problem.
 		Input:
 			G: A NetworkX graph
-			list_of_homes: The list of homes in the graph
-			car_path: The indices of the vertices in G that are in the car path
+			home_indices: The list of home indices in the graph
+			car_path_indices: The indices of the vertices in G that are in the car path
 		Output:
 			MIP Model Starter, to be set as model.start
 		"""
 
-		home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
+		E = list(G.to_directed().edges())
 
-		E = list(G.to_directed().edges(data='weight'))
+		x_starter = []
+		x_set = set()
+		prev = car_path_indices[0]
+		for curr in car_path_indices[1:]:
+			edge_index = E.index((prev, curr))
+			x_set.add(x[edge_index])
+			prev = curr
 
-		cost, dropoffs = self.find_best_dropoffs(G, home_indices, car_path)
-		home_paths = {}
-		ta_drop = {}
+		for x_i in x:
+			if x_i in x_set:
+				x_starter.append((x_i, 1.0))
+			else:
+				x_starter.append((x_i, 0.0))
 
-		for dropoff, homes in dropoffs.items():
-			for home in homes:
-				ta_drop[home] = dropoff
+		shortest_paths = dict(nx.all_pairs_shortest_path(G))
+		shortest_distances = dict(nx.floyd_warshall(G))
+		
+		t_starter = []
+		for i, home_index in enumerate(home_indices):
+			best_distance = float('inf')
+			best_path = []
+			for dropoff_vertex in car_path_indices:
+				distance = shortest_distances[dropoff_vertex][home_index]
+				path = shortest_paths[dropoff_vertex][home_index]
 
-		for i in range(len(list_of_homes)):
-			for j in range(len(car_path)):
-				home_paths[j] = [p for p in nx.all_shortest_paths(G, ta_drop[j], i, weight='weight')][0]
+				if distance < best_distance:
+					best_distance = distance
+					best_path = path
+			
+			print ("TA best path: ", i, best_path)
+			prev = best_path[0]
+			t_set = set()
+			for curr in best_path[1:]:
+				edge_index = E.index((prev, curr))
+				t_set.add(t[i][edge_index])
+				prev = curr
+			
+			for x_i in t[i]:
+				if x_i in t_set:
+					t_starter.append((x_i, 1.0))
+				else:
+					t_starter.append((x_i, 0.0))
 
-		starter = []
+		return x_starter + t_starter
 
-		for i in range(len(home_indices)):
-			curr_path = home_paths[home_indices[i]]
-			for j in range(len(curr_path) - 1):
-				for k in range(len(E)):
-					if (E[k][0] == curr_path[j] and E[k][1] == car_path[j + 1]):
-						starter.append((t[i][k], 1.0))
-
-		for i in range(len(car_path - 1)):
-			for j in range(len(E)):
-				if (E[j][0] == car_path[i] and E[j][1] == car_path[i + 1]):
-					starter.append((x[j], 1.0))       
-
-		return starter 
+	def generate_random(self, G, start_index):
+		"""
+		Generate a random cycle starting at start
+		Inputs:
+			G: networkx graph
+			start: starting vertex
+		Outputs:
+			list of vertices representing the car path
+		"""
+		path = []
+		seen = set([])
+		curr = start_index
+		while curr not in seen:
+			seen.add(curr)
+			path.append(curr)
+			edges = [e for e in G.edges([curr])]
+			curr = random.choice(edges)[1]
+		if curr == start_index:
+			return path + [start_index]
+		return path + nx.shortest_path(G, source = curr, target = start_index)
 	
 	def find_best_dropoffs(self, G, home_indices, car_path_indices):
 		"""
@@ -320,9 +357,40 @@ class ILPSolver(BaseSolver):
 			timeout = int(params[params.index("-t") + 1])
 
 		# parameter tuning
-		if seen:
+		if seen and not "-n" in params:
 			model.cutoff = seen[0]
 		model.symmetry = 2
+
+		random_path = self.generate_random(G, starting_car_index)
+		#random_path = [0, 2, 5, 3, 0]
+		model.start = self.construct_starter(x, t, G, home_indices, random_path)
+
+		starter_dict = dict(model.start)       
+		
+		# for starter_variable in starter_dict:
+		# 	model += starter_variable == starter_dict[starter_variable]
+
+		print("Starting path:")
+		print(random_path)
+		print()
+
+		# print('\nEdges (In, Out, Weight):\n')  
+		# for i in E:
+		# 	print(str(i), end=" ")
+		# print()
+
+		# print('Car - Chosen Edges:')
+		# for x_i in x:
+		# 	print(starter_dict.get(x_i, 999.0), end=" ")
+		# print()
+
+		# print('TAs - Chosen Edges:')  
+		# for t_i in t:
+		# 	for x_i in t_i:
+		# 		print(starter_dict.get(x_i, 999.0), end=" ")
+		# 	print()
+		
+		# input("Enter to continue:")
 
 		if timeout != -1:
 			status = model.optimize(max_seconds=timeout)
