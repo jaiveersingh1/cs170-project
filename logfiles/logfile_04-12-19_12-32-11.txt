@@ -1,0 +1,25 @@
+
+Wed Dec  4 12:32:11 2019	211_200.in  	 [32mOptimal cost=204.66666666666666.[0m 
+Wed Dec  4 12:35:13 2019	212_200.in  	 [32mOptimal cost=6998.999999999999.[0m 
+Wed Dec  4 12:39:02 2019	213_200.in  	 [31mTimeout![0m Feasible cost=214.33333333333334, bound=180.33333333333331. 
+Wed Dec  4 12:54:38 2019	214_200.in  	 [31mTimeout![0m Feasible cost=593.3333333333333, bound=182.33333333333331. 
+Wed Dec  4 13:09:44 2019	216_200.in  	 [32mOptimal cost=9.55228.[0m 
+Wed Dec  4 13:10:30 2019	217_200.in  	 [31mTimeout![0m Failed, bound=7869625073.411257. 
+Wed Dec  4 13:26:23 2019	218_200.in  	 [32mOptimal cost=104.66666666666666.[0m 
+Wed Dec  4 13:28:34 2019	219_200.in  	 [32mOptimal cost=66.66666666666664.[0m 
+Wed Dec  4 13:28:40 2019	220_200.in  	 [31mTimeout![0m Feasible cost=23333.332522415727, bound=20482.49404323168. 
+Wed Dec  4 13:43:49 2019	222_200.in  	 [31mTimeout![0m Feasible cost=420.91267666666664, bound=278.1800331233005. 
+Wed Dec  4 13:59:58 2019	223_200.in  	 [32mOptimal cost=66.66666666666667.[0m 
+Wed Dec  4 14:02:06 2019	226_200.in  	 [32mOptimal cost=40385.99999999999.[0m 
+Wed Dec  4 14:03:57 2019	227_200.in  	 [32mOptimal cost=85.3348.[0m 
+Wed Dec  4 14:12:34 2019	228_200.in  	 [32mOptimal cost=588.0.[0m 
+Wed Dec  4 14:13:10 2019	229_200.in  	 [32mOptimal cost=960.7396666666667.[0m 
+Wed Dec  4 14:13:27 2019	230_200.in  	 [31mTimeout![0m Feasible cost=176703922668.38354, bound=68259833596.21589. 
+Wed Dec  4 14:31:34 2019	231_200.in  	 [32mOptimal cost=218666666563.33337.[0m 
+Wed Dec  4 14:32:22 2019	232_200.in  	 [32mOptimal cost=118.33333333333336.[0m 
+Wed Dec  4 14:35:08 2019	233_200.in  	 [31mTimeout![0m Feasible cost=576490.1643299999, bound=328060.5871385159. 
+Wed Dec  4 14:54:51 2019	234_200.in  	 [31mTimeout![0m Feasible cost=8520678.956404168, bound=7125689.279046109. 
+Wed Dec  4 15:10:04 2019	235_200.in  	 [32mOptimal cost=136457.66666666666.[0m 
+Wed Dec  4 15:16:21 2019	236_200.in  	 [32mOptimal cost=323.3333333333333.[0m 
+Wed Dec  4 15:20:44 2019	237_200.in  	 [32mOptimal cost=201.0.[0m 
+Wed Dec  4 15:22:25 2019	238_200.in  	 

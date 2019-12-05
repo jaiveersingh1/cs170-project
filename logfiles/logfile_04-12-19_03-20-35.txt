@@ -1,0 +1,7 @@
+
+Wed Dec  4 03:20:35 2019	205_200.in  	 [32mOptimal cost=2874.6666657361798.[0m [33mGraph was not Eulerian.[0m 
+Wed Dec  4 03:32:48 2019	206_200.in  	 [31mTimeout![0m Failed, bound=7143605.988174531. 
+Wed Dec  4 03:50:04 2019	207_200.in  	 [32mOptimal cost=399.3333333333333.[0m 
+Wed Dec  4 03:50:06 2019	208_200.in  	 [32mOptimal cost=105.14185666666667.[0m 
+Wed Dec  4 03:58:37 2019	209_200.in  	 [31mTimeout![0m Feasible cost=75290.32048666666, bound=45767.3452921764. 
+Wed Dec  4 04:15:57 2019	210_200.in  	 
