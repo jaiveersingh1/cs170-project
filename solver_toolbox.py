@@ -468,7 +468,7 @@ class ILPSolver(BaseSolver):
 			c.execute('INSERT INTO models (input_file, best_objective_bound, optimal) VALUES (?, ?, ?)', \
 				(input_file, model.objective_value, status == OptimizationStatus.OPTIMAL))
 			conn.commit()
-		elif model.objective_value <= seen[0]:
+		elif model.objective_value < seen[0]:
 			print("UPDATING", input_file)
 			c.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', \
 				(model.objective_value, status == OptimizationStatus.OPTIMAL, input_file))
