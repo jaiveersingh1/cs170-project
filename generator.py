@@ -316,7 +316,7 @@ class GraphVisualizer:
 		conn = sqlite3.connect('models.sqlite')
 		c = conn.cursor()
 		c.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', \
-				(self.new_cost, status == 0, self.in_file))
+				(self.new_cost, 0, self.in_file))
 		conn.commit()
 		conn.close()
 
