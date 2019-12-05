@@ -270,13 +270,13 @@ class GraphVisualizer:
 
 	def onClick(self, event):
 		x, y = event.xdata, event.ydata
-		best_x, best_y = float('inf'), float('inf')
+		best_dist = float('inf')
 		best_label = 0
 
 		for label, loc in self.pos.items():
-			curr_x, curr_y = abs(x - loc[0]), abs(y - loc[1])
-			if(curr_x < best_x and curr_y < best_y):
-				best_label, best_x, best_y = label, curr_x, curr_y
+			curr_dist = np.linalg.norm(np.array([x, y]) - np.array(loc))
+			if(curr_dist < best_dist):
+				best_label, best_dist = label, curr_dist
 
 		self.path.append(best_label)
 		print(self.path)
