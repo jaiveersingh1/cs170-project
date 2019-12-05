@@ -72,7 +72,6 @@ class BaseSolver:
 					best_distance = distance
 					best_path = path
 			
-			print ("TA best path: ", i, best_path)
 			prev = best_path[0]
 			t_set = set()
 			for curr in best_path[1:]:
