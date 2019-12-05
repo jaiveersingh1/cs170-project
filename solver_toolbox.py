@@ -363,13 +363,13 @@ class ILPSolver(BaseSolver):
 		model.symmetry = 2
 
 		random_path = self.generate_random(G, starting_car_index)
+		print("Starting path:")
+		print(random_path)
+		print()
 
 		if "-nms" not in params:
 			model.start = self.construct_starter(x, t, G, home_indices, random_path)
 
-		print("Starting path:")
-		print(random_path)
-		print()
 
 		if timeout != -1:
 			status = model.optimize(max_seconds=timeout)
