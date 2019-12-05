@@ -273,6 +273,40 @@ class ILPSolver(BaseSolver):
 
 		starting_car_index = list_of_locations.index(starting_car_location)
 
+		start_paths = []
+		num_random_paths = 5
+		if "-r" in params:
+			num_random_paths = int(params[params.index("-r") + 1])
+
+		for i in range(num_random_paths):
+			start_paths.append(self.generate_random(G, starting_car_index))
+
+		if seen:
+			output_file = 'submissions/submission_final/{}.out'.format(input_file.split('.')[0])
+			print(output_file)
+			if not "--no-prev" in params and os.path.isfile(output_file):
+				start_paths.append(convert_locations_to_indices(utils.read_file(output_file)[0], list_of_locations))
+		
+		best_start_path_cost = float('inf')
+		best_start_path_index = -1
+		for i, path in enumerate(start_paths):
+			walk_cost, dropoffs = self.find_best_dropoffs(G, home_indices, path)
+			cost, msg = cost_of_solution(G, path, dropoffs)
+
+			if cost < best_start_path_cost:
+				best_start_path_cost = cost
+				best_start_path_index = i
+
+		start_path = start_paths[best_start_path_index]
+		print("Starting path:")
+		if best_start_path_index == num_random_paths:
+			print("SAVED PATH:", start_path)
+		elif best_start_path_index >= 0:
+			print("RANDOM PATH:", start_path)
+		else:
+			print("No start path found")
+		print("Starting cost:", best_start_path_cost)
+
 		# number of nodes and list of vertices, not including source or sink
 		n, V, H = len(list_of_locations), location_indices, home_indices 
 		bigNum = (2 * n) 
@@ -352,35 +386,14 @@ class ILPSolver(BaseSolver):
 		# WINNING ONLINE
 		model.max_gap = 0.00001
 		model.emphasis = 2
-
-		timeout = 300
-		if "-t" in params:
-			timeout = int(params[params.index("-t") + 1])
-
-		start_path, is_random = self.generate_random(G, starting_car_index), True
-
-		# parameter tuning
-		if seen:
-			# if not "--no-cutoff" in params:
-			# 	model.cutoff = seen[0]
-			output_file = 'submissions/submission_final/{}.out'.format(input_file.split('.')[0])
-			print(output_file)
-			if not "--no-prev" in params and os.path.isfile(output_file):
-				start_path = utils.read_file(output_file)[0]
-				is_random = False
-				start_path = convert_locations_to_indices(start_path, list_of_locations)
 		model.symmetry = 2
-
-		print("Starting path:")
-		if is_random:
-			print("Random PATH:", start_path)
-		else:
-			print("OLD PATH:", start_path)
-		print()
 
 		if "--no-model-start" not in params:
 			model.start = self.construct_starter(x, t, G, home_indices, start_path)
 
+		timeout = 300
+		if "-t" in params:
+			timeout = int(params[params.index("-t") + 1])
 
 		if timeout != -1:
 			status = model.optimize(max_seconds=timeout)
