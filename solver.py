@@ -130,7 +130,7 @@ def solve_all(input_directory, output_directory, params=[]):
     input_files = utils.get_files_with_extension(input_directory, 'in')
 
     for i, input_file in enumerate(input_files):
-        print (f"~~ Solving file {i} of {len(input_files)} ~~")
+        print (f"~~ Solving file {i + 1} of {len(input_files)} ~~")
         solve_from_file(input_file, output_directory, params=params)
 
 
