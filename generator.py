@@ -282,7 +282,7 @@ class GraphVisualizer:
 		print(self.path)
 
 	def clearPath(self, event):
-		self.__init__()
+		self.path, self.dropoffs, self.new_cost = [], {}, 0
 		print("----------------------- New Path -----------------------")
 
 	def nextGraph(self, event):
@@ -307,7 +307,7 @@ class GraphVisualizer:
 		walk_cost, self.dropoffs = solver.find_best_dropoffs(self.G, self.homes, self.path)
 		self.new_cost = cost_of_solution(self.G, self.path, self.dropoffs)[0]
 
-		print("----------------------- Adjusted Path -----------------------\n", self.path, "New Cost:", self.new_cost, "Current Cost:", self.curr_cost)
+		print("----------------------- Adjusted Path -----------------------\n", self.path, "New Cost:", self.new_cost, "| Current Bound:", self.curr_cost)
 
 	def outToFile(self, event):
 		self.path.pop()
