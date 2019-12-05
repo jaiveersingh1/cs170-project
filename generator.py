@@ -357,6 +357,10 @@ class GraphVisualizer:
 
 				plt.show()
 
+			else:
+				print("No suboptimal files found in the given input directory.\nEither all files in the directory are optimal,",
+					"the directory is empty, or any suboptimal files in the directory is not in the MODELS table.")
+
 		conn.close()
 
 # -------------------------------------------------------------- COMMAND LINE INTERFACE -------------------------------------------------------------- #
@@ -382,7 +386,10 @@ if __name__=="__main__":
 			vis.visIter(output_directory=input_2)
 		else:
 			vis.visIter()
-		# vis.visFromAdj(input_1, input_2, True)
+
+	if (action == "visOld"):
+		vis = GraphVisualizer()
+		vis.visFromAdj(input_1, input_2, True)
 
 	if (action == "generate" or action == "gen"):
 		gen = GraphGenerator(int(input_1), int(input_2))
