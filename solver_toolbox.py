@@ -108,7 +108,7 @@ class BaseSolver:
 		if curr == start_index:
 			return path + [start_index]
 		index = path.index(curr)
-		return path + path[:index + 1:-1]
+		return path + path[:index:-1]
 	
 	def find_best_dropoffs(self, G, home_indices, car_path_indices):
 		"""
