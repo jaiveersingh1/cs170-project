@@ -313,14 +313,12 @@ class GraphVisualizer:
 		self.path.pop()
 		convertToFile(self.path, self.dropoffs, self.out_file, self.locations)
 
-		'''
 		conn = sqlite3.connect('models.sqlite')
 		c = conn.cursor()
 		c.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', \
-				(self.new_cost, status == False, self.in_file))
+				(self.new_cost, status == 0, self.in_file))
 		conn.commit()
 		conn.close()
-		'''
 
 		print("Successfuly wrote new path to output file:", self.out_file)
 
