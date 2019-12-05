@@ -1,13 +1,19 @@
+import os
 import math
 import utils
 import pickle
+import sqlite3
 import argparse
 import networkx
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import matplotlib.pylab as plb
 
+from solver import *
 from student_utils import *
+from solver_toolbox import *
+from matplotlib.widgets import Button
 from scipy.sparse.csgraph import connected_components
 
 class Vertex:
@@ -161,6 +167,17 @@ class GraphGenerator:
 class GraphVisualizer:
 	def __init__(self, gen=None):
 		self.gen = gen
+		self.path = []
+		self.homes = []
+		self.locations = []
+		self.dropoffs = {}
+		self.pos = None
+		self.G = None
+		self.adj_mat = None
+		self.out_file = None
+		self.in_file = None
+		self.curr_cost = 0
+		self.new_cost = 0
 
 	def connectPoints(self, x, y, p1, p2):
 		x1, x2 = x[p1], x[p2]
@@ -201,18 +218,24 @@ class GraphVisualizer:
 			self.gen = pickle.load(fp)
 		self.visGen()
 
-	def visFromAdj(self, input_matrix, solution_file):
-		input_data = utils.read_file(input_matrix)
-		num_of_locations, num_houses, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix = data_parser(input_data)
-		home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
-		location_indices = convert_locations_to_indices(list_of_locations, list_of_locations)
+	def visFromAdj(self, input_matrix, solution_file=None, draw=False, G=None):
+		if (not G):
+			input_data = utils.read_file(input_matrix)
+			num_of_locations, num_houses, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix = data_parser(input_data)
+			home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
+			location_indices = convert_locations_to_indices(list_of_locations, list_of_locations)
 
-		for i in range(len(adjacency_matrix)):
-			for j in range(len(adjacency_matrix)):
-				if (adjacency_matrix[i][j] == 'x'):
-					adjacency_matrix[i][j] = 0
+			self.adj_mat = adjacency_matrix
+			self.homes = home_indices
+			self.locations = list_of_locations
 
-		G = nx.from_numpy_matrix(np.matrix(adjacency_matrix), create_using=nx.DiGraph)
+			for i in range(len(adjacency_matrix)):
+				for j in range(len(adjacency_matrix)):
+					if (adjacency_matrix[i][j] == 'x'):
+						adjacency_matrix[i][j] = 0
+
+			G = nx.from_numpy_matrix(np.matrix(adjacency_matrix), create_using=nx.DiGraph)
+
 		pos = nx.spring_layout(G)
 
 		labels = { i : i for i in location_indices }
@@ -230,8 +253,9 @@ class GraphVisualizer:
 					   node_color='r',
 					   node_size=100)
 		nx.draw_networkx_edges(G, pos, width=1.0, alpha=0.5)
+		nx.draw_networkx_labels(G, pos, labels, font_size=8)
 
-		if (type(solution_file) == str):
+		if (solution_file):
 			with open(solution_file) as f:
 				path = list(f.readline().split())
 
@@ -239,17 +263,110 @@ class GraphVisualizer:
 			nx.draw_networkx_edges(G, pos,
 						edgelist=path_edges,
 						width=3, alpha=0.5, edge_color='r')
-			nx.draw_networkx_labels(G, pos, labels, font_size=8)
 
-		plt.show()
+		if (draw):
+			plt.show()
+		return pos, G
 
+	def onClick(self, event):
+		x, y = event.xdata, event.ydata
+		best_x, best_y = float('inf'), float('inf')
+		best_label = 0
+
+		for label, loc in self.pos.items():
+			curr_x, curr_y = abs(x - loc[0]), abs(y - loc[1])
+			if(curr_x < best_x and curr_y < best_y):
+				best_label, best_x, best_y = label, curr_x, curr_y
+
+		self.path.append(best_label)
+		print(self.path)
+
+	def clearPath(self, event):
+		self.__init__()
+		print("----------------------- New Path -----------------------")
+
+	def nextGraph(self, event):
+		self.__init__()
+		plt.close()
+		print("----------------------- Next Graph -----------------------")
+
+	def calcCost(self, event):
+		self.path.pop()
+		new_path = []
+
+		for i in range(len(self.path) - 1):
+			if (not self.G.has_edge(self.path[i], self.path[i + 1])):
+				new_path.extend(nx.dijkstra_path(self.G, self.path[i], self.path[i + 1]))
+				new_path.pop()
+			else:
+				new_path.append(self.path[i])
+		new_path.append(self.path[-1])
+
+		self.path = new_path
+		solver = BaseSolver()
+		walk_cost, self.dropoffs = solver.find_best_dropoffs(self.G, self.homes, self.path)
+		self.new_cost = cost_of_solution(self.G, self.path, self.dropoffs)[0]
+
+		print("----------------------- Adjusted Path -----------------------\n", self.path, "New Cost:", self.new_cost, "Current Cost:", self.curr_cost)
+
+	def outToFile(self, event):
+		self.path.pop()
+		convertToFile(self.path, self.dropoffs, self.out_file, self.locations)
+
+		'''
+		conn = sqlite3.connect('models.sqlite')
+		c = conn.cursor()
+		c.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', \
+				(self.new_cost, status == False, self.in_file))
+		conn.commit()
+		conn.close()
+		'''
+
+		print("Successfuly wrote new path to output file:", self.out_file)
+
+	def visIter(self, input_directory="batches/inputs/", output_directory="submissions/submission_final/"):
+		conn = sqlite3.connect('models.sqlite')
+		c = conn.cursor()
+
+		for entry in os.scandir(input_directory): 
+			input_file = entry.path.split('/')[-1]
+			query_result = c.execute('SELECT optimal, best_objective_bound FROM models WHERE input_file = (?)', (input_file,)).fetchone()
+
+			if (query_result and not query_result[0]):
+				print(entry.path)
+
+				self.curr_cost = query_result[1]
+				self.in_file = input_file
+				self.out_file = "submissions/submission_boosted/" + input_file.split('.')[0] + ".out"
+
+				output_file = output_directory + input_file.split('.')[0] + ".out"
+
+				fig, ax = plt.subplots()
+				self.ax = plb.gca()
+				fig.canvas.mpl_connect('button_press_event', self.onClick)
+				if (os.path.isfile(output_file)):
+					self.pos, self.G = self.visFromAdj(entry.path, output_file)
+				else:
+					self.pos, self.G = self.visFromAdj(entry.path)
+
+				ax_reset, ax_cost, ax_write, ax_next = plt.axes([0.6, 0.0, 0.1, 0.075]), plt.axes([0.7, 0.0, 0.1, 0.075]), plt.axes([0.8, 0.0, 0.1, 0.075]), plt.axes([0.9, 0.0, 0.1, 0.075])
+				b_reset, b_cost, b_write, b_next = Button(ax_reset, 'Reset'), Button(ax_cost, 'Cost'), Button(ax_write, 'Write'), Button(ax_next, 'Next')
+
+				b_reset.on_clicked(self.clearPath)
+				b_cost.on_clicked(self.calcCost)
+				b_write.on_clicked(self.outToFile)
+				b_next.on_clicked(self.nextGraph)
+
+				plt.show()
+
+		conn.close()
 
 # -------------------------------------------------------------- COMMAND LINE INTERFACE -------------------------------------------------------------- #
 if __name__=="__main__":
 	parser = argparse.ArgumentParser(description='Parsing arguments')
 	parser.add_argument('action', type=str, help='The type of action to execute.')
-	parser.add_argument('input1', type=str, help='The path to the input file or directory')
-	parser.add_argument('input2', type=str, nargs=None, default=None, help='The path to the input file or directory')
+	parser.add_argument('input1', type=str, nargs='?', help='The path to the input file or directory')
+	parser.add_argument('input2', type=str, nargs='?', help='The path to the input file or directory')
 
 	args = parser.parse_args()
 	action = args.action
@@ -258,7 +375,16 @@ if __name__=="__main__":
 
 	if (action == "visualize" or action == "vis" or action == "visual"):
 		vis = GraphVisualizer()
-		vis.visFromAdj(input_1, input_2)
+
+		if (input_1 and input_2):
+			vis.visIter(input_1, input_2)
+		elif (input_1):
+			vis.visIter(input_directory=input_1)
+		elif (input_2):
+			vis.visIter(output_directory=input_2)
+		else:
+			vis.visIter()
+		# vis.visFromAdj(input_1, input_2, True)
 
 	if (action == "generate" or action == "gen"):
 		gen = GraphGenerator(int(input_1), int(input_2))
