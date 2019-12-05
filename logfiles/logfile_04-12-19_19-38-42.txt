@@ -1,0 +1,5 @@
+
+Wed Dec  4 19:38:42 2019	230_200.in  	 [31mTimeout![0m Feasible cost=115108789243.17426, bound=68259847902.5032. 
+Wed Dec  4 19:56:52 2019	233_200.in  	 [31mTimeout![0m Feasible cost=559370.1615466665, bound=330874.0372323046. 
+Wed Dec  4 20:16:44 2019	234_200.in  	 [31mTimeout![0m Feasible cost=8518814.270851843, bound=6906450.8634421965. [33mGraph was not Eulerian.[0m 
+Wed Dec  4 20:31:52 2019	238_200.in  	 
