@@ -107,7 +107,9 @@ class BaseSolver:
 			curr = random.choice(edges)[1]
 		if curr == start_index:
 			return path + [start_index]
-		return path + nx.shortest_path(G, source = curr, target = start_index)
+		index = path.index(curr)
+		shame = path[:index + 1]
+		return path + shame[::-1]
 	
 	def find_best_dropoffs(self, G, home_indices, car_path_indices):
 		"""
@@ -356,41 +358,30 @@ class ILPSolver(BaseSolver):
 		if "-t" in params:
 			timeout = int(params[params.index("-t") + 1])
 
+		start_path, is_random = self.generate_random(G, starting_car_index), True
+
 		# parameter tuning
-		if seen and not "-n" in params:
-			model.cutoff = seen[0]
+		if seen:
+			# if not "--no-cutoff" in params:
+			# 	model.cutoff = seen[0]
+			output_file = 'submissions/submission_final/{}.out'.format(input_file.split('.')[0])
+			print(output_file)
+			if not "--no-prev" in params and os.path.isfile(output_file):
+				start_path = utils.read_file(output_file)[0]
+				is_random = False
+				start_path = convert_locations_to_indices(start_path, list_of_locations)
 		model.symmetry = 2
 
-		random_path = self.generate_random(G, starting_car_index)
-		#random_path = [0, 2, 5, 3, 0]
-		model.start = self.construct_starter(x, t, G, home_indices, random_path)
-
-		starter_dict = dict(model.start)       
-		
-		# for starter_variable in starter_dict:
-		# 	model += starter_variable == starter_dict[starter_variable]
-
 		print("Starting path:")
-		print(random_path)
+		if is_random:
+			print("Random PATH:", start_path)
+		else:
+			print("OLD PATH:", start_path)
 		print()
 
-		# print('\nEdges (In, Out, Weight):\n')  
-		# for i in E:
-		# 	print(str(i), end=" ")
-		# print()
+		if "--no-model-start" not in params:
+			model.start = self.construct_starter(x, t, G, home_indices, start_path)
 
-		# print('Car - Chosen Edges:')
-		# for x_i in x:
-		# 	print(starter_dict.get(x_i, 999.0), end=" ")
-		# print()
-
-		# print('TAs - Chosen Edges:')  
-		# for t_i in t:
-		# 	for x_i in t_i:
-		# 		print(starter_dict.get(x_i, 999.0), end=" ")
-		# 	print()
-		
-		# input("Enter to continue:")
 
 		if timeout != -1:
 			status = model.optimize(max_seconds=timeout)

@@ -1,0 +1,4 @@
+
+Wed Dec  4 09:40:30 2019	132_50.in  	 [31mTimeout![0m Failed, bound=358.06666666666666. 
+Wed Dec  4 10:00:33 2019	216_50.in  	 [31mTimeout![0m Feasible cost=200.70593666666664, bound=182.4830656666667. 
+Wed Dec  4 10:20:54 2019	23_50.in  	 [31mTimeout![0m Failed, bound=21.0. 

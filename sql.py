@@ -1,6 +1,8 @@
 import sqlite3
 import argparse
 import utils
+import shutil
+import os
 
 def print_local_table(filename):
     conn = sqlite3.connect(filename)
@@ -114,10 +116,38 @@ def merge_tables(filename):
     [print(i) for i in best_results]
     print()
 
+def remaining(filename):
+    conn = sqlite3.connect(filename)
+    c = conn.cursor()
+
+    inputs = [file.split("/")[-1] for file in utils.get_files_with_extension("batches/inputs", 'in')]
+    results = [file[0] for file in c.execute("SELECT input_file FROM models").fetchall()]
+    remaining = []
+    for i in inputs:
+        if i not in results:
+            remaining.append(i)
+
+    conn.commit()
+    conn.close()
+
+    num_batches = int(input("How many batches to split into? "))
+    factor = int(len(remaining) / num_batches)
+
+    for i in range(num_batches):
+        directory = "batches/remaining/remaining_{}/".format(i)
+        print("CREATED", directory)
+        os.mkdir(directory)
+
+        for file in remaining[i * factor: (i + 1) * factor]:
+            shutil.copy("batches/inputs/{}".format(file), directory + file)
+
+
+
+
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description='Parsing arguments')
-    parser.add_argument('command', type=str, choices=['print', 'merge', 'query'], help='The command to run')
+    parser.add_argument('command', type=str, choices=['print', 'merge', 'query', 'remaining'], help='The command to run')
     parser.add_argument('input', type=str, help='The path to the input table')
     args = parser.parse_args()
     if args.command == 'print':
@@ -126,5 +156,7 @@ if __name__=="__main__":
         merge_tables(args.input)
     elif args.command == 'query':
         run_queries(args.input)
+    elif args.command == 'remaining':
+        remaining(args.input)
     else:
         print("Unsupported command")
