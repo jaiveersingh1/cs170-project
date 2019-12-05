@@ -120,17 +120,24 @@ def remaining(filename):
     conn = sqlite3.connect(filename)
     c = conn.cursor()
 
-    inputs = [file.split("/")[-1] for file in utils.get_files_with_extension("batches/inputs", 'in')]
+    input_folder = input("Which folder to check against? ")
+    inputs = [file.split("/")[-1] for file in utils.get_files_with_extension(input_folder, 'in')]
     results = [file[0] for file in c.execute("SELECT input_file FROM models").fetchall()]
     remaining = []
     for i in inputs:
         if i not in results:
             remaining.append(i)
+            print(i)
 
     conn.commit()
     conn.close()
 
-    num_batches = int(input("How many batches to split into? "))
+    print(f"There are {len(remaining)} files remaining.")
+
+    num_batches = int(input("How many batches to split into? (-1 to skip) "))
+    if num_batches == -1:
+        return
+    
     factor = int(len(remaining) / num_batches)
 
     for i in range(num_batches):
