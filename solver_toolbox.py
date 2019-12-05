@@ -358,7 +358,7 @@ class ILPSolver(BaseSolver):
 		if "-t" in params:
 			timeout = int(params[params.index("-t") + 1])
 
-		start_path, is_random = [0, 37, 38, 0], True
+		start_path, is_random = self.generate_random(G, starting_car_index), True
 
 		# parameter tuning
 		if seen:
