@@ -358,18 +358,29 @@ class ILPSolver(BaseSolver):
 		if "-t" in params:
 			timeout = int(params[params.index("-t") + 1])
 
+		start_path, is_random = [0, 37, 38, 0], True
+
 		# parameter tuning
-		if seen and not "-n" in params:
-			model.cutoff = seen[0]
+		if seen:
+			# if not "--no-cutoff" in params:
+			# 	model.cutoff = seen[0]
+			output_file = 'submissions/submission_final/{}.out'.format(input_file.split('.')[0])
+			print(output_file)
+			if not "--no-prev" in params and os.path.isfile(output_file):
+				start_path = utils.read_file(output_file)[0]
+				is_random = False
+				start_path = convert_locations_to_indices(start_path, list_of_locations)
 		model.symmetry = 2
 
-		random_path = self.generate_random(G, starting_car_index)
 		print("Starting path:")
-		print(random_path)
+		if is_random:
+			print("Random PATH:", start_path)
+		else:
+			print("OLD PATH:", start_path)
 		print()
 
-		if "-nms" not in params:
-			model.start = self.construct_starter(x, t, G, home_indices, random_path)
+		if "--no-model-start" not in params:
+			model.start = self.construct_starter(x, t, G, home_indices, start_path)
 
 
 		if timeout != -1:
