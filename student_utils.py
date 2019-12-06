@@ -24,7 +24,7 @@ def data_parser(input_data):
 
 def adjacency_matrix_to_graph(adjacency_matrix, scale = 1.0):
     node_weights = [adjacency_matrix[i][i] for i in range(len(adjacency_matrix))]
-    adjacency_matrix_formatted = [[0 if entry == 'x' else entry for entry in row] for row in adjacency_matrix]
+    adjacency_matrix_formatted = [[0 if entry == 'x' else entry * scale for entry in row] for row in adjacency_matrix]
 
     for i in range(len(adjacency_matrix_formatted)):
         adjacency_matrix_formatted[i][i] = 0
@@ -36,7 +36,7 @@ def adjacency_matrix_to_graph(adjacency_matrix, scale = 1.0):
     for node, datadict in G.nodes.items():
         if node_weights[node] != 'x':
             message += 'The location {} has a road to itself. This is not allowed.\n'.format(node)
-        datadict['weight'] = node_weights[node] * scale
+        datadict['weight'] = node_weights[node]
 
     return G, message
 
