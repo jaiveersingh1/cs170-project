@@ -214,7 +214,6 @@ if __name__=="__main__":
         if '-p' in args.params:
             allowance = float(args.params[args.params.index("-p") + 1])
         discrepancy_check(args.input, allowance)
-        discrepancy_check(args.input)
     elif args.command == 'split':
         split(args.input)
     else:
