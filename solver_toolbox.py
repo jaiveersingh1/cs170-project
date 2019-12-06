@@ -423,6 +423,8 @@ class ILPSolver(BaseSolver):
 			conn.close()
 			return float('inf'), [], {}
 
+		model.objective_value /= edge_scale
+
 		# printing the solution if found
 		out.write('Route with total cost %g found. \n' % (model.objective_value))
 
