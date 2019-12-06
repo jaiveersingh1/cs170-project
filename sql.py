@@ -186,7 +186,6 @@ def discrepancy_check(filename, allowance):
             if (not os.path.exists("batches/batch_discrepancy/" + input_file_name + ".in")):
                 shutil.copy(input_file, "batches/batch_discrepancy")
 
-    inputs = [file.split("/")[-1].split('.')[0] + ".in" for file in utils.get_files_with_extension(output_directory, 'out')]
     results = [file[0] for file in c.execute("SELECT input_file FROM models").fetchall()]
     for file in results:
         if (not os.path.exists(output_directory + file.split('.')[0] + ".out")):
