@@ -15,4 +15,6 @@ Thu Dec  5 20:30:49 2019	233_100.in  	 [31mTimeout![0m Feasible cost=381561.81
 Thu Dec  5 20:46:32 2019	209_100.in  	 [32mOptimal cost=46526.23450666666.[0m 
 Thu Dec  5 20:54:46 2019	231_100.in  	 [32mOptimal cost=34793305509.0581.[0m 
 Thu Dec  5 20:58:47 2019	240_100.in  	 [32mOptimal cost=348.04304666666656.[0m 
-Thu Dec  5 21:02:58 2019	203_100.in  	 
+Thu Dec  5 21:02:58 2019	203_100.in  	 [31mTimeout![0m Feasible cost=3916.232463333332, bound=3487.499532348473. 
+Thu Dec  5 21:18:42 2019	248_100.in  	 [32mOptimal cost=178206.0.[0m 
+Thu Dec  5 21:19:17 2019	201_100.in  	 
