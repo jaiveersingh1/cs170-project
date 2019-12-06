@@ -277,7 +277,7 @@ class ILPSolver(BaseSolver):
 
 		starting_car_index = list_of_locations.index(starting_car_location)
 
-		start_paths = [convert_location_to_indices([starting_car_location])]
+		start_paths = [convert_locations_to_indices([starting_car_location], list_of_locations)]
 		num_random_paths = 5
 		if "-r" in params:
 			num_random_paths = int(params[params.index("-r") + 1])
