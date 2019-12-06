@@ -462,19 +462,25 @@ class ILPSolver(BaseSolver):
 		car_path_indices = self.construct_path(starting_car_index, list_of_edges, input_file)
 		
 		walk_cost, dropoffs_dict = self.find_best_dropoffs(G, home_indices, car_path_indices)
-
+		updated = False
 		if not seen:
 			print("SAVING", input_file)
 			c.execute('INSERT INTO models (input_file, best_objective_bound, optimal) VALUES (?, ?, ?)', \
 				(input_file, model.objective_value, status == OptimizationStatus.OPTIMAL))
 			conn.commit()
 		elif model.objective_value < seen[0]:
+			updated = True
 			print("UPDATING", input_file)
 			c.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', \
 				(model.objective_value, status == OptimizationStatus.OPTIMAL, input_file))
 			conn.commit()
 		if not "-s" in params:
 			print("Walk cost =", walk_cost, "\n")
+
+		if updated:
+			self.log_update_entry(Fore.GREEN + "Updated" + Style.RESET_ALL)
+		else:
+			self.log_update_entry(Fore.RED + "Not Updated" + Style.RESET_ALL)
 
 		conn.close()
 		return model.objective_value, car_path_indices, dropoffs_dict
