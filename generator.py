@@ -356,8 +356,8 @@ class GraphVisualizer:
 				b_next.on_clicked(self.nextGraph)
 
 				plt.show()
-
-			else:
+			
+			elif (not query_result):
 				print("No suboptimal files found in the given input directory.\nEither all files in the directory are optimal,",
 					"the directory is empty, or any suboptimal files in the directory is not in the MODELS table.")
 
