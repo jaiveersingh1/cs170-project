@@ -15,7 +15,7 @@ pbar = ProgressBar()
 
 files = []
 for file, score, optimal in pbar(results):
-	if optimal == '1':
+	if optimal:
 		pass
 	file = file.split('.')[0]
 	our_cost = validate_output_nm('batches/inputs/{}.in'.format(file), 'submissions/submission_final/{}.out'.format(file))
