@@ -168,6 +168,8 @@ def discrepancy_check(filename, allowance):
 
     logfile = open("batches/batch_discrepancy/logfile.txt", "a")
 
+    print("Checking for discrepancies between MODELS table and submissions_final directory...")
+
     for entry in os.scandir(output_directory): 
         output_file = entry.path
         output_file_name = output_file.split('/')[-1]
@@ -178,20 +180,20 @@ def discrepancy_check(filename, allowance):
         cost_from_file = validate_output_nm(input_file, output_file)
 
         if (not query_result):
-            logfile.write(input_file_name.split('.')[0] + ": " + "File is not in the MODELS table, but has an output in the submission_final directory.")
+            logfile.write(input_file_name.split('.')[0] + ": " + "File is not in the MODELS table, but has an output in the submission_final directory.\n")
             if (not os.path.exists("batches/batch_discrepancy/" + input_file_name + ".in")):
                 shutil.copy(input_file, "batches/batch_discrepancy")
         elif ((abs(query_result[1] - cost_from_file) / query_result[1]) * 100 >= allowance):
             logfile.write(output_file_name.split('.')[0] + ": " + "MODELS cost is " + str(query_result[1]) \
                 + " but OV cost " + str(cost_from_file) + ". Percent Differential: " + \
-                    str((abs(query_result[1] - cost_from_file) / query_result[1]) * 100) + ".")
+                    str(((query_result[1] - cost_from_file) / query_result[1]) * 100) + ".\n")
             if (not os.path.exists("batches/batch_discrepancy/" + input_file_name + ".in")):
                 shutil.copy(input_file, "batches/batch_discrepancy")
 
     results = [file[0] for file in c.execute("SELECT input_file FROM models").fetchall()]
     for file in results:
         if (not os.path.exists(output_directory + file.split('.')[0] + ".out")):
-            logfile.write(file.split('.')[0] + ": " + "File is in the MODELS table, but does not have an output in the submission_final directory.")
+            logfile.write(file.split('.')[0] + ": " + "File is in the MODELS table, but does not have an output in the submission_final directory.\n")
             if (not os.path.exists("batches/batch_discrepancy/" + file)):
                 shutil.copy("batches/inputs/" + file, "batches/batch_discrepancy")
 
