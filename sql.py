@@ -134,19 +134,27 @@ def remaining(filename):
 
     print(f"There are {len(remaining)} files remaining.")
 
+    splitter('remaining', remaining)
+    
+def splitter(new_directory, files):
     num_batches = int(input("How many batches to split into? (-1 to skip) "))
     if num_batches == -1:
         return
-    
-    factor = int(len(remaining) / num_batches)
+
+    factor = int(len(files) / num_batches)
 
     for i in range(num_batches):
-        directory = "batches/remaining/remaining_{}/".format(i)
+        directory = "batches/split_{}/batch{}/".format(new_directory, i)
         print("CREATED", directory)
-        os.mkdir(directory)
+        os.makedirs(directory)
 
-        for file in remaining[i * factor: (i + 1) * factor]:
+        for file in files[i * factor: (i + 1) * factor]:
             shutil.copy("batches/inputs/{}".format(file), directory + file)
+
+def split(input_folder):
+    inputs = [file.split("/")[-1] for file in utils.get_files_with_extension(input_folder, 'in')]
+    splitter(input_folder.split('/')[-1], inputs)
+
 
 def discrepancy_check(filename):
     conn = sqlite3.connect('models.sqlite')
@@ -166,7 +174,7 @@ def discrepancy_check(filename):
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description='Parsing arguments')
-    parser.add_argument('command', type=str, choices=['print', 'merge', 'query', 'remaining'], help='The command to run')
+    parser.add_argument('command', type=str, choices=['print', 'merge', 'query', 'remaining', 'split'], help='The command to run')
     parser.add_argument('input', type=str, help='The path to the input table')
     args = parser.parse_args()
     if args.command == 'print':
@@ -179,5 +187,7 @@ if __name__=="__main__":
         remaining(args.input)
     elif args.command == 'discrepancy':
         discrepancy_check(args.input)
+    elif args.command == 'split':
+        split(args.input)
     else:
         print("Unsupported command")
