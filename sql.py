@@ -161,7 +161,7 @@ def split(input_folder):
     splitter(input_folder.split('/')[-1], inputs)
 
 
-def discrepancy_check(filename):
+def discrepancy_check(filename, allowance):
     conn = sqlite3.connect('models.sqlite')
     c = conn.cursor()
     output_directory = "submissions/submission_final/"
