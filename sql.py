@@ -41,85 +41,60 @@ def run_queries(filename):
 
 def merge_tables(filename):
     saved_tables = utils.get_files_with_extension("models/", 'sqlite')
-    new_table = input("Where to save new output? ")
-
+    
     local_conn = sqlite3.connect(filename)
     local_cursor = local_conn.cursor()
-    orig_local_res = local_cursor.execute("SELECT * FROM models ORDER BY input_file").fetchall()
-    
+    local_res = local_cursor.execute("SELECT * FROM models ORDER BY input_file").fetchall()
+    local_conn.close()
+
+    new_table = input("Where to save new output? ")
+    new_conn = sqlite3.connect(new_table)
+    new_cursor = new_conn.cursor()
+    new_cursor.execute("DROP TABLE IF EXISTS models")
+    new_cursor.execute("CREATE TABLE IF NOT EXISTS models (input_file TEXT PRIMARY KEY, best_objective_bound NUMERIC, optimal INTEGER)")
+
+    for result in local_res:
+        new_cursor.execute('INSERT INTO models (input_file, best_objective_bound, optimal) VALUES (?, ?, ?)', result)
+
     for table in saved_tables:
-        print(table)
         remote_conn = sqlite3.connect(table)
         remote_cursor = remote_conn.cursor()
-
-        local_results = local_cursor.execute("SELECT * FROM models ORDER BY input_file").fetchall()
         remote_results = remote_cursor.execute("SELECT * FROM models ORDER BY input_file").fetchall()
 
-        best_results = []
-
         def compare(a, b):
-            if a[0] > b[0]:
-                return a, True, False
-            if b[0] > a[0]:
-                return b, False, True
-
-            if a[2] and not b[2]:
-                return a, True, True
-            if not a[2] and b[2]:
-                return b, True, True
-
-            if not a[2] and not b[2]:
-                if a[1] < b[1]:
-                    return a, True, True
-                return b, True, True
-            
             if a[2] and b[2]:
                 if a[1] != b[1]:
                     print("DANGER: entries claim to both be optimal with different costs")
                     print(a)
                     print(b)
-                return a, True, True
+                else:
+                    return min([a, b], key = lambda x: x[1])
 
+            if a[2] and not b[2] and a[1] >= b[1]:
+                print("DANGER: optimal entry has greater cost than non-optimal")
+                print(a)
+                print(b)
+                return a
+            elif not a[2] and b[2] and a[1] <= b[1]:
+                print("DANGER: optimal entry has greater cost than non-optimal")
+                print(a)
+                print(b)
+                return b
 
-        while len(local_results) > 0 and len(remote_results) > 0:
-            res_l = local_results[0]
-            res_r = remote_results[0]
+            return a if a[1] < b[1] else b
 
-            better_result, pop_local, pop_remote = compare(res_l, res_r)
-
-            best_results.append(better_result)
-            if pop_local:
-                local_results.pop(0)
-            if pop_remote:
-                remote_results.pop(0)
-
-        best_results += local_results + remote_results            
-        
-        remote_conn.close()
-
-        new_conn = sqlite3.connect(new_table)
-        new_cursor = new_conn.cursor()
-        new_cursor.execute("DROP TABLE IF EXISTS models")
-        new_cursor.execute("CREATE TABLE IF NOT EXISTS models (input_file TEXT PRIMARY KEY, best_objective_bound NUMERIC, optimal INTEGER)")
-        for result in best_results:
-            seen = new_cursor.execute('SELECT best_objective_bound FROM models WHERE input_file = (?)', [result[0]]).fetchone()
+        for result in remote_results:
+            seen = new_cursor.execute('SELECT * FROM models WHERE input_file = (?)', [result[0]]).fetchone()
             if not seen:
                 new_cursor.execute('INSERT INTO models (input_file, best_objective_bound, optimal) VALUES (?, ?, ?)', result)
             else:
-                new_cursor.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', result)
+                comp = compare(seen, result)
+                new_cursor.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', (comp[1], comp[2], comp[0]))
+        
+        remote_conn.close()            
                 
-        new_conn.commit()
-        new_conn.close()
-
-    local_conn.close()
-    
-    print("Local: ")
-    [print(i) for i in orig_local_res]
-    print()
-
-    print("Best: ")
-    [print(i) for i in best_results]
-    print()
+    new_conn.commit()
+    new_conn.close()    
 
 def remaining(filename):
     conn = sqlite3.connect(filename)
@@ -166,6 +141,10 @@ def discrepancy_check(filename, allowance):
     c = conn.cursor()
     output_directory = "submissions/submission_final/"
 
+    logfile = open("batches/batch_discrepancy/logfile.txt", "a")
+
+    print("Checking for discrepancies between MODELS table and submissions_final directory...")
+
     for entry in os.scandir(output_directory): 
         output_file = entry.path
         output_file_name = output_file.split('/')[-1]
@@ -176,23 +155,25 @@ def discrepancy_check(filename, allowance):
         cost_from_file = validate_output_nm(input_file, output_file)
 
         if (not query_result):
-            print(input_file_name.split('.')[0] + ": " + "File is not in the MODELS table, but has an output in the submission_final directory.")
+            logfile.write(input_file_name.split('.')[0] + ": " + "File is not in the MODELS table, but has an output in the submission_final directory.\n")
             if (not os.path.exists("batches/batch_discrepancy/" + input_file_name + ".in")):
                 shutil.copy(input_file, "batches/batch_discrepancy")
-        elif ((abs(query_result[1] - cost_from_file) / query_result[1]) * 100 >= allowance):
-            print(output_file_name.split('.')[0] + ": " + "MODELS cost is " + str(query_result[1]) \
+        elif ((abs(query_result[1] - cost_from_file) / query_result[1]) * 100 >= allowance \
+            and query_result[1] - cost_from_file / query_result[1] * 100 < 0):
+            logfile.write(output_file_name.split('.')[0] + ": " + "MODELS cost is " + str(query_result[1]) \
                 + " but OV cost " + str(cost_from_file) + ". Percent Differential: " + \
-                    str((abs(query_result[1] - cost_from_file) / query_result[1]) * 100) + ".")
+                    str(((query_result[1] - cost_from_file) / query_result[1]) * 100) + ".\n")
             if (not os.path.exists("batches/batch_discrepancy/" + input_file_name + ".in")):
                 shutil.copy(input_file, "batches/batch_discrepancy")
 
     results = [file[0] for file in c.execute("SELECT input_file FROM models").fetchall()]
     for file in results:
         if (not os.path.exists(output_directory + file.split('.')[0] + ".out")):
-            print(file.split('.')[0] + ": " + "File is in the MODELS table, but does not have an output in the submission_final directory.")
+            logfile.write(file.split('.')[0] + ": " + "File is in the MODELS table, but does not have an output in the submission_final directory.\n")
             if (not os.path.exists("batches/batch_discrepancy/" + file)):
                 shutil.copy("batches/inputs/" + file, "batches/batch_discrepancy")
 
+    logfile.close()
     conn.close()
 
 
