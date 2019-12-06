@@ -1,6 +1,6 @@
-Chattanooga Cleveland Chesapeake Midland Anchorage Surprise Carrollton Bakersfield BatonRouge Detroit Vancouver Austin Tacoma Oxnard McAllen ElkGrove Savannah FortLauderdale SanDiego Sunnyvale Boise SanBernardino Fremont Honolulu Miramar Tampa Thornton Augusta SantaClarita Hayward Jacksonville Hayward Akron RanchoCucamonga TianamenSquare Ontario Salem PembrokePines Gilbert KansasCity Frisco Orange Henderson Toledo Atlanta Chicago Naperville Orlando NewportNews Alexandria Spokane Springfield Berkeley Knoxville GardenGrove Salinas Murfreesboro Carrollton Wichita Macon LittleRock CapeCoral Oceanside Fontana Lincoln Madison Denton ElPaso Dayton Plano Fresno Plano Yonkers Durham MorenoValley Anaheim NewYork Syracuse Irvine Norfolk SaintPaul Norfolk Irvine OklahomaCity SantaAna Lubbock Corona Jackson Brownsville Boston Hollywood GrandPrairie LongBeach Cincinnati Albuquerque Pomona Buffalo Tallahassee MorenoValley Roseville Memphis SanAntonio Memphis Roseville VirginiaBeach FortWorth Fayetteville Aurora Tempe Scottsdale Riverside Indianapolis Irving Nashville Chattanooga
-86
-Yonkers Yonkers
+Chattanooga Cleveland SanAntonio Memphis Wichita Fayetteville Aurora Orange Frisco Orange Henderson Toledo Atlanta Chicago Naperville Orlando Albuquerque Waco LongBeach Cincinnati DesMoines NewportNews Alexandria HuntingtonBeach Jackson Brownsville Boston Hollywood Lubbock Corona FortWorth Roseville MorenoValley Anaheim NewYork Syracuse Irvine Norfolk SaintPaul Norfolk Raleigh Hayward Akron RanchoCucamonga TianamenSquare Ontario Salem FortCollins Pomona Buffalo JerseyCity Portland Fresno Plano ElkGrove Savannah FortLauderdale SanDiego Sunnyvale Boise SanBernardino Tucson Fontana OklahomaCity Lincoln Madison Denton SanJose Montgomery Macon LittleRock CapeCoral Oceanside Bakersfield Salinas Murfreesboro Salinas GardenGrove Phoenix Anchorage Surprise OverlandPark Scottsdale Riverside Scottsdale Austin Vancouver PortStLucie Miramar Honolulu Fremont Huntsville Tacoma Oxnard Spokane Springfield Berkeley Knoxville ElPaso Chattanooga
+80
+Plano Yonkers Plano
 Alexandria Alexandria
 Madison Joliet Madison
 Orlando Orlando
@@ -9,15 +9,15 @@ Fresno Worcester GrandRapids
 LittleRock LittleRock Shreveport
 GardenGrove GardenGrove
 Aurora Aurora Baltimore Lexington
-NewportNews DesMoines NewportNews
+DesMoines DesMoines
 Surprise Surprise
-Indianapolis Phoenix Indianapolis
+Phoenix Phoenix
 Knoxville Knoxville
-Jacksonville Jacksonville
+Hayward Jacksonville SantaClarita Hayward
 Oceanside Oceanside
 Henderson Henderson
 Fremont Fremont
-Riverside Riverside
+Riverside Riverside Indianapolis
 Memphis Memphis
 SanBernardino SanBernardino
 Tacoma Tacoma
@@ -25,34 +25,32 @@ Wichita Wichita
 Cincinnati Paterson Cincinnati
 SaintPaul Washington SaintPaul
 Ontario Ontario
-Bakersfield Bakersfield
-SantaClarita SantaClarita
+Bakersfield Bakersfield BatonRouge
 Cleveland Cleveland
 Brownsville Brownsville
-McAllen McAllen
+ElkGrove McAllen
 Murfreesboro Charlotte Murfreesboro
-Corona Corona
+Corona Corona Olathe
 Honolulu Honolulu SanFrancisco
 Springfield Springfield
 Denton Denton
-Tempe Tempe
+Scottsdale Tempe Scottsdale
 Spokane Spokane
-VirginiaBeach Glendale
-GrandPrairie GrandPrairie
+Portland Glendale
+LongBeach GrandPrairie
 Irvine Irvine
-PembrokePines Olathe
-Scottsdale Scottsdale
+NewportNews NewportNews
 Vancouver Vancouver
-Anchorage Anchorage
+Anchorage Anchorage Midland
 FortWorth FortWorth
 Austin Austin
-Norfolk Raleigh
+Raleigh Raleigh
 Anaheim Anaheim ChulaVista
-Macon SanJose
+SanJose SanJose
 Fayetteville Fayetteville Richmond
 Oxnard Oxnard
-Durham Durham
-SantaAna SantaAna
+Roseville Durham
+OklahomaCity SantaAna
 FortLauderdale FortLauderdale
 ElPaso ElPaso
 Syracuse Syracuse
@@ -60,22 +58,19 @@ NewYork NewYork
 Savannah Savannah
 CapeCoral CapeCoral
 Hollywood Louisville
-Hayward Hayward
 Buffalo Buffalo
-BatonRouge BatonRouge
 Boston Boston
 Boise Boise
-Albuquerque Waco LosAngeles
+Waco Waco
 Chicago Chicago
 SanAntonio SanAntonio
-KansasCity KansasCity
-Tallahassee Tallahassee
+Frisco KansasCity Frisco
+MorenoValley Tallahassee
 Salem Salem
-Midland Midland
+Albuquerque LosAngeles
 Fontana Fontana
 Berkeley Berkeley
-Miramar PortStLucie
-Plano Plano
+PortStLucie PortStLucie
 Orange Orange
 RanchoCucamonga Newark
 Toledo Toledo
@@ -84,5 +79,4 @@ Jackson Jackson
 Akron Akron
 Pomona Pomona
 Lubbock Lubbock
-Frisco Frisco
 SanDiego SanDiego

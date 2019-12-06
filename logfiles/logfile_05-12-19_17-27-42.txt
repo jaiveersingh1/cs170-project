@@ -1,2 +1,2 @@
 
-Thu Dec  5 17:27:42 2019	300_200.in  	 
+Thu Dec  5 17:27:42 2019	300_200.in  	 [32mOptimal cost=84.25852333332845.[0m [33mGraph was not Eulerian.[0m 
