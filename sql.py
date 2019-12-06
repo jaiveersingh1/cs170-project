@@ -28,11 +28,14 @@ def run_queries(filename):
             conn.close()
             return
         
-        results = c.execute(command).fetchall()
-
-        print("Results:")
-        [print(i) for i in results]
-        print()
+        try:
+            results = c.execute(command).fetchall()
+            print("Results:")
+            [print(i) for i in results]
+            print()
+        except:
+            print("Invalid query.")
+        
 
 def merge_tables(filename):
     saved_tables = utils.get_files_with_extension("models/", 'sqlite')
