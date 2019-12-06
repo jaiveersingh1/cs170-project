@@ -272,7 +272,7 @@ class ILPSolver(BaseSolver):
 		if "--approx" in params:
 			edge_scale = 1/10000
 
-		G, message = adjacency_matrix_to_graph(adjacency_matrix, scale)
+		G, message = adjacency_matrix_to_graph(adjacency_matrix, edge_scale)
 		E = list(G.to_directed().edges(data='weight'))
 
 		starting_car_index = list_of_locations.index(starting_car_location)
