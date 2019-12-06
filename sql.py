@@ -4,6 +4,8 @@ import utils
 import shutil
 import os
 
+from output_validator import *
+
 def print_local_table(filename):
     conn = sqlite3.connect(filename)
     c = conn.cursor()
@@ -162,24 +164,46 @@ def split(input_folder):
 def discrepancy_check(filename):
     conn = sqlite3.connect('models.sqlite')
     c = conn.cursor()
+    output_directory = "submissions/submission_final/"
 
-    for entry in os.scandir(input_directory): 
-        input_file = entry.path.split('/')[-1]
-        query_result = c.execute('SELECT optimal, best_objective_bound FROM models WHERE input_file = (?)', (input_file,)).fetchone()
+    for entry in os.scandir(output_directory): 
+        output_file = entry.path
+        output_file_name = output_file.split('/')[-1]
+        input_file_name = output_file_name.split('.')[0] + ".in"
+        input_file = "batches/inputs/" + input_file_name
+
+        query_result = c.execute('SELECT optimal, best_objective_bound FROM models WHERE input_file = (?)', (input_file_name,)).fetchone()
+        cost_from_file = validate_output_nm(input_file, output_file)
+
         if (not query_result):
-            print(input_file + ": " + "File is not in the MODELS table, but is in the submission_final directory.")
-        if (not query_result[0]):
-            print(entry.path)
+            print(input_file_name.split('.')[0] + ": " + "File is not in the MODELS table, but has an output in the submission_final directory.")
+            if (not os.path.exists("batches/batch_discrepancy/" + input_file_name + ".in")):
+                shutil.copy(input_file, "batches/batch_discrepancy")
+        elif ((abs(query_result[1] - cost_from_file) / query_result[1]) * 100 >= allowance):
+            print(output_file_name.split('.')[0] + ": " + "MODELS cost is " + str(query_result[1]) \
+                + " but OV cost " + str(cost_from_file) + ". Percent Differential: " + \
+                    str((abs(query_result[1] - cost_from_file) / query_result[1]) * 100) + ".")
+            if (not os.path.exists("batches/batch_discrepancy/" + input_file_name + ".in")):
+                shutil.copy(input_file, "batches/batch_discrepancy")
 
-            self.curr_cost = query_result[1]
+    inputs = [file.split("/")[-1].split('.')[0] + ".in" for file in utils.get_files_with_extension(output_directory, 'out')]
+    results = [file[0] for file in c.execute("SELECT input_file FROM models").fetchall()]
+    for file in results:
+        if (not os.path.exists(output_directory + file.split('.')[0] + ".out")):
+            print(file.split('.')[0] + ": " + "File is in the MODELS table, but does not have an output in the submission_final directory.")
+            if (not os.path.exists("batches/batch_discrepancy/" + file)):
+                shutil.copy("batches/inputs/" + file, "batches/batch_discrepancy")
+
     conn.close()
 
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description='Parsing arguments')
-    parser.add_argument('command', type=str, choices=['print', 'merge', 'query', 'remaining', 'split'], help='The command to run')
+    parser.add_argument('command', type=str, choices=['print', 'merge', 'query', 'remaining', 'discrepancy', 'split'], help='The command to run')
     parser.add_argument('input', type=str, help='The path to the input table')
+    parser.add_argument('params', nargs=argparse.REMAINDER, help='Extra arguments passed in')
     args = parser.parse_args()
+
     if args.command == 'print':
         print_local_table(args.input)
     elif args.command == 'merge':
@@ -189,6 +213,10 @@ if __name__=="__main__":
     elif args.command == 'remaining':
         remaining(args.input)
     elif args.command == 'discrepancy':
+        allowance = 0.1
+        if '-p' in args.params:
+            allowance = float(args.params[args.params.index("-p") + 1])
+        discrepancy_check(args.input, allowance)
         discrepancy_check(args.input)
     elif args.command == 'split':
         split(args.input)
