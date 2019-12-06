@@ -149,10 +149,19 @@ def remaining(filename):
             shutil.copy("batches/inputs/{}".format(file), directory + file)
 
 def discrepancy_check(filename):
-    
+    conn = sqlite3.connect('models.sqlite')
+    c = conn.cursor()
 
+    for entry in os.scandir(input_directory): 
+        input_file = entry.path.split('/')[-1]
+        query_result = c.execute('SELECT optimal, best_objective_bound FROM models WHERE input_file = (?)', (input_file,)).fetchone()
+        if (not query_result):
+            print(input_file + ": " + "File is not in the MODELS table, but is in the submission_final directory.")
+        if (not query_result[0]):
+            print(entry.path)
 
-
+            self.curr_cost = query_result[1]
+    conn.close()
 
 
 if __name__=="__main__":
