@@ -404,29 +404,31 @@ class ILPSolver(BaseSolver):
 		else:
 			status = model.optimize()
 
+		objective_value = model.objective_value / edge_scale
+		objective_bound = model.objective_bound / edge_scale
+
 		if status == OptimizationStatus.OPTIMAL:
-			print('optimal solution cost {} found'.format(model.objective_value))
-			self.log_update_entry(Fore.GREEN + "Optimal cost={}.".format(model.objective_value) + Style.RESET_ALL)
+			print('optimal solution cost {} found'.format(objective_value))
+			self.log_update_entry(Fore.GREEN + "Optimal cost={}.".format(objective_value) + Style.RESET_ALL)
 		else:
 			print("!!!! TIMEOUT !!!!")
 			self.log_update_entry(Fore.RED + "Timeout!" + Style.RESET_ALL)
 
 			if status == OptimizationStatus.FEASIBLE:
-				print('sol.cost {} found, best possible: {}'.format(model.objective_value, model.objective_bound))
-				self.log_update_entry("Feasible cost={}, bound={}.".format(model.objective_value, model.objective_bound))
+				print('sol.cost {} found, best possible: {}'.format(objective_value, objective_bound))
+				self.log_update_entry("Feasible cost={}, bound={}.".format(objective_value, objective_bound))
 			elif status == OptimizationStatus.NO_SOLUTION_FOUND:
-				print('no feasible solution found, lower bound is: {}'.format(model.objective_bound))
-				self.log_update_entry("Failed, bound={}.".format(model.objective_bound))
+				print('no feasible solution found, lower bound is: {}'.format(objective_bound))
+				self.log_update_entry("Failed, bound={}.".format(objective_bound))
 
 		# if no solution found, return inf cost
 		if model.num_solutions == 0:
 			conn.close()
 			return float('inf'), [], {}
 
-		model.objective_value /= edge_scale
 
 		# printing the solution if found
-		out.write('Route with total cost %g found. \n' % (model.objective_value))
+		out.write('Route with total cost %g found. \n' % (objective_value))
 
 		if "-v" in params:
 			out.write('\nEdges (In, Out, Weight):\n')  
@@ -472,13 +474,13 @@ class ILPSolver(BaseSolver):
 		if not seen:
 			print("SAVING", input_file)
 			c.execute('INSERT INTO models (input_file, best_objective_bound, optimal) VALUES (?, ?, ?)', \
-				(input_file, model.objective_value, status == OptimizationStatus.OPTIMAL))
+				(input_file, objective_value, status == OptimizationStatus.OPTIMAL))
 			conn.commit()
-		elif model.objective_value < seen[0]:
+		elif objective_value < seen[0]:
 			updated = True
 			print("UPDATING", input_file)
 			c.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', \
-				(model.objective_value, status == OptimizationStatus.OPTIMAL, input_file))
+				(objective_value, status == OptimizationStatus.OPTIMAL, input_file))
 			conn.commit()
 		if not "-s" in params:
 			print("Walk cost =", walk_cost, "\n")
@@ -489,4 +491,4 @@ class ILPSolver(BaseSolver):
 			self.log_update_entry(Fore.RED + "Not Updated" + Style.RESET_ALL)
 
 		conn.close()
-		return model.objective_value, car_path_indices, dropoffs_dict
+		return objective_value, car_path_indices, dropoffs_dict
