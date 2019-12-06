@@ -1,15 +1,15 @@
-zero six five twelve thirteen twenty twentyone twentyeight thirtyfive thirtyfour thirtythree thirtytwo thirtynine forty fortyseven fortyeight fiftyfive fiftyfour fiftythree sixty sixtyseven sixtysix sixtyfive sixtyfour seventy seventyseven seventyone seventyeight eightyfour eightythree eightytwo eightynine eightyeight eightyone eightytwo seventyfive sixtyeight sixtyone sixtytwo sixtythree fiftyseven fifty fiftyone fortyfour thirtyseven thirty twentynine twentytwo twentythree twentyfour seventeen ten three two zero
+zero six five twelve thirteen fourteen twentyone fifteen twentytwo twentynine thirtyfive thirtyfour thirtythree forty fortyseven fortyeight fiftyfive fiftyfour fiftythree sixty sixtyseven sixtysix sixtyfive sixtyfour seventy seventyseven seventyone seventyeight seventynine eightysix eightyseven eightyeight eightyone eightytwo seventyfive sixtyeight sixtyone sixtytwo sixtythree fiftyseven fifty fiftyone fortyfour thirtyseven thirty twentythree twentyfour seventeen ten three four zero
 44
-two two
+zero two
 three three
-zero four
+four four
 five five
 six six
 ten ten
 twelve twelve
-thirteen fourteen
-twentyone fifteen
-twenty twenty
+fourteen fourteen
+fifteen fifteen
+twentyone twenty
 twentytwo twentytwo
 twentyfour twentyfour twentyfive
 twentynine twentynine
@@ -18,7 +18,7 @@ thirtythree thirtythree
 thirtyfour thirtyfour
 thirtyfive thirtyfive
 thirtyseven thirtysix thirtyseven
-thirtynine thirtynine
+forty thirtynine
 fortyfour fortyfour fortyfive
 fortyseven fortyseven
 fortyeight fortyeight
@@ -38,9 +38,9 @@ seventy seventy
 seventyone seventyone
 seventyfive seventyfive
 seventyseven seventyseven
-seventyeight seventyeight seventynine
+seventyeight seventyeight eightyfour
+seventynine seventynine
 eightyone eightyone
 eightytwo eightytwo
-eightyfour eightyfour
-eightyeight eightyseven eightyeight ninetyfive
-eightynine eightynine
+eightyseven eightyseven
+eightyeight eightyeight eightynine ninetyfive

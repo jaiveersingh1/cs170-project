@@ -1,20 +1,20 @@
-Soda ResidenceHalls AlumniHouse HavilandHall BarkerHall BanwayBldg EdwardsStadium CaliforniaHall HertzHall EtcheverryHall ChanShunAuditorium DonnerLab ChouHall ClarkKerrCampus CalvinLaboratory BerkeleyArtMuseum Campanile BerkeleyWayWest Campanile AnthonyHall EastGate BancroftLibrary BoaltHall CampbellHall EastAsianLibrary Dwinelle Insectary CareerCenter VLSB CareerCenter BARTStation BarrowsHall BarrowLane EvansDiamond CheitHall BotanicalGarden EyeCenter BirgeHall BlumHall CheitHall BlackwellHall EshlemanHall DurantHall HearstFieldAnnex Cory HearstFieldAnnex DurantHall Soda
+Soda VLSB CareerCenter AlumniHouse HavilandHall BarkerHall BanwayBldg EdwardsStadium CaliforniaHall HertzHall EtcheverryHall ChanShunAuditorium DonnerLab ChouHall ClarkKerrCampus CalvinLaboratory BerkeleyArtMuseum AnthonyHall EastGate BancroftLibrary CampbellHall EastAsianLibrary Dwinelle BARTStation BarrowsHall BarrowLane GoldmanField BarrowLane EvansDiamond CheitHall BotanicalGarden EyeCenter BirgeHall BlumHall BlackwellHall EshlemanHall BrainImagingCenter BerkeleyWayWest Campanile DurantHall Soda
 38
 AlumniHouse AlumniHouse
 AnthonyHall AnthonyHall
-BancroftLibrary BancroftLibrary
+BancroftLibrary BancroftLibrary BoaltHall
 BanwayBldg BanwayBldg
 BarkerHall BarkerHall
 BarrowLane BarrowLane
 BarrowsHall BarrowsHall
 BARTStation BARTStation
 BerkeleyArtMuseum BerkeleyArtMuseum DavisHall
-BerkeleyWayWest BerkeleyWayWest BrainImagingCenter
+BerkeleyWayWest BerkeleyWayWest
 BirgeHall BirgeHall
 BlackwellHall BlackwellHall
 BlumHall BlumHall
-BoaltHall BoaltHall
 BotanicalGarden BotanicalGarden
+BrainImagingCenter BrainImagingCenter
 EastAsianLibrary EastAsianLibrary
 CaliforniaHall CaliforniaHall
 CalvinLaboratory CalvinLaboratory
@@ -27,7 +27,7 @@ CheitHall CheitHall
 ChouHall ChouHall
 ClarkKerrCampus ClarkKerrCampus
 HertzHall CNMAT
-Cory Cory
+GoldmanField Cory
 EyeCenter CyclotronRd
 HavilandHall DoeMemorialLibrary
 DonnerLab DonnerLab
