@@ -161,7 +161,7 @@ def split(input_folder):
     splitter(input_folder.split('/')[-1], inputs)
 
 
-def discrepancy_check(filename):
+def discrepancy_check(filename, allowance):
     conn = sqlite3.connect('models.sqlite')
     c = conn.cursor()
     output_directory = "submissions/submission_final/"
@@ -186,7 +186,6 @@ def discrepancy_check(filename):
             if (not os.path.exists("batches/batch_discrepancy/" + input_file_name + ".in")):
                 shutil.copy(input_file, "batches/batch_discrepancy")
 
-    inputs = [file.split("/")[-1].split('.')[0] + ".in" for file in utils.get_files_with_extension(output_directory, 'out')]
     results = [file[0] for file in c.execute("SELECT input_file FROM models").fetchall()]
     for file in results:
         if (not os.path.exists(output_directory + file.split('.')[0] + ".out")):
@@ -217,7 +216,6 @@ if __name__=="__main__":
         if '-p' in args.params:
             allowance = float(args.params[args.params.index("-p") + 1])
         discrepancy_check(args.input, allowance)
-        discrepancy_check(args.input)
     elif args.command == 'split':
         split(args.input)
     else:
