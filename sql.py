@@ -166,6 +166,8 @@ def discrepancy_check(filename, allowance):
     c = conn.cursor()
     output_directory = "submissions/submission_final/"
 
+    logfile = open("batches/batch_discrepancy/logfile.txt", "a")
+
     for entry in os.scandir(output_directory): 
         output_file = entry.path
         output_file_name = output_file.split('/')[-1]
@@ -176,11 +178,11 @@ def discrepancy_check(filename, allowance):
         cost_from_file = validate_output_nm(input_file, output_file)
 
         if (not query_result):
-            print(input_file_name.split('.')[0] + ": " + "File is not in the MODELS table, but has an output in the submission_final directory.")
+            logfile.write(input_file_name.split('.')[0] + ": " + "File is not in the MODELS table, but has an output in the submission_final directory.")
             if (not os.path.exists("batches/batch_discrepancy/" + input_file_name + ".in")):
                 shutil.copy(input_file, "batches/batch_discrepancy")
         elif ((abs(query_result[1] - cost_from_file) / query_result[1]) * 100 >= allowance):
-            print(output_file_name.split('.')[0] + ": " + "MODELS cost is " + str(query_result[1]) \
+            logfile.write(output_file_name.split('.')[0] + ": " + "MODELS cost is " + str(query_result[1]) \
                 + " but OV cost " + str(cost_from_file) + ". Percent Differential: " + \
                     str((abs(query_result[1] - cost_from_file) / query_result[1]) * 100) + ".")
             if (not os.path.exists("batches/batch_discrepancy/" + input_file_name + ".in")):
@@ -189,10 +191,11 @@ def discrepancy_check(filename, allowance):
     results = [file[0] for file in c.execute("SELECT input_file FROM models").fetchall()]
     for file in results:
         if (not os.path.exists(output_directory + file.split('.')[0] + ".out")):
-            print(file.split('.')[0] + ": " + "File is in the MODELS table, but does not have an output in the submission_final directory.")
+            logfile.write(file.split('.')[0] + ": " + "File is in the MODELS table, but does not have an output in the submission_final directory.")
             if (not os.path.exists("batches/batch_discrepancy/" + file)):
                 shutil.copy("batches/inputs/" + file, "batches/batch_discrepancy")
 
+    logfile.close()
     conn.close()
 
 
