@@ -196,11 +196,7 @@ def discrepancy_check(filename):
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description='Parsing arguments')
-<<<<<<< HEAD
-    parser.add_argument('command', type=str, choices=['print', 'merge', 'query', 'remaining', 'discrepancy'], help='The command to run')
-=======
-    parser.add_argument('command', type=str, choices=['print', 'merge', 'query', 'remaining', 'split'], help='The command to run')
->>>>>>> d0f3d4113b371f36eb31a3ea35c1e7f5b1016f6c
+    parser.add_argument('command', type=str, choices=['print', 'merge', 'query', 'remaining', 'discrepancy', 'split'], help='The command to run')
     parser.add_argument('input', type=str, help='The path to the input table')
     parser.add_argument('params', nargs=argparse.REMAINDER, help='Extra arguments passed in')
     args = parser.parse_args()
@@ -214,15 +210,12 @@ if __name__=="__main__":
     elif args.command == 'remaining':
         remaining(args.input)
     elif args.command == 'discrepancy':
-<<<<<<< HEAD
         allowance = 0.1
         if '-p' in args.params:
             allowance = float(args.params[args.params.index("-p") + 1])
         discrepancy_check(args.input, allowance)
-=======
         discrepancy_check(args.input)
     elif args.command == 'split':
         split(args.input)
->>>>>>> d0f3d4113b371f36eb31a3ea35c1e7f5b1016f6c
     else:
         print("Unsupported command")
