@@ -158,7 +158,8 @@ def discrepancy_check(filename, allowance):
             logfile.write(input_file_name.split('.')[0] + ": " + "File is not in the MODELS table, but has an output in the submission_final directory.\n")
             if (not os.path.exists("batches/batch_discrepancy/" + input_file_name + ".in")):
                 shutil.copy(input_file, "batches/batch_discrepancy")
-        elif ((abs(query_result[1] - cost_from_file) / query_result[1]) * 100 >= allowance):
+        elif ((abs(query_result[1] - cost_from_file) / query_result[1]) * 100 >= allowance \
+            and query_result[1] - cost_from_file / query_result[1] * 100 < 0):
             logfile.write(output_file_name.split('.')[0] + ": " + "MODELS cost is " + str(query_result[1]) \
                 + " but OV cost " + str(cost_from_file) + ". Percent Differential: " + \
                     str(((query_result[1] - cost_from_file) / query_result[1]) * 100) + ".\n")

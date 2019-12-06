@@ -15,8 +15,6 @@ pbar = ProgressBar()
 
 files = []
 for file, score, optimal in pbar(results):
-	if optimal:
-		pass
 	file = file.split('.')[0]
 	our_cost = validate_output_nm('batches/inputs/{}.in'.format(file), 'submissions/submission_final/{}.out'.format(file))
 
@@ -29,10 +27,15 @@ for file, score, optimal in pbar(results):
 	G, message = adjacency_matrix_to_graph(adjacency_matrix)
 	bad_cost, message = cost_of_solution(G, path, dropoffs)
 
-	files.append((our_cost / bad_cost, file))
+	files.append((our_cost / bad_cost, file, optimal))
 
 files.sort(key = lambda x: x[0])
 
 print("\n\nDamaging Files")
+total = 0
 for f in files:
-	print(f)
+	total += f[0]
+	if f[2]:
+		print(f)
+
+print(total)
