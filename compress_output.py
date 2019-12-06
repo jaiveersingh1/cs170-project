@@ -11,7 +11,7 @@ if __name__ == '__main__':
     parser.add_argument('outputs', type=str, help='The path to the output file or directory')
     args = parser.parse_args()
     output_file = "{}/outputs.json".format(args.outputs)
-    with open(output_file, 'w') as output_json:
+    with open(output_file, 'w+') as output_json:
         data = {}
         for output in os.listdir(args.outputs):
             with open(args.outputs + output, 'r') as output_file:
