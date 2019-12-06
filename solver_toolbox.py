@@ -268,7 +268,11 @@ class ILPSolver(BaseSolver):
 		home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
 		location_indices = convert_locations_to_indices(list_of_locations, list_of_locations)
 
-		G, message = adjacency_matrix_to_graph(adjacency_matrix)
+		edge_scale = 1.0
+		if "--approx" in params:
+			edge_scale = 1/10000
+
+		G, message = adjacency_matrix_to_graph(adjacency_matrix, scale)
 		E = list(G.to_directed().edges(data='weight'))
 
 		starting_car_index = list_of_locations.index(starting_car_location)
