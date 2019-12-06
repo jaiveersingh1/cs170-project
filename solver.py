@@ -63,7 +63,7 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
         if best_solution == None or solution[0] < best_solution[0]:
             best_solution = solution
 
-    return (not prev or prev[0] > best_solution[0]), best_solution[1], best_solution[2]
+    return ("--force-write" in params or not prev or prev[0] > best_solution[0]), best_solution[1], best_solution[2]
 
 """
 ======================================================================

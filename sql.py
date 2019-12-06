@@ -148,6 +148,9 @@ def remaining(filename):
         for file in remaining[i * factor: (i + 1) * factor]:
             shutil.copy("batches/inputs/{}".format(file), directory + file)
 
+def discrepancy_check(filename):
+    
+
 
 
 
@@ -165,5 +168,7 @@ if __name__=="__main__":
         run_queries(args.input)
     elif args.command == 'remaining':
         remaining(args.input)
+    elif args.command == 'discrepancy':
+        discrepancy_check(args.input)
     else:
         print("Unsupported command")
