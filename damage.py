@@ -1,6 +1,8 @@
 import sqlite3
 from output_validator import *
 from utils import *
+from progressbar import ProgressBar
+
 conn = sqlite3.connect('models.sqlite')
 c = conn.cursor()
 
@@ -9,9 +11,10 @@ results = c.execute("SELECT * FROM models ORDER BY input_file").fetchall()
 conn.commit()
 conn.close()
 
-files =[]
-for file, score, optimal in results:
-	print(file)
+pbar = ProgressBar()
+
+files = []
+for file, score, optimal in pbar(results):
 	if optimal == '1':
 		pass
 	file = file.split('.')[0]
@@ -30,5 +33,6 @@ for file, score, optimal in results:
 
 files.sort(key = lambda x: x[0])
 
+print("\n\nDamaging Files")
 for f in files:
 	print(f)
