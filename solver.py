@@ -63,7 +63,7 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
         if best_solution == None or solution[0] < best_solution[0]:
             best_solution = solution
 
-    return (not prev or prev[0] > best_solution[0]), best_solution[1], best_solution[2]
+    return ("--force-write" in params or not prev or prev[0] > best_solution[0]), best_solution[1], best_solution[2]
 
 """
 ======================================================================
@@ -130,7 +130,7 @@ def solve_all(input_directory, output_directory, params=[]):
     input_files = utils.get_files_with_extension(input_directory, 'in')
 
     for i, input_file in enumerate(input_files):
-        print (f"~~ Solving file {i} of {len(input_files)} ~~")
+        print (f"~~ Solving file {i + 1} of {len(input_files)} ~~")
         solve_from_file(input_file, output_directory, params=params)
 
 

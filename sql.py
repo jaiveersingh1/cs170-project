@@ -4,6 +4,8 @@ import utils
 import shutil
 import os
 
+from output_validator import *
+
 def print_local_table(filename):
     conn = sqlite3.connect(filename)
     c = conn.cursor()
@@ -28,11 +30,14 @@ def run_queries(filename):
             conn.close()
             return
         
-        results = c.execute(command).fetchall()
-
-        print("Results:")
-        [print(i) for i in results]
-        print()
+        try:
+            results = c.execute(command).fetchall()
+            print("Results:")
+            [print(i) for i in results]
+            print()
+        except:
+            print("Invalid query.")
+        
 
 def merge_tables(filename):
     saved_tables = utils.get_files_with_extension("models/", 'sqlite')
@@ -134,29 +139,70 @@ def remaining(filename):
 
     print(f"There are {len(remaining)} files remaining.")
 
+    splitter('remaining', remaining)
+    
+def splitter(new_directory, files):
     num_batches = int(input("How many batches to split into? (-1 to skip) "))
     if num_batches == -1:
         return
-    
-    factor = int(len(remaining) / num_batches)
+
+    factor = int(len(files) / num_batches)
 
     for i in range(num_batches):
-        directory = "batches/remaining/remaining_{}/".format(i)
+        directory = "batches/split_{}/batch{}/".format(new_directory, i)
         print("CREATED", directory)
-        os.mkdir(directory)
+        os.makedirs(directory)
 
-        for file in remaining[i * factor: (i + 1) * factor]:
+        for file in files[i * factor: (i + 1) * factor]:
             shutil.copy("batches/inputs/{}".format(file), directory + file)
 
+def split(input_folder):
+    inputs = [file.split("/")[-1] for file in utils.get_files_with_extension(input_folder, 'in')]
+    splitter(input_folder.split('/')[-1], inputs)
 
 
+def discrepancy_check(filename, allowance):
+    conn = sqlite3.connect('models.sqlite')
+    c = conn.cursor()
+    output_directory = "submissions/submission_final/"
+
+    for entry in os.scandir(output_directory): 
+        output_file = entry.path
+        output_file_name = output_file.split('/')[-1]
+        input_file_name = output_file_name.split('.')[0] + ".in"
+        input_file = "batches/inputs/" + input_file_name
+
+        query_result = c.execute('SELECT optimal, best_objective_bound FROM models WHERE input_file = (?)', (input_file_name,)).fetchone()
+        cost_from_file = validate_output_nm(input_file, output_file)
+
+        if (not query_result):
+            print(input_file_name.split('.')[0] + ": " + "File is not in the MODELS table, but has an output in the submission_final directory.")
+            if (not os.path.exists("batches/batch_discrepancy/" + input_file_name + ".in")):
+                shutil.copy(input_file, "batches/batch_discrepancy")
+        elif ((abs(query_result[1] - cost_from_file) / query_result[1]) * 100 >= allowance):
+            print(output_file_name.split('.')[0] + ": " + "MODELS cost is " + str(query_result[1]) \
+                + " but OV cost " + str(cost_from_file) + ". Percent Differential: " + \
+                    str((abs(query_result[1] - cost_from_file) / query_result[1]) * 100) + ".")
+            if (not os.path.exists("batches/batch_discrepancy/" + input_file_name + ".in")):
+                shutil.copy(input_file, "batches/batch_discrepancy")
+
+    results = [file[0] for file in c.execute("SELECT input_file FROM models").fetchall()]
+    for file in results:
+        if (not os.path.exists(output_directory + file.split('.')[0] + ".out")):
+            print(file.split('.')[0] + ": " + "File is in the MODELS table, but does not have an output in the submission_final directory.")
+            if (not os.path.exists("batches/batch_discrepancy/" + file)):
+                shutil.copy("batches/inputs/" + file, "batches/batch_discrepancy")
+
+    conn.close()
 
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description='Parsing arguments')
-    parser.add_argument('command', type=str, choices=['print', 'merge', 'query', 'remaining'], help='The command to run')
+    parser.add_argument('command', type=str, choices=['print', 'merge', 'query', 'remaining', 'discrepancy', 'split'], help='The command to run')
     parser.add_argument('input', type=str, help='The path to the input table')
+    parser.add_argument('params', nargs=argparse.REMAINDER, help='Extra arguments passed in')
     args = parser.parse_args()
+
     if args.command == 'print':
         print_local_table(args.input)
     elif args.command == 'merge':
@@ -165,5 +211,12 @@ if __name__=="__main__":
         run_queries(args.input)
     elif args.command == 'remaining':
         remaining(args.input)
+    elif args.command == 'discrepancy':
+        allowance = 0.1
+        if '-p' in args.params:
+            allowance = float(args.params[args.params.index("-p") + 1])
+        discrepancy_check(args.input, allowance)
+    elif args.command == 'split':
+        split(args.input)
     else:
         print("Unsupported command")

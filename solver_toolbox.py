@@ -268,7 +268,11 @@ class ILPSolver(BaseSolver):
 		home_indices = convert_locations_to_indices(list_of_homes, list_of_locations)
 		location_indices = convert_locations_to_indices(list_of_locations, list_of_locations)
 
-		G, message = adjacency_matrix_to_graph(adjacency_matrix)
+		edge_scale = 1.0
+		if "--approx" in params:
+			edge_scale = 1/10000
+
+		G, message = adjacency_matrix_to_graph(adjacency_matrix, edge_scale)
 		E = list(G.to_directed().edges(data='weight'))
 
 		starting_car_index = list_of_locations.index(starting_car_location)
@@ -462,19 +466,25 @@ class ILPSolver(BaseSolver):
 		car_path_indices = self.construct_path(starting_car_index, list_of_edges, input_file)
 		
 		walk_cost, dropoffs_dict = self.find_best_dropoffs(G, home_indices, car_path_indices)
-
+		updated = False
 		if not seen:
 			print("SAVING", input_file)
 			c.execute('INSERT INTO models (input_file, best_objective_bound, optimal) VALUES (?, ?, ?)', \
 				(input_file, model.objective_value, status == OptimizationStatus.OPTIMAL))
 			conn.commit()
 		elif model.objective_value < seen[0]:
+			updated = True
 			print("UPDATING", input_file)
 			c.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', \
 				(model.objective_value, status == OptimizationStatus.OPTIMAL, input_file))
 			conn.commit()
 		if not "-s" in params:
 			print("Walk cost =", walk_cost, "\n")
+
+		if updated:
+			self.log_update_entry(Fore.GREEN + "Updated" + Style.RESET_ALL)
+		else:
+			self.log_update_entry(Fore.RED + "Not Updated" + Style.RESET_ALL)
 
 		conn.close()
 		return model.objective_value, car_path_indices, dropoffs_dict

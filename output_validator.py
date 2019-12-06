@@ -9,6 +9,14 @@ from student_utils import *
 import input_validator
 import os
 
+def validate_output_nm(input_file, output_file, params=[]):
+    input_data = utils.read_file(input_file)
+    output_data = utils.read_file(output_file)
+
+    input_message, input_error = input_validator.tests(input_file)
+    cost, message = tests(input_data, output_data, params=params)
+
+    return cost
 
 def validate_output(input_file, output_file, params=[]):
     print('Processing', input_file)

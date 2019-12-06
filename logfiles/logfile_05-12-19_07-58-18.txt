@@ -1,0 +1,56 @@
+
+Thu Dec  5 07:58:18 2019	102_100.in  	 [31mTimeout![0m Feasible cost=437402.9964666667, bound=266215.40137628117. 
+Thu Dec  5 08:14:03 2019	103_100.in  	 [31mTimeout![0m Feasible cost=1263.1757333333333, bound=1137.316887084009. 
+Thu Dec  5 08:29:57 2019	107_100.in  	 [31mTimeout![0m Feasible cost=0.029490000000000002, bound=0.02801751034404239. 
+Thu Dec  5 08:45:34 2019	109_100.in  	 [31mTimeout![0m Feasible cost=791719756.8812299, bound=631354268.5748223. 
+Thu Dec  5 09:01:34 2019	118_100.in  	 [31mTimeout![0m Feasible cost=59008057.95795603, bound=45975860.23274028. 
+Thu Dec  5 09:17:38 2019	128_100.in  	 [31mTimeout![0m Feasible cost=7043839617.361452, bound=6773985742.901472. 
+Thu Dec  5 09:32:46 2019	130_100.in  	 [31mTimeout![0m Feasible cost=36420078872.666664, bound=35119859879.80665. 
+Thu Dec  5 09:48:56 2019	131_100.in  	 [31mTimeout![0m Feasible cost=61422609.503253326, bound=45898634.692276105. 
+Thu Dec  5 10:05:07 2019	132_100.in  	 [31mTimeout![0m Feasible cost=1326.6666666666663, bound=793.8. 
+Thu Dec  5 10:20:39 2019	133_100.in  	 [31mTimeout![0m Feasible cost=1628726752.6670732, bound=1459441844.413283. 
+Thu Dec  5 10:36:42 2019	140_100.in  	 [31mTimeout![0m Feasible cost=4112610351.329423, bound=3718872217.214167. 
+Thu Dec  5 10:52:30 2019	14_100.in  	 [31mTimeout![0m Feasible cost=6787.782493333333, bound=5884.4143665069105. 
+Thu Dec  5 11:08:23 2019	150_100.in  	 [31mTimeout![0m Feasible cost=625368102.2810932, bound=605620054.9811933. 
+Thu Dec  5 11:23:48 2019	155_100.in  	 [31mTimeout![0m Feasible cost=789.6666666666665, bound=682.3333333333333. 
+Thu Dec  5 11:39:44 2019	156_100.in  	 [31mTimeout![0m Feasible cost=7362287366.85269, bound=4797577135.972455. 
+Thu Dec  5 11:55:25 2019	157_100.in  	 [31mTimeout![0m Feasible cost=746.1829966666667, bound=544.3385723497709. 
+Thu Dec  5 12:11:41 2019	162_100.in  	 [31mTimeout![0m Feasible cost=1933113815.3333333, bound=1911568360.2770708. 
+Thu Dec  5 12:27:28 2019	165_100.in  	 [32mOptimal cost=121.51666666666667.[0m 
+Thu Dec  5 12:38:01 2019	168_100.in  	 [31mTimeout![0m Feasible cost=79254.11665433037, bound=59022.604985561804. 
+Thu Dec  5 12:53:11 2019	175_100.in  	 [31mTimeout![0m Feasible cost=7051372864.6375265, bound=6892544685.349291. 
+Thu Dec  5 13:09:02 2019	182_100.in  	 [31mTimeout![0m Feasible cost=5379491550.000001, bound=4432681894.004069. 
+Thu Dec  5 13:24:50 2019	18_100.in  	 [31mTimeout![0m Feasible cost=157.33333333333331, bound=129.66666666666666. 
+Thu Dec  5 13:40:48 2019	195_100.in  	 [31mTimeout![0m Feasible cost=281.0, bound=261.0. 
+Thu Dec  5 13:55:59 2019	196_100.in  	 [31mTimeout![0m Feasible cost=14.426623333333334, bound=11.884046008026104. 
+Thu Dec  5 14:11:27 2019	200_100.in  	 [31mTimeout![0m Feasible cost=5272.913069120274, bound=4965.040633910676. 
+Thu Dec  5 14:26:57 2019	201_100.in  	 [31mTimeout![0m Feasible cost=1372124621.9999998, bound=1260097382.9315655. 
+Thu Dec  5 14:43:14 2019	202_100.in  	 [31mTimeout![0m Feasible cost=42217.12612666667, bound=35954.59496758642. 
+Thu Dec  5 14:59:24 2019	203_100.in  	 [31mTimeout![0m Feasible cost=4002.3837466666664, bound=2613.2970637554836. 
+Thu Dec  5 15:15:42 2019	206_100.in  	 [31mTimeout![0m Feasible cost=12448629.666666666, bound=11711888.601452727. 
+Thu Dec  5 15:31:21 2019	209_100.in  	 [31mTimeout![0m Feasible cost=46840.609626666665, bound=46185.16175355963. 
+Thu Dec  5 15:47:04 2019	20_100.in  	 [31mTimeout![0m Feasible cost=6621525409.0226, bound=4058111752.3932996. 
+Thu Dec  5 16:03:02 2019	210_100.in  	 [31mTimeout![0m Feasible cost=39781.34702666666, bound=25924.74027411938. 
+Thu Dec  5 16:19:20 2019	212_100.in  	 [32mOptimal cost=1001.6666666666665.[0m 
+Thu Dec  5 16:33:24 2019	214_100.in  	 [31mTimeout![0m Feasible cost=159.99999999999997, bound=109.33333333333333. 
+Thu Dec  5 16:48:32 2019	220_100.in  	 [31mTimeout![0m Feasible cost=11666.666501205704, bound=9030.818430713109. 
+Thu Dec  5 17:03:41 2019	222_100.in  	 [32mOptimal cost=272.7369733333333.[0m 
+Thu Dec  5 17:17:09 2019	231_100.in  	 [32mOptimal cost=34793305509.0581.[0m 
+Thu Dec  5 17:26:51 2019	233_100.in  	 [31mTimeout![0m Feasible cost=402137.49561, bound=261134.72103013258. 
+Thu Dec  5 17:43:02 2019	234_100.in  	 [31mTimeout![0m Feasible cost=4692401.662186054, bound=3920571.0068722493. [33mGraph was not Eulerian.[0m 
+Thu Dec  5 17:58:10 2019	238_100.in  	 [31mTimeout![0m Feasible cost=4175.913033333333, bound=3138.5882611297. 
+Thu Dec  5 18:14:24 2019	23_100.in  	 [31mTimeout![0m Feasible cost=29.666666666666664, bound=19.0. 
+Thu Dec  5 18:29:44 2019	240_100.in  	 [32mOptimal cost=348.0430466666666.[0m 
+Thu Dec  5 18:40:44 2019	241_100.in  	 [32mOptimal cost=1755.5037121196865.[0m 
+Thu Dec  5 18:43:30 2019	245_100.in  	 [31mTimeout![0m Feasible cost=3939.311326666667, bound=3276.610507314976. 
+Thu Dec  5 18:59:45 2019	246_100.in  	 [31mTimeout![0m Feasible cost=412.07991, bound=304.5976693086377. 
+Thu Dec  5 19:15:36 2019	248_100.in  	 [32mOptimal cost=178205.99999999997.[0m 
+Thu Dec  5 19:16:37 2019	253_100.in  	 [31mTimeout![0m Feasible cost=1039694960.8151513, bound=720826227.6039007. [33mGraph was not Eulerian.[0m 
+Thu Dec  5 19:32:14 2019	254_100.in  	 [31mTimeout![0m Feasible cost=64.0, bound=61.666666666666664. 
+Thu Dec  5 19:47:23 2019	258_100.in  	 [31mTimeout![0m Feasible cost=402.6966133333333, bound=312.1065223291065. 
+Thu Dec  5 20:03:19 2019	264_100.in  	 [31mTimeout![0m Feasible cost=479.53058333333337, bound=451.06966765021286. 
+Thu Dec  5 20:19:03 2019	26_100.in  	 [31mTimeout![0m Feasible cost=407.6666666666667, bound=388.66666666666663. 
+Thu Dec  5 20:34:10 2019	271_100.in  	 [31mTimeout![0m Feasible cost=42564.60650666666, bound=33822.52781674329. 
+Thu Dec  5 20:50:35 2019	277_100.in  	 [31mTimeout![0m Feasible cost=25813892530.999996, bound=25626898137.002327. 
+Thu Dec  5 21:05:45 2019	278_100.in  	 [31mTimeout![0m Feasible cost=2645.2071133333334, bound=2641.1688225814705. 
+Thu Dec  5 21:22:01 2019	279_100.in  	 

@@ -270,19 +270,19 @@ class GraphVisualizer:
 
 	def onClick(self, event):
 		x, y = event.xdata, event.ydata
-		best_x, best_y = float('inf'), float('inf')
+		best_dist = float('inf')
 		best_label = 0
 
 		for label, loc in self.pos.items():
-			curr_x, curr_y = abs(x - loc[0]), abs(y - loc[1])
-			if(curr_x < best_x and curr_y < best_y):
-				best_label, best_x, best_y = label, curr_x, curr_y
+			curr_dist = np.linalg.norm(np.array([x, y]) - np.array(loc))
+			if(curr_dist < best_dist):
+				best_label, best_dist = label, curr_dist
 
 		self.path.append(best_label)
 		print(self.path)
 
 	def clearPath(self, event):
-		self.__init__()
+		self.path, self.dropoffs, self.new_cost = [], {}, 0
 		print("----------------------- New Path -----------------------")
 
 	def nextGraph(self, event):
@@ -307,7 +307,7 @@ class GraphVisualizer:
 		walk_cost, self.dropoffs = solver.find_best_dropoffs(self.G, self.homes, self.path)
 		self.new_cost = cost_of_solution(self.G, self.path, self.dropoffs)[0]
 
-		print("----------------------- Adjusted Path -----------------------\n", self.path, "New Cost:", self.new_cost, "Current Cost:", self.curr_cost)
+		print("----------------------- Adjusted Path -----------------------\n", self.path, "New Cost:", self.new_cost, "| Current Bound:", self.curr_cost)
 
 	def outToFile(self, event):
 		self.path.pop()
@@ -316,7 +316,7 @@ class GraphVisualizer:
 		conn = sqlite3.connect('models.sqlite')
 		c = conn.cursor()
 		c.execute('UPDATE models SET best_objective_bound = ?, optimal = ? WHERE input_file = ?', \
-				(self.new_cost, status == 0, self.in_file))
+				(self.new_cost, 0, self.in_file))
 		conn.commit()
 		conn.close()
 
@@ -356,6 +356,10 @@ class GraphVisualizer:
 				b_next.on_clicked(self.nextGraph)
 
 				plt.show()
+			
+			elif (not query_result):
+				print("No suboptimal files found in the given input directory.\nEither all files in the directory are optimal,",
+					"the directory is empty, or any suboptimal files in the directory is not in the MODELS table.")
 
 		conn.close()
 
@@ -382,7 +386,10 @@ if __name__=="__main__":
 			vis.visIter(output_directory=input_2)
 		else:
 			vis.visIter()
-		# vis.visFromAdj(input_1, input_2, True)
+
+	if (action == "visOld"):
+		vis = GraphVisualizer()
+		vis.visFromAdj(input_1, input_2, True)
 
 	if (action == "generate" or action == "gen"):
 		gen = GraphGenerator(int(input_1), int(input_2))
