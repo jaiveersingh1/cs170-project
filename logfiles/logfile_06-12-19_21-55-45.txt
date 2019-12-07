@@ -3,4 +3,5 @@ Fri Dec  6 21:55:45 2019	261_200.in  	 [31mTimeout![0m Feasible cost=527.99999
 Fri Dec  6 22:03:30 2019	264_200.in  	 [31mTimeout![0m Feasible cost=17734.666666666664, bound=13700.70244754211. [32mUpdated[0m 
 Fri Dec  6 22:13:39 2019	26_200.in  	 [31mTimeout![0m Feasible cost=3955.3333333333326, bound=3583.1625901345906. [31mNot Updated[0m 
 Fri Dec  6 22:21:31 2019	274_200.in  	 [31mTimeout![0m Feasible cost=83878.33333333333, bound=55180.27753140448. [32mUpdated[0m 
-Fri Dec  6 22:31:35 2019	285_100.in  	 
+Fri Dec  6 22:31:35 2019	285_100.in  	 [31mTimeout![0m Feasible cost=87792.49481702737, bound=71321.4581297134. [31mNot Updated[0m 
+Fri Dec  6 22:36:57 2019	285_200.in  	 [31mTimeout![0m Feasible cost=406537.4023833333, bound=264027.67633145925. [31mNot Updated[0m 
