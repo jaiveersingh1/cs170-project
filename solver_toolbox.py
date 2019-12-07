@@ -200,12 +200,25 @@ class NaiveSolver(BaseSolver):
 			A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
 			NOTE: all outputs should be in terms of indices not the names of the locations themselves
 		"""
+
+		conn = sqlite3.connect('models.sqlite')
+		c = conn.cursor()
+
+		prev = c.execute('SELECT best_objective_bound FROM models WHERE input_file = (?)', (input_file,)).fetchone()
+
 		path = convert_locations_to_indices([starting_car_location], list_of_locations)
 		homes = convert_locations_to_indices(list_of_homes, list_of_locations)
 		dropoffs = {path[0]: homes}
 		G, message = adjacency_matrix_to_graph(adjacency_matrix)
 		cost, message = cost_of_solution(G, path, dropoffs)
 
+		if prev and prev[0] > cost:
+			print("UPDATING")
+			c.execute("UPDATE models SET best_objective_bound = ? WHERE input_file = ?", (cost, input_file))
+		else:
+			c.execute("INSERT INTO models (best_objective_bound, input_file, optimal) VALUES (?, ?, ?)", (input_file, cost, 0))
+
+		conn.close()
 		return cost, path, dropoffs
 
 class BruteForceJSSolver(BaseSolver):

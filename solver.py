@@ -21,7 +21,8 @@ naive_solver = NaiveSolver()
 solvers_mode = {
     "all": [ilp_solver, brute_force_solver],
     "bf": [brute_force_solver],
-    "ilp": [ilp_solver, naive_solver]
+    "ilp": [ilp_solver],
+    "naive": [naive_solver]
 }
 
 # One-time initialization of logfiles for this run
@@ -51,8 +52,8 @@ def solve(list_of_locations, list_of_homes, starting_car_location, adjacency_mat
     c = conn.cursor()
 
     prev = c.execute('SELECT best_objective_bound FROM models WHERE input_file = (?)', (input_file,)).fetchone()
-
     conn.close()
+
     
     mode = "ilp"
     if "-m" in params:
@@ -123,7 +124,6 @@ def solve_from_file(input_file, output_directory, params=[]):
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
     output_file = utils.input_to_output(input_file, output_directory)
-
     convertToFile(car_path, drop_offs, output_file, list_locations)
 
 

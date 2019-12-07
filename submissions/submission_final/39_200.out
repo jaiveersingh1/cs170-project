@@ -1,21 +1,21 @@
-Plano SantaClara Irving Amarillo Cary OklahomaCity Warren SanFrancisco Warren Kent Beaumont Atlanta Oxnard Omaha VirginiaBeach Providence Seattle PembrokePines Torrance Lancaster LosAngeles Escondido Akron Hollywood Glasses LosAngeles Lancaster Elizabeth Anaheim JerseyCity Lafayette Huntsville Chesapeake OWO Mesa Memphis Montgomery MorenoValley Pasadena Sunnyvale Norman Pasadena Denver Hayward Denver Ontario Waco Ontario Omaha Garland KansasCity Frisco Lakewood Anchorage Salinas SanAntonio NewHaven Davidson Teemo Greensboro Surprise NewOrleans Surprise Corona Brownsville Salem Knoxville SanBernardino Madison Fremont SantaClarita CorpusChristi Spokane Pomona Houston Glendale Raleigh Yonkers Arlington Portland GrandPrairie McAllen Tampa Laredo SantaRosa FortCollins Killeen Allentown Hialeah Denton Chicago Salinas GardenGrove Frisco Tulsa Reno Norfolk FortLauderdale AnnArbor StLouis WestValleyCity Vallejo LasVegas Joliet Thornton Joliet LasVegas Miami Olathe HuntingtonBeach SimiValley HuntingtonBeach Mobile Hartford Dallas StPetersburg Olathe Irvine Olathe Cincinnati Tallahassee Riverside OklahomaCity Cary Amarillo SantaClara Plano Rockford Plano
-88
+Plano Rockford Riverside Tallahassee Cincinnati Miami Olathe Irvine Fullerton AugustaRichmond HuntingtonBeach Mobile Hartford NewOrleans Dallas Worcester Mesquite Joliet Thornton Anchorage Salinas GardenGrove CedarRapids SanAntonio NewHaven Davidson Teemo Greensboro Surprise Corona Brownsville Knoxville SanBernardino Madison Fremont SantaClarita CorpusChristi Spokane Pomona Houston Glendale Raleigh FortWorth McAllen GrandPrairie Portland Tampa Laredo SantaRosa FortCollins SantaRosa Denton Springfield LexingtonFa LouisvilleJefferson Reno Norfolk FortLauderdale AnnArbor StLouis WestValleyCity Vallejo LasVegas Cary OklahomaCity Rochester SanFrancisco Warren Beaumont Atlanta Cleveland Denver Hayward WinstonSalem Waco Ontario Omaha Lincoln PembrokePines Torrance LosAngeles Akron Escondido Hollywood Glasses Stamford Allentown Killeen SanJose Glasses LosAngeles Lancaster Elizabeth Anaheim JerseyCity Lafayette Huntsville Chesapeake OWO Mesa Memphis Montgomery MorenoValley Norman Sunnyvale Pasadena Irving SantaClara Plano
+89
 SanFrancisco SanFrancisco
 SantaClara SantaClara
 Memphis Charleston Memphis
 FortCollins FortCollins SiouxFalls
 Cincinnati Cincinnati
-Joliet Mesquite
-Allentown Stamford Allentown
+Mesquite Mesquite
+Stamford Stamford
 Hollywood Hollywood
 Riverside Riverside
-Omaha Omaha
+Omaha Omaha Garland
 GardenGrove GardenGrove
 Beaumont Beaumont Vancouver
 Anaheim Anaheim
 Brownsville Brownsville
 StLouis StLouis
-Glasses SanJose Glasses
+SanJose SanJose
 Glendale Glendale
 Elizabeth Elizabeth
 Killeen Killeen
@@ -25,7 +25,6 @@ Ontario Ontario
 Davidson Davidson
 Norman Norman
 Montgomery Montgomery
-Garland Garland
 Mesa Mesa
 SantaRosa SantaRosa
 AnnArbor AnnArbor
@@ -34,7 +33,7 @@ Hartford Hartford
 Escondido Escondido
 Salinas Salinas
 Tampa Tampa ThousandOaks
-Dallas Dallas Worcester
+Dallas Dallas
 Tallahassee Hampton
 Rockford Rockford
 Portland Portland
@@ -44,8 +43,9 @@ Irvine LittleRock Irvine
 SanBernardino SanBernardino
 Raleigh Raleigh
 Torrance Torrance
-PembrokePines Lincoln
+Lincoln Lincoln
 Surprise Surprise
+Allentown Allentown
 Norfolk Norfolk
 Houston Houston
 Fremont Fremont
@@ -53,14 +53,14 @@ Greensboro Greensboro
 SanAntonio SanAntonio
 OWO OWO
 Anchorage Anchorage
-Chicago Chicago
-Atlanta Atlanta
+Glasses Glasses
+Springfield Chicago
+Atlanta Atlanta Oxnard
 Cary Cary
-Oxnard Oxnard
 MorenoValley MorenoValley
 Irving Irving
 Vallejo Vallejo
-Tulsa LouisvilleJefferson Tulsa
+LouisvilleJefferson LouisvilleJefferson Tulsa
 Madison Madison
 Thornton Thornton
 Hayward Hayward
@@ -69,10 +69,10 @@ Knoxville Knoxville
 Denton Denton
 Pasadena Pasadena
 JerseyCity JerseyCity Pikachu
-HuntingtonBeach AugustaRichmond HuntingtonBeach
+AugustaRichmond AugustaRichmond
 Denver Denver
 Sunnyvale Sunnyvale
-SimiValley SimiValley
+HuntingtonBeach SimiValley HuntingtonBeach
 FortLauderdale FortLauderdale
 Laredo Laredo
 SantaClarita SantaClarita
@@ -86,5 +86,6 @@ Pomona Pomona
 CorpusChristi CorpusChristi
 Mobile Mobile
 GrandPrairie GrandPrairie
+Worcester Worcester
 Akron Akron
 NewHaven NewHaven
