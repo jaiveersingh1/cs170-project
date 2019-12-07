@@ -16,11 +16,12 @@ from student_utils import *
 # Initialize solvers and modes
 ilp_solver = ILPSolver()
 brute_force_solver = BruteForceJSSolver()
+naive_solver = NaiveSolver()
 
 solvers_mode = {
     "all": [ilp_solver, brute_force_solver],
     "bf": [brute_force_solver],
-    "ilp": [ilp_solver]
+    "ilp": [ilp_solver, naive_solver]
 }
 
 # One-time initialization of logfiles for this run
