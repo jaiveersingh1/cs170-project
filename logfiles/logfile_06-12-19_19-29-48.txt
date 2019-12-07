@@ -1,0 +1,4 @@
+
+Fri Dec  6 19:29:48 2019	256_200.in  	 [31mTimeout![0m Feasible cost=465.3333333333333, bound=425.37310409637627. [32mUpdated[0m 
+Fri Dec  6 19:50:45 2019	258_200.in  	 [31mTimeout![0m Feasible cost=656.0561933333333, bound=343.6973900451539. [32mUpdated[0m 
+Fri Dec  6 20:17:35 2019	260_200.in  	 
