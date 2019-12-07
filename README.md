@@ -3,7 +3,7 @@ CS 170 Final Project Submission (Group 10). Team Members: Ayush Jain, Manav Rath
 ## Initial Setup
 
 ### Local Project Setup
-Begin by unzipping the provided .zip folder containing the project files onto the machine that you will be using to run the code.
+Begin by cloning this repository using `git clone https://github.com/jaiveersingh1/cs170-project.git` (or `git@github.com:jaiveersingh1/cs170-project.git` if you have SSH enabled) into the local folder on your machine that you will be using to run the code in this project.
 
 ### Gurobi Optimization Installation
 To run the solver efficiently, download the optimizer engine provided by Gurobi Optimization's academic license, which can be activated for free using an account created with a `....@berkeley.edu` email. This can be done at the following link to the Gurobi Optimizer EULA page: `https://www.gurobi.com/downloads/gurobi-optimizer-eula/`. Be sure to specify that your account is an Academic account by choosing the appropriate option when registering for an account. 
@@ -21,7 +21,7 @@ Now, open your terminal of choice (e.g. `Git Bash`, `ITerm2`) and run the comman
 Continue now by opening your terminal in the project directory. To run the solver properly, you will need to make sure that you have downloaded all the modules used in the code. To do so, run the command `pip install -r requirements.txt`.
 
 ### `cp models/models_baseline.sqlite models.sqlite`
-Create a local version of the baseline SQLite table used to keep track of optimality and cost across all input files. This table will self-update by the solver as it runs through all the provided inputs.
+Create a local version of the baseline SQLite table used to keep track of optimality and cost across all input files. This table will self-update itself as the solver runs through all the provided inputs.
 
 ### `python3 solver.py --all input_dir output_dir`
 At last, the moment of truth! To run the solver, run the command `python3 solver.py --all input_dir output_dir`, where `input_dir` is the directory where the inputs are to be fetched from (to run all inputs, you may opt to use the directory `batches/inputs/` as `input_dir`) and `output_dir` is the directory where you would like output files to be stored. If you wish to set other parameters, please choose them from among the following choices:
