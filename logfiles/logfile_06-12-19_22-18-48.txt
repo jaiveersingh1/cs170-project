@@ -5,4 +5,4 @@ Fri Dec  6 22:35:48 2019	220_100.in  	 [31mTimeout![0m Feasible cost=11666.666
 Fri Dec  6 22:41:13 2019	220_200.in  	 [31mTimeout![0m Feasible cost=23333.332890261627, bound=15030.22159098113. [31mNot Updated[0m 
 Fri Dec  6 22:49:20 2019	230_200.in  	 [31mTimeout![0m Feasible cost=74435936313.39778, bound=68255701658.339. [32mUpdated[0m 
 Fri Dec  6 23:00:37 2019	239_200.in  	 [31mTimeout![0m Feasible cost=102.66666666666669, bound=100.62789843883661. [31mNot Updated[0m 
-Fri Dec  6 23:12:08 2019	240_200.in  	 
+Fri Dec  6 23:12:08 2019	240_200.in  	 [31mTimeout![0m Feasible cost=848.8740433333332, bound=677.0092261166669. [32mUpdated[0m 
