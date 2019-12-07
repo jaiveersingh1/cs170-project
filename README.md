@@ -18,7 +18,7 @@ Now, open your terminal of choice (e.g. `Git Bash`, `ITerm2`) and run the comman
 ## Running the Solver 
 
 ### Module Installation
-Continue now by opening To run the solver properly, you will need to make sure that you have downloaded all the modules used in the code. To do so, run the command `pip install -r requirements.txt`.
+Continue now by opening your terminal in the project directory. To run the solver properly, you will need to make sure that you have downloaded all the modules used in the code. To do so, run the command `pip install -r requirements.txt`.
 
 ### `cp models/models_baseline.sqlite models.sqlite`
 Create a local version of the baseline SQLite table used to keep track of optimality and cost across all input files. This table will self-update by the solver as it runs through all the provided inputs.
