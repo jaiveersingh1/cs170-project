@@ -185,6 +185,42 @@ def randomSolveJS(list_of_locations, list_of_homes, starting_car_location, adjac
 	
 	return 0, [], dict()
 
+class NaiveSolver(BaseSolver):
+	def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params=[]):
+		"""
+		Solve the problem using brute force.
+		Input:
+			list_of_locations: A list of locations such that node i of the graph corresponds to name at index i of the list
+			list_of_homes: A list of homes
+			starting_car_location: The name of the starting location for the car
+			adjacency_matrix: The adjacency matrix from the input file
+		Output:
+			A cost of how expensive the current solution is
+			A list of locations representing the car path
+			A dictionary mapping drop-off location to a list of homes of TAs that got off at that particular location
+			NOTE: all outputs should be in terms of indices not the names of the locations themselves
+		"""
+
+		conn = sqlite3.connect('models.sqlite')
+		c = conn.cursor()
+
+		prev = c.execute('SELECT best_objective_bound FROM models WHERE input_file = (?)', (input_file,)).fetchone()
+
+		path = convert_locations_to_indices([starting_car_location], list_of_locations)
+		homes = convert_locations_to_indices(list_of_homes, list_of_locations)
+		dropoffs = {path[0]: homes}
+		G, message = adjacency_matrix_to_graph(adjacency_matrix)
+		cost, message = cost_of_solution(G, path, dropoffs)
+
+		if prev and prev[0] > cost:
+			print("UPDATING")
+			c.execute("UPDATE models SET best_objective_bound = ? WHERE input_file = ?", (cost, input_file))
+		else:
+			c.execute("INSERT INTO models (best_objective_bound, input_file, optimal) VALUES (?, ?, ?)", (input_file, cost, 0))
+
+		conn.close()
+		return cost, path, dropoffs
+
 class BruteForceJSSolver(BaseSolver):
 	def solve(self, list_of_locations, list_of_homes, starting_car_location, adjacency_matrix, input_file, params=[]):
 		"""
@@ -277,7 +313,7 @@ class ILPSolver(BaseSolver):
 
 		starting_car_index = list_of_locations.index(starting_car_location)
 
-		start_paths = []
+		start_paths = [convert_locations_to_indices([starting_car_location], list_of_locations)]
 		num_random_paths = 5
 		if "-r" in params:
 			num_random_paths = int(params[params.index("-r") + 1])
