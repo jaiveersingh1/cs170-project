@@ -13,6 +13,11 @@ conn.close()
 
 pbar = ProgressBar()
 
+conn = sqlite3.connect('damages.sqlite')
+c = conn.cursor()
+c.execute("DROP TABLE IF EXISTS damages")
+c.execute("CREATE TABLE damages (input_file TEXT PRIMARY KEY, damage NUMERIC)")
+
 files = []
 for file, score, optimal in pbar(results):
 	file = file.split('.')[0]
@@ -27,15 +32,22 @@ for file, score, optimal in pbar(results):
 	G, message = adjacency_matrix_to_graph(adjacency_matrix)
 	bad_cost, message = cost_of_solution(G, path, dropoffs)
 
-	files.append((our_cost / bad_cost, file, optimal))
+	damage = our_cost / bad_cost * 100.0
+
+	c.execute('INSERT INTO damages (input_file, damage) VALUES (?, ?)', (file, damage))
+
+
+	files.append((damage, file, optimal))
 
 files.sort(key = lambda x: x[0])
+conn.commit()
+conn.close()
 
 print("\n\nDamaging Files")
 total = 0
 for f in files:
 	total += f[0]
-	if f[2]:
+	if f[2] == 0:
 		print(f)
 
-print(total)
+print(total / len(files))
