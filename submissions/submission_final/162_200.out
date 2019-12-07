@@ -1,12 +1,12 @@
-FortCollins Independence Bellevue Lakeland CollegeStation ElPaso Hemet Knoxville Harlingen Anaheim Kennewick LasVegas Layton Bloomington GreenBay Boston Bloomington Layton Durham DalyCity Houston Fresno Kalamazoo Leominster FortSmith Arvada Fargo Charleston AnnArbor Berkeley FortWorth KansasCity Carrollton Frederick Hampton Lafayette Champaign Harrisburg ElkGrove Harrisburg Champaign Elkhart Concord Clearwater Chicago McAllen Chicago Clearwater Evansville Danbury Arlington Anaheim LasVegas Austin Lorain Bryan Aberdeen Barnstable Brownsville Fayetteville Barnstable Kenosha Gilbert Jacksonville AtlanticCity Bakersfield Cincinnati Joliet Fairfield Lancaster Cincinnati GulfportBiloxi Leominster Manchester HuntingtonBeach BoiseCity Eugene GrandRapids Garland Burlington Burbank BatonRouge Jefferson Dallas Abilene Greensboro LittleRock FortWaltonBeach Kissimmee Amarillo Kissimmee AppleValley Corona Allentown Bremerton Allentown Corona Detroit Beaumont Detroit Lacey Irving ChulaVista Lubbock Louisville Glendale DaytonaBeach Arvada Hickory Arvada Erie Arvada Glendale FortWaltonBeach Akron FortCollins
-81
+FortCollins Akron FortSmith FortWaltonBeach Kissimmee Amarillo Kissimmee AppleValley Corona Allentown Bremerton Allentown Detroit Beaumont Detroit Lacey Irving ChulaVista Howell Lubbock Louisville Columbia Barnstable Kenosha Gilbert Jacksonville AtlanticCity Bakersfield Cincinnati GulfportBiloxi Leominster Manchester HuntingtonBeach BoiseCity Eugene GrandRapids Garland Burlington Burbank BatonRouge Jefferson Dallas Abilene Greensboro LittleRock FortWaltonBeach FortSmith Arvada Hickory Arvada Fargo Charleston AnnArbor Berkeley FortWorth KansasCity Carrollton Frederick Hampton Lafayette Champaign Harrisburg ElkGrove Irvine LasVegas Kennewick LasVegas Layton Bloomington GreenBay Boston Bloomington Layton FortWayne Fairfield Joliet Fairfield Lancaster Erie Arvada DaytonaBeach Arvada Erie Buffalo Bradenton Bridgeport McAllen Chicago Clearwater Evansville Danbury Arlington Harlingen Knoxville Hemet ElPaso CollegeStation Lakeland Bellevue LasVegas Austin Lorain Albany Bryan Aberdeen Barnstable Brownsville Fayetteville Asheville DalyCity Houston Fresno Elkhart FortCollins
+79
 Aberdeen Aberdeen
 Abilene Abilene
 Akron Akron Elizabeth
 DaytonaBeach Albuquerque
 Amarillo Alexandria Amarillo
 Allentown Allentown
-Anaheim Anaheim
+Kennewick Anaheim Kennewick
 Lancaster Anchorage Lancaster
 AnnArbor AnnArbor
 AppleValley AppleValley
@@ -19,11 +19,11 @@ Bakersfield Bakersfield
 Charleston Baltimore BonitaSprings
 Barnstable Barnstable
 Beaumont Beaumont Bethlehem
-Bellevue Bellevue
+Bellevue Bellevue Independence
 Berkeley Berkeley ElMonte
 CollegeStation Boise CollegeStation
 BoiseCity BoiseCity
-McAllen Bradenton
+Bradenton Bradenton
 Bremerton Bremerton Grayslake
 Lacey Brighton Lacey
 Brownsville Brownsville
@@ -51,11 +51,11 @@ Evansville Evansville
 Fairfield Fairfield
 Fargo Fargo
 Harrisburg Fontana Harrisburg
-FortCollins FortCollins Hollywood
+FortCollins FortCollins
 FortWaltonBeach FortWaltonBeach
 Frederick Frederick
 GulfportBiloxi Fremont
-Fresno Fresno
+Fresno Fresno Kalamazoo
 Garland Garland
 Gilbert Gilbert
 GrandRapids GrandRapids
@@ -64,15 +64,13 @@ Harlingen Harlingen
 Hemet Hemet
 HuntingtonBeach Henderson
 Hickory Hickory Inglewood
+Buffalo Hollywood
 Houston Houston
-Independence Independence
 Burlington Indianapolis
-ElkGrove Irvine
+Irvine Irvine
 Jacksonville Jacksonville
 Jefferson Jefferson
 Joliet Joliet LasCruces
-Kalamazoo Kalamazoo
-Kennewick Kennewick
 Knoxville Knoxville
 Lafayette Lafayette Lakewood
 Lakeland Lakeland
