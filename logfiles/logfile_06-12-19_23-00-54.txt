@@ -4,4 +4,4 @@ Fri Dec  6 23:08:41 2019	264_200.in  	 [31mTimeout![0m Feasible cost=17402.666
 Fri Dec  6 23:18:49 2019	26_200.in  	 [31mTimeout![0m Feasible cost=3953.666666666666, bound=3840.042911625256. [32mUpdated[0m 
 Fri Dec  6 23:26:32 2019	274_200.in  	 [31mTimeout![0m Feasible cost=82306.99999999999, bound=55210.06277303879. [32mUpdated[0m 
 Fri Dec  6 23:36:17 2019	285_100.in  	 [31mTimeout![0m Feasible cost=87792.494197008, bound=74227.50566518599. [33mGraph was not Eulerian.[0m [31mNot Updated[0m 
-Fri Dec  6 23:41:39 2019	285_200.in  	 
+Fri Dec  6 23:41:39 2019	285_200.in  	 [31mTimeout![0m Feasible cost=408270.9243333333, bound=267703.54761801823. [31mNot Updated[0m 
