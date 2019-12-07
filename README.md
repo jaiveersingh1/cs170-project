@@ -3,7 +3,7 @@ CS 170 Final Project Submission (Group 10). Team Members: Ayush Jain, Manav Rath
 ## Initial Setup
 
 ### Local Project Setup
-Begin by unzip your machine that you will be using to run the code in this project.
+Begin by unzipping the provided .zip folder containing the project files onto the machine that you will be using to run the code.
 
 ### Gurobi Optimization Installation
 To run the solver efficiently, download the optimizer engine provided by Gurobi Optimization's academic license, which can be activated for free using an account created with a `....@berkeley.edu` email. This can be done at the following link to the Gurobi Optimizer EULA page: `https://www.gurobi.com/downloads/gurobi-optimizer-eula/`. Be sure to specify that your account is an Academic account by choosing the appropriate option when registering for an account. 
